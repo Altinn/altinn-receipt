@@ -28,7 +28,7 @@ Also use an app for creating data that should be presented in receipt.
 ##### Manual
 
 - Open a terminal in `src/backend`
-- Execute `dotnet run --environment "LocalDevelopment"` and keep the process running
+- Execute `dotnet run` and keep the process running
 
 - Open another terminal in `src/frontend/receipt`
 - Execute `yarn --immutable` (only required first time, or when dependencies in package.json changes)

@@ -1,3 +1,6 @@
+@using Microsoft.Extensions.Hosting
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+
 <!DOCTYPE html>
 <html lang="no">
 
@@ -18,13 +21,14 @@
   <script src="https://use.fortawesome.com/bdabc5c1.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-
-  <environment include="LocalDevelopment">
+  @if (Env.IsDevelopment())
+  {
     <link rel="stylesheet" type="text/css" href="http://localhost:8080/receipt.css">
-  </environment>
-  <environment exclude="LocalDevelopment">
+  }
+  else
+  {
     <link rel="stylesheet" type="text/css" href="~/receipt/css/receipt.css">
-  </environment>
+  }
 
   <style>
     html {
@@ -42,12 +46,15 @@
   <div class="flex-column d-flex media-body">
     <div id="root" class="media-body flex-column d-flex"></div>
   </div>
-  <environment include="LocalDevelopment">
+  @if (Env.IsDevelopment())
+  {
     <script src="http://localhost:8080/receipt.js"></script>
-  </environment>
-  <environment exclude="LocalDevelopment">
+  }
+  else
+  {
     <script src="~/receipt/js/react/receipt.js"></script>
-  </environment>
+  }
+
 </body>
 
 </html>
