@@ -27,6 +27,7 @@ Also use an app for creating data that should be presented in receipt.
 
 ##### Manual
 
+- Open `src/backend/Views/Receipt/receipt.cshtml` and change the `link` and `script` tags according to the comments in that file.
 - Open a terminal in `src/backend`
 - Execute `dotnet run` and keep the process running
 
