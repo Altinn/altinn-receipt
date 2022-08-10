@@ -27,7 +27,7 @@ Also use an app for creating data that should be presented in receipt.
 
 ##### Manual
 
-- Open `src/backend/Views/Receipt/receipt.cshtml` and change the `link` and `script` tags according to the comments in that file.
+- Open `src/backend/Views/Altinn.Receipt/receipt.cshtml` and change the `link` and `script` tags according to the comments in that file.
 - Open a terminal in `src/backend`
 - Execute `dotnet run` and keep the process running
 
@@ -35,11 +35,12 @@ Also use an app for creating data that should be presented in receipt.
 - Execute `yarn --immutable` (only required first time, or when dependencies in package.json changes)
 - Execute `yarn start`
 
-The application should now be available at `localhost:5060/receipt/{instanceOwnerId}/{instanceId}`. Making changes to the frontend code will automatically recompile and reload the browser with the updated changes.
+The application should now be available at `altinn3local.no/receipt/{instanceOwnerId}/{instanceId}`.
+Making changes to the frontend code will automatically recompile and reload the browser with the updated changes.
 
 ##### Docker
 
-- Open a terminal in `src/backend`
-- run `docker build .`
+- Open a terminal in `src/backend/Altnn.Receipt`
+- run `docker-compose up`
 
-The application should now be available at `localhost:5060/receipt/{instanceOwnerId}/{instanceId}`. If you make changes to the code, you will need to rerun `docker build .`.
+The application should now be available at `altinn3local.no/receipt/{instanceOwnerId}/{instanceId}`. If you make changes to the code, you will need to rerun `docker-compose up --build`.
