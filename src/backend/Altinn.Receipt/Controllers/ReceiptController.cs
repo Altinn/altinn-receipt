@@ -141,10 +141,8 @@ namespace Altinn.Platform.Receipt
             {
                 return StatusCode(404, e.Message);
             }
-            else
-            {
-                return StatusCode(500, e.Message);
-            }
+            
+            return StatusCode(500, e.Message);            
         }
     }
 }
