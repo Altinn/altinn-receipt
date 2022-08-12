@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 namespace Altinn.Platform.Receipt.Filters
 {
     /// <summary>
-    /// Filter to enrich request telemetry with identity information
+    /// Filter to enrich request telemetry with identity information.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class IdentityTelemetryFilter : ITelemetryProcessor
