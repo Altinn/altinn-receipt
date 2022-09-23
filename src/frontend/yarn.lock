@@ -2365,15 +2365,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:17.0.1":
-  version: 17.0.1
-  resolution: "@types/react-test-renderer@npm:17.0.1"
-  dependencies:
-    "@types/react": "*"
-  checksum: ecaae8df36cd8cfeb89080d52534856acc3789bad9a6e369ff5119426377c827b4e5b5daa638507f2c1c2fd6c994bf45de288a698143178cd4049c2cd8b77b35
-  languageName: node
-  linkType: hard
-
 "@types/react-transition-group@npm:^4.2.0":
   version: 4.4.4
   resolution: "@types/react-transition-group@npm:4.4.4"
@@ -8237,7 +8228,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.7.1":
+"prettier@npm:2.7.1":
   version: 2.7.1
   resolution: "prettier@npm:2.7.1"
   bin:
@@ -8405,17 +8396,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0 || ^17.0.0, react-is@npm:^16.8.0 || ^17.0.0, react-is@npm:^17.0.1, react-is@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "react-is@npm:17.0.2"
-  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
-  languageName: node
-  linkType: hard
-
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
+  languageName: node
+  linkType: hard
+
+"react-is@npm:^16.8.0 || ^17.0.0, react-is@npm:^17.0.1":
+  version: 17.0.2
+  resolution: "react-is@npm:17.0.2"
+  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
   languageName: node
   linkType: hard
 
@@ -8430,32 +8421,6 @@ __metadata:
   version: 2.0.0
   resolution: "react-property@npm:2.0.0"
   checksum: 8a444df30ef0937689c7968dae2501a0ca523777169f450e1f7ef5beeb855d6509bd058bf612f6ed8f459aa35468335d356e50264492e1938586e59fdb988262
-  languageName: node
-  linkType: hard
-
-"react-shallow-renderer@npm:^16.13.1":
-  version: 16.14.1
-  resolution: "react-shallow-renderer@npm:16.14.1"
-  dependencies:
-    object-assign: ^4.1.1
-    react-is: ^16.12.0 || ^17.0.0
-  peerDependencies:
-    react: ^16.0.0 || ^17.0.0
-  checksum: f344c663c48720d19559b4198b1f63ad47a3f11bedc92ede053a6c0706b5209e6110086f3ccc6db04eda9f0d1a415845956ddfb6ce09a922167d4831fcba9314
-  languageName: node
-  linkType: hard
-
-"react-test-renderer@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react-test-renderer@npm:17.0.2"
-  dependencies:
-    object-assign: ^4.1.1
-    react-is: ^17.0.2
-    react-shallow-renderer: ^16.13.1
-    scheduler: ^0.20.2
-  peerDependencies:
-    react: 17.0.2
-  checksum: e6b5c6ed2a0bde2c34f1ab9523ff9bc4c141a271daf730d6b852374e83acc0155d58ab71a318251e953ebfa65b8bebb9c5dce3eba1ccfcbef7cc4e1e8261c401
   languageName: node
   linkType: hard
 
@@ -8537,7 +8502,6 @@ __metadata:
     "@types/marked": 4.0.3
     "@types/react": 17.0.43
     "@types/react-dom": 17.0.14
-    "@types/react-test-renderer": 17.0.1
     "@typescript-eslint/eslint-plugin": 5.30.6
     "@typescript-eslint/parser": 5.30.6
     altinn-designsystem: 3.1.0
@@ -8566,11 +8530,10 @@ __metadata:
     mini-css-extract-plugin: 2.6.1
     moment: 2.29.4
     msw: 0.44.0
-    prettier: ^2.7.1
+    prettier: 2.7.1
     react: 17.0.2
     react-content-loader: 6.2.0
     react-dom: 17.0.2
-    react-test-renderer: 17.0.2
     rimraf: 3.0.2
     source-map-loader: 3.0.1
     terser-webpack-plugin: 5.3.3
