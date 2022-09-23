@@ -4,8 +4,7 @@ import type { IParty } from 'src/types';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-// const user = userEvent.setup();
-const user = userEvent;
+const user = userEvent.setup();
 
 describe('organisms/AltinnAppHeader', () => {
   const partyPerson = {

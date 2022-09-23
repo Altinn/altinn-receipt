@@ -32,6 +32,7 @@ module.exports = {
   plugins: [...commonConfig.plugins, new ForkTsCheckerNotifierWebpackPlugin()],
   devServer: {
     historyApiFallback: true,
+    allowedHosts: 'all',
     client: {
       overlay: {
         errors: true,
