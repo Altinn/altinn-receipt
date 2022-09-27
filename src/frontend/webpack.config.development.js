@@ -33,6 +33,7 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     allowedHosts: 'all',
+    headers: { 'Access-Control-Allow-Origin': '*' },
     client: {
       overlay: {
         errors: true,
