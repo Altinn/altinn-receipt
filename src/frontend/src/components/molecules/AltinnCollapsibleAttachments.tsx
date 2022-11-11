@@ -69,7 +69,7 @@ export function AltinnCollapsibleAttachments(props: IAltinnCollapsibleAttachment
               />
             </ListItemIcon>
             <ListItemText
-              primary={`${props.title} ${attachmentCount}`}
+              primary={<>{props.title} {attachmentCount}</>}
               classes={{
                 root: classNames(props.classes.listItemTextPadding),
                 primary: classNames(props.classes.collapsedTitle),
