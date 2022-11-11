@@ -31,9 +31,14 @@ export const getInstanceMetaDataObject = (
 
   let dateSubmitted;
   if (instance.data && instance.data.length > 0) {
-    const lastChanged = getCurrentTaskData(application, instance).lastChanged;
-    dateSubmitted = moment(lastChanged).format('DD.MM.YYYY / HH:mm');
-  } else if (instance.status.isArchived) {
+    let currentTaskData = getCurrentTaskData(application, instance);
+    if (currentTaskData !== undefined) {
+      const lastChanged = getCurrentTaskData(application, instance).lastChanged;
+      dateSubmitted = moment(lastChanged).format('DD.MM.YYYY / HH:mm');
+    }
+  }
+
+  if (dateSubmitted === undefined && instance.status.isArchived) {
     dateSubmitted = moment(instance.status.archived).format('DD.MM.YYYY / HH:mm');
   }
 
