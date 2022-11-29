@@ -1,4 +1,4 @@
-FROM node:19.1.0-alpine3.16 AS build-receipt-frontend
+FROM node:alpine3.16 AS build-receipt-frontend
 
 WORKDIR /build
 
