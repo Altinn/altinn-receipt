@@ -10055,12 +10055,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:5.1.2":
-  version: 5.1.2
-  resolution: "marked@npm:5.1.2"
+"marked@npm:8.0.1":
+  version: 8.0.1
+  resolution: "marked@npm:8.0.1"
   bin:
     marked: bin/marked.js
-  checksum: fff8741a1dc7313f32bea221079a3d6ff55cd485170fade8841b77b48c89ad5b96676e645636e73e50f4b5b6d65cf9d8821072afb16173822505949df2407ffe
+  checksum: 08f321f939791969e4124df4ba569bd2d3004275891f99bee58f039629b088ee0225c2140c1a1db323cb8570761bfad0b55d8e16e4a8c426fb8fb934662d1b67
   languageName: node
   linkType: hard
 
@@ -11703,7 +11703,7 @@ __metadata:
     jest-environment-jsdom: 29.6.4
     jest-junit: 16.0.0
     jsdom: 22.1.0
-    marked: 5.1.2
+    marked: 8.0.1
     mini-css-extract-plugin: 2.7.6
     moment: 2.29.4
     msw: 1.3.0
