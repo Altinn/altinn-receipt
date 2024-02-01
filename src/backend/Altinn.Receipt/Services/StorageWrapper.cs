@@ -1,13 +1,14 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-using Altinn.Platform.Receipt.Clients;
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Extensions;
 using Altinn.Platform.Receipt.Helpers;
 using Altinn.Platform.Storage.Interface.Models;
+
 using AltinnCore.Authentication.Utils;
 
 using Microsoft.AspNetCore.Http;
@@ -22,16 +23,14 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
     {
         private readonly HttpClient _client;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly PlatformSettings _platformSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageWrapper"/> class
         /// </summary>
         public StorageWrapper(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<PlatformSettings> platformSettings)
         {
-            _platformSettings = platformSettings.Value;
-            httpClient.BaseAddress = new Uri(_platformSettings.ApiStorageEndpoint);
-            httpClient.DefaultRequestHeaders.Add(_platformSettings.SubscriptionKeyHeaderName, _platformSettings.SubscriptionKey);
+            httpClient.BaseAddress = new Uri(platformSettings.Value.ApiStorageEndpoint);
+            httpClient.DefaultRequestHeaders.Add(platformSettings.Value.SubscriptionKeyHeaderName, platformSettings.Value.SubscriptionKey);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client = httpClient;
             _contextAccessor = httpContextAccessor;
@@ -48,7 +47,8 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                Instance instance = await response.Content.ReadAsAsync<Instance>();
+                string responseString = await response.Content.ReadAsStringAsync();
+                Instance instance = JsonSerializer.Deserialize<Instance>(responseString, JsonSerializerOptionsProvider.Options);
                 return instance;
             }
 

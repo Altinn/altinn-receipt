@@ -1,14 +1,17 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
+
 using Altinn.Common.AccessTokenClient.Services;
 using Altinn.Platform.Profile.Models;
-using Altinn.Platform.Receipt.Clients;
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Extensions;
 using Altinn.Platform.Receipt.Helpers;
+
 using AltinnCore.Authentication.Utils;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -21,7 +24,6 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
     {
         private readonly HttpClient _client;
         private readonly IHttpContextAccessor _contextaccessor;
-        private readonly PlatformSettings _platformSettings;
         private readonly IAccessTokenGenerator _accessTokenGenerator;
 
         /// <summary>
@@ -29,9 +31,8 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
         /// </summary>
         public ProfileWrapper(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<PlatformSettings> platformSettings, IAccessTokenGenerator accessTokenGenerator)
         {
-            _platformSettings = platformSettings.Value;
-            httpClient.BaseAddress = new Uri(_platformSettings.ApiProfileEndpoint);
-            httpClient.DefaultRequestHeaders.Add(_platformSettings.SubscriptionKeyHeaderName, _platformSettings.SubscriptionKey);
+            httpClient.BaseAddress = new Uri(platformSettings.Value.ApiProfileEndpoint);
+            httpClient.DefaultRequestHeaders.Add(platformSettings.Value.SubscriptionKeyHeaderName, platformSettings.Value.SubscriptionKey);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client = httpClient;
             _contextaccessor = httpContextAccessor;
@@ -48,7 +49,8 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                UserProfile profile = await response.Content.ReadAsAsync<UserProfile>();
+                string responseString = await response.Content.ReadAsStringAsync();
+                UserProfile profile = JsonSerializer.Deserialize<UserProfile>(responseString, JsonSerializerOptionsProvider.Options);
                 return profile;
             }
 
