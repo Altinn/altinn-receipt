@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 using Altinn.Platform.Receipt.Configuration;
@@ -47,9 +47,7 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                string responseString = await response.Content.ReadAsStringAsync();
-                Instance instance = JsonSerializer.Deserialize<Instance>(responseString, JsonSerializerOptionsProvider.Options);
-                return instance;
+                return await response.Content.ReadFromJsonAsync<Instance>(JsonSerializerOptionsProvider.Options);
             }
 
             throw new PlatformHttpException(response, string.Empty);

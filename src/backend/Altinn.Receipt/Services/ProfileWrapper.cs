@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 using Altinn.Common.AccessTokenClient.Services;
@@ -49,9 +49,7 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                string responseString = await response.Content.ReadAsStringAsync();
-                UserProfile profile = JsonSerializer.Deserialize<UserProfile>(responseString, JsonSerializerOptionsProvider.Options);
-                return profile;
+                return await response.Content.ReadFromJsonAsync<UserProfile>(JsonSerializerOptionsProvider.Options);             
             }
 
             throw new PlatformHttpException(response, string.Empty);

@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 using Altinn.Common.AccessTokenClient.Services;
@@ -50,9 +50,7 @@ namespace Altinn.Platform.Receipt.Services
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                string responseString = await response.Content.ReadAsStringAsync();
-                Party party = JsonSerializer.Deserialize<Party>(responseString, JsonSerializerOptionsProvider.Options);
-                return party;
+                return await response.Content.ReadFromJsonAsync<Party>(JsonSerializerOptionsProvider.Options);
             }
 
             throw new PlatformHttpException(response, string.Empty);
