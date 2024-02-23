@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 
 import type {
   IInstanceContext,
@@ -131,7 +131,7 @@ export const useFetchInitialData = () => {
     const appAbortController = new AbortController();
     const textAbortController = new AbortController();
 
-    const fetchTextResources = async (org: string, app: string, languages: string[]) => {
+    const fetchTextResources = async (org: string, app: string, languages: string[]): Promise<{ response: AxiosResponse<any>; language: string; }> => {
       for (const language of languages) {
         try {
           const response = await Axios.get(
@@ -140,21 +140,24 @@ export const useFetchInitialData = () => {
               signal: textAbortController.signal,
             },
           );
-    
-          // Check if response status is not 404
+
           if (response.status == 200 && Array.isArray(response.data.resource)) {
             return {
               response: response,
               language: language,
-            }; // Return response if successful
+            };
           }
         } catch (error) {
           logFetchError(error);
         }
       }
-    
+
       // If none of the languages returned a successful response
-      throw new Error('Text resources not found for any language');
+      logFetchError('Text resources not found for any language');
+      return {
+        response: {} as AxiosResponse<any>,
+        language: languages[0],
+      }
     }
 
     const fetchInitialData = async () => {
