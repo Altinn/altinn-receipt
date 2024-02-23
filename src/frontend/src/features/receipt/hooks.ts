@@ -21,7 +21,7 @@ import {
   getTextResourceUrl,
 } from 'src/utils/receiptUrlHelper';
 import { buildInstanceContext } from 'src/utils/instanceContext';
-import { getLanguageFromCode } from 'src/language';
+import { languageLookup, getLanguageFromCode } from 'src/language';
 import { replaceTextResourceParams } from 'src/utils/language';
 
 interface IMergeLanguageWithOverrides {
@@ -131,6 +131,32 @@ export const useFetchInitialData = () => {
     const appAbortController = new AbortController();
     const textAbortController = new AbortController();
 
+    async function fetchTextResources(org: any, app: any , languages: string[]) {
+      for (const language of languages) {
+        try {
+          const response = await Axios.get(
+            getTextResourceUrl(org, app, language),
+            {
+              signal: textAbortController.signal,
+            },
+          );
+    
+          // Check if response status is not 404
+          if (response.status !== 404) {
+            return {
+              response: response,
+              language: language,
+            }; // Return response if successful
+          }
+        } catch (error) {
+          logFetchError(error);
+        }
+      }
+    
+      // If none of the languages returned a successful response
+      throw new Error('Text resources not found for any language');
+    }
+
     const fetchInitialData = async () => {
       try {
         const [instanceResponse, orgResponse, userResponse] = await Promise.all(
@@ -147,6 +173,10 @@ export const useFetchInitialData = () => {
           ],
         );
 
+        const currentLang = userResponse.data.profileSettingPreference.language;
+        const langs = Object.keys(languageLookup).filter(key => key !== currentLang);
+        langs.unshift(currentLang);
+
         const app = instanceResponse.data.instance.appId.split('/')[1];
         const [applicationResponse, appTextResourcesResponse] =
           await Promise.all([
@@ -159,20 +189,12 @@ export const useFetchInitialData = () => {
                 signal: appAbortController.signal,
               },
             ),
-            Axios.get(
-              getTextResourceUrl(
-                instanceResponse.data.instance.org,
-                app,
-                userResponse.data.profileSettingPreference.language,
-              ),
-              {
-                signal: textAbortController.signal,
-              },
-            ),
+            fetchTextResources(instanceResponse.data.instance.org, app, langs),
           ]);
 
+        userResponse.data.profileSettingPreference.language = appTextResourcesResponse.language;
         setApplication(applicationResponse.data);
-        setTextResources(appTextResourcesResponse.data.resources);
+        setTextResources(appTextResourcesResponse.response.data.resources);
         setParty(instanceResponse.data.party);
         setInstance(instanceResponse.data.instance);
         setOrganisations(orgResponse.data.orgs);
