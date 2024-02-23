@@ -173,9 +173,10 @@ export const useFetchInitialData = () => {
           ],
         );
 
-        const currentLang = userResponse.data.profileSettingPreference.language;
-        const langs = Object.keys(languageLookup).filter(key => key !== currentLang);
-        langs.unshift(currentLang);
+        const langs = Object.keys(languageLookup).filter(
+          element => element !== userResponse.data.profileSettingPreference.language
+        ); // Getting all the laguages except the current language
+        langs.unshift(userResponse.data.profileSettingPreference.language); // Putting the current language in the beginning.
 
         const app = instanceResponse.data.instance.appId.split('/')[1];
         const [applicationResponse, appTextResourcesResponse] =
