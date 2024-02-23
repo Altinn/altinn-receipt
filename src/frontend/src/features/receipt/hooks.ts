@@ -131,7 +131,7 @@ export const useFetchInitialData = () => {
     const appAbortController = new AbortController();
     const textAbortController = new AbortController();
 
-    async function fetchTextResources(org: any, app: any , languages: string[]) {
+    const fetchTextResources = async (org: string, app: string, languages: string[]) => {
       for (const language of languages) {
         try {
           const response = await Axios.get(
@@ -142,7 +142,7 @@ export const useFetchInitialData = () => {
           );
     
           // Check if response status is not 404
-          if (response.status !== 404) {
+          if (response.status == 200 && Array.isArray(response.data.resource)) {
             return {
               response: response,
               language: language,
