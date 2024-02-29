@@ -12054,7 +12054,7 @@ __metadata:
     ts-jest: 29.1.2
     ts-loader: 9.5.1
     typescript: 4.9.5
-    undici: ^5.28.3
+    undici: ^6.0.0
     webpack: 5.90.3
     webpack-cli: 5.1.4
     webpack-dev-server: 4.15.1
@@ -13841,12 +13841,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.28.3":
-  version: 5.28.3
-  resolution: "undici@npm:5.28.3"
+"undici@npm:^6.0.0":
+  version: 6.6.2
+  resolution: "undici@npm:6.6.2"
   dependencies:
     "@fastify/busboy": ^2.0.0
-  checksum: fa1e65aff896c5e2ee23637b632e306f9e3a2b32a3dc0b23ea71e5555ad350bcc25713aea894b3dccc0b7dc2c5e92a5a58435ebc2033b731a5524506f573dfd2
+  checksum: 33f527e010a8bb56b6cd37e7b5395b9b8efc14f175a9beb2c1d32f64bd2e91a8ded6480106095ad1cfca1f6ac214875127de4b89862a5405902e8729af092815
   languageName: node
   linkType: hard
 
