@@ -38,23 +38,23 @@ __Process__
         image: localtest:latest
         restart: always
         networks:
-        - altinntestlocal_network
+            - altinntestlocal_network
         ports:
-        - "5101:5101"
+            - "5101:5101"
         build:
         context: .
         environment:
-        - DOTNET_ENVIRONMENT=Docker
-        - ASPNETCORE_URLS=http://*:5101/
-        - GeneralSettings__BaseUrl=http://${TEST_DOMAIN:-local.altinn.cloud}:${ALTINN3LOCAL_PORT:-80}
-        - GeneralSettings__HostName=${TEST_DOMAIN:-local.altinn.cloud}
-        - PlatformSettings__ApiAuthorizationEndpoint=http://host.docker.internal:5101/authorization/api/v1/
-        - AuthnGeneralSettings__PlatformEndpoint=http://host.docker.internal:5101/
+            - DOTNET_ENVIRONMENT=Docker
+            - ASPNETCORE_URLS=http://*:5101/
+            - GeneralSettings__BaseUrl=http://${TEST_DOMAIN:-local.altinn.cloud}:${ALTINN3LOCAL_PORT:-80}
+            - GeneralSettings__HostName=${TEST_DOMAIN:-local.altinn.cloud}
+            - PlatformSettings__ApiAuthorizationEndpoint=http://host.docker.internal:5101/authorization/api/v1/
+            - AuthnGeneralSettings__PlatformEndpoint=http://host.docker.internal:5101/
         volumes:
-        - ./testdata:/testdata
-        - ${ALTINN3LOCALSTORAGE_PATH:-AltinnPlatformLocal}:/AltinnPlatformLocal
+            - ./testdata:/testdata
+            - ${ALTINN3LOCALSTORAGE_PATH:-AltinnPlatformLocal}:/AltinnPlatformLocal
         extra_hosts:
-        - "host.docker.internal:host-gateway"
+            - "host.docker.internal:host-gateway"
     ```
 
 2. Start the app you have made in the **Altinn Studio** and run it. Check if this app is working fine with the `app-localtest` backend service.
