@@ -9,7 +9,7 @@ These instructions will get you a copy of the receipt component up and running o
 
 ### Prerequisites
 
-1. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+1. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 2. [Node LTS](https://nodejs.org/en/)
 3. Code editor of your choice
 4. Newest [Git](https://git-scm.com/downloads)
