@@ -167,17 +167,22 @@ namespace Altinn.Platform.Receipt
                 return dafaultLang;
             }
 
-            switch (cookieValue)
+            if (cookieValue.Contains("UL=1033"))
             {
-                case string val when val.Contains("UL=1033"):
-                    return "en";
-                case string val when val.Contains("UL=1044"):
-                    return "nb";
-                case string val when val.Contains("UL=2068"):
-                    return "nn";
-                default:
-                    return dafaultLang;
+                return "en";
             }
+
+            if (cookieValue.Contains("UL=1044"))
+            {
+                return "nb";
+            }
+
+            if (cookieValue.Contains("UL=2068"))
+            {
+                return "nn";
+            }
+            
+            return dafaultLang;
         }
     }
 }
