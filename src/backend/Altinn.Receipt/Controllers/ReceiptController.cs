@@ -12,6 +12,7 @@ using Altinn.Platform.Storage.Interface.Models;
 using AltinnCore.Authentication.Constants;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -28,6 +29,7 @@ namespace Altinn.Platform.Receipt
         private readonly IStorage _storage;
         private readonly IProfile _profile;
         private readonly ILogger _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReceiptController"/> class
@@ -36,16 +38,19 @@ namespace Altinn.Platform.Receipt
         /// <param name="storage">the storage service</param>
         /// <param name="profile">the profile service</param>
         /// <param name="logger">the logger</param>
+        /// <param name="httpContextAccessor">the HTTP context accessor</param>
         public ReceiptController(
             IRegister register,
             IStorage storage,
             IProfile profile,
-            ILogger<ReceiptController> logger)
+            ILogger<ReceiptController> logger,
+            IHttpContextAccessor httpContextAccessor)
         {
             _register = register;
             _storage = storage;
             _profile = profile;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -82,6 +87,12 @@ namespace Altinn.Platform.Receipt
             {
                 int userId = int.Parse(userIdString);
                 UserProfile profile = await _profile.GetUser(userId);
+
+                if (!string.IsNullOrEmpty(profile?.ProfileSettingPreference?.Language))
+                {
+                    profile.ProfileSettingPreference.Language = GetLanguageFromAltinnPersistenceCookie(profile.ProfileSettingPreference.Language);
+                }
+
                 return Ok(profile);
             }
             catch (PlatformHttpException e)
@@ -144,6 +155,28 @@ namespace Altinn.Platform.Receipt
             else
             {
                 return StatusCode(500, e.Message);
+            }
+        }
+
+        private string GetLanguageFromAltinnPersistenceCookie(string dafaultLang = "nb")
+        {
+            string cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"];
+
+            if (cookieValue == null)
+            {
+                return dafaultLang;
+            }
+
+            switch (cookieValue)
+            {
+                case string val when val.Contains("UL=1033"):
+                    return "en";
+                case string val when val.Contains("UL=1044"):
+                    return "nb";
+                case string val when val.Contains("UL=2068"):
+                    return "nn";
+                default:
+                    return dafaultLang;
             }
         }
     }
