@@ -90,7 +90,7 @@ namespace Altinn.Platform.Receipt
 
                 if (!string.IsNullOrEmpty(profile?.ProfileSettingPreference?.Language))
                 {
-                    profile.ProfileSettingPreference.Language = GetLanguageFromAltinnPersistenceCookie(
+                    profile.ProfileSettingPreference.Language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(
                         _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"],
                         profile.ProfileSettingPreference.Language);
                 }
@@ -158,37 +158,6 @@ namespace Altinn.Platform.Receipt
             {
                 return StatusCode(500, e.Message);
             }
-        }
-
-        /// <summary>
-        /// Gets the language from the Altinn persistence cookie.
-        /// </summary>
-        /// <param name="cookieValue">The value of the Altinn persistence cookie containing language information.</param>
-        /// <param name="defaultLang">The default language to return if the cookie is not found or doesn't contain language information.</param>
-        /// <returns>The language code ('en', 'nb', 'nn') extracted from the Altinn persistence cookie, or the default language if not found.</returns>
-        internal string GetLanguageFromAltinnPersistenceCookie(string cookieValue, string defaultLang = "nb")
-        {
-            if (cookieValue == null)
-            {
-                return defaultLang;
-            }
-
-            if (cookieValue.Contains("UL=1033"))
-            {
-                return "en";
-            }
-
-            if (cookieValue.Contains("UL=1044"))
-            {
-                return "nb";
-            }
-
-            if (cookieValue.Contains("UL=2068"))
-            {
-                return "nn";
-            }
-            
-            return defaultLang;
         }
     }
 }
