@@ -31,7 +31,7 @@ __Process__
     - PlatformSettings__ApiAuthorizationEndpoint=http://host.docker.internal:5101/authorization/api/v1/
     - AuthnGeneralSettings__PlatformEndpoint=http://host.docker.internal:5101/
     ```
-    After adding these the section `altinn_localtest` in the `docker-compose.tml` file of the **`app-localtest`** will look like this:
+    After adding these the section `altinn_localtest` in the `docker-compose.yml` file of the **`app-localtest`** will look like this:
     ```
     altinn_localtest:
         container_name: localtest
