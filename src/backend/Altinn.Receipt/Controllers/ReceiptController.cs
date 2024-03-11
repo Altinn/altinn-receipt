@@ -90,7 +90,9 @@ namespace Altinn.Platform.Receipt
 
                 if (!string.IsNullOrEmpty(profile?.ProfileSettingPreference?.Language))
                 {
-                    profile.ProfileSettingPreference.Language = GetLanguageFromAltinnPersistenceCookie(profile.ProfileSettingPreference.Language);
+                    profile.ProfileSettingPreference.Language = GetLanguageFromAltinnPersistenceCookie(
+                        _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"],
+                        profile.ProfileSettingPreference.Language);
                 }
 
                 return Ok(profile);
@@ -158,13 +160,17 @@ namespace Altinn.Platform.Receipt
             }
         }
 
-        private string GetLanguageFromAltinnPersistenceCookie(string dafaultLang = "nb")
+        /// <summary>
+        /// Gets the language from the Altinn persistence cookie.
+        /// </summary>
+        /// <param name="cookieValue">The value of the Altinn persistence cookie containing language information.</param>
+        /// <param name="defaultLang">The default language to return if the cookie is not found or doesn't contain language information.</param>
+        /// <returns>The language code ('en', 'nb', 'nn') extracted from the Altinn persistence cookie, or the default language if not found.</returns>
+        internal string GetLanguageFromAltinnPersistenceCookie(string cookieValue, string defaultLang = "nb")
         {
-            string cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"];
-
             if (cookieValue == null)
             {
-                return dafaultLang;
+                return defaultLang;
             }
 
             if (cookieValue.Contains("UL=1033"))
@@ -182,7 +188,7 @@ namespace Altinn.Platform.Receipt
                 return "nn";
             }
             
-            return dafaultLang;
+            return defaultLang;
         }
     }
 }
