@@ -26,7 +26,7 @@ __Prerequisite__
 
 __Process__
 
-1. **`app-localtest`**: Before starting `app-localtest` add these below lines to the `environment` section of `altinn_localtest` in the `docker-compose.tml` file of the **`app-localtest`**:
+1. **`app-localtest`**: Before starting `app-localtest` add these below lines to the `environment` section of `altinn_localtest` in the `docker-compose.yml` file of the **`app-localtest`**:
     ```
     - PlatformSettings__ApiAuthorizationEndpoint=http://host.docker.internal:5101/authorization/api/v1/
     - AuthnGeneralSettings__PlatformEndpoint=http://host.docker.internal:5101/
