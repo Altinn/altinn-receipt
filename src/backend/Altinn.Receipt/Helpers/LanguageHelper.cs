@@ -13,7 +13,7 @@ public static class LanguageHelper
     /// <returns>The language code ('en', 'nb', 'nn') extracted from the Altinn persistence cookie, or the default language if not found.</returns>
     public static string GetLanguageFromAltinnPersistenceCookie(string cookieValue, string defaultLang = "nb")
     {
-        if (cookieValue == null)
+        if (string.IsNullOrEmpty(cookieValue))
         {
             return defaultLang;
         }
