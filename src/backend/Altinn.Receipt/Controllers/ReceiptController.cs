@@ -88,14 +88,32 @@ namespace Altinn.Platform.Receipt
                 int userId = int.Parse(userIdString);
                 UserProfile profile = await _profile.GetUser(userId);
 
-                if (!string.IsNullOrEmpty(profile?.ProfileSettingPreference?.Language))
+                return Ok(profile);
+            }
+            catch (PlatformHttpException e)
+            {
+                return HandlePlatformHttpException(e);
+            }
+        }
+
+        /// <summary>
+        /// Gets the language from cookie for current user
+        /// </summary>
+        /// <returns>The language or 404(if not found)</returns>
+        [HttpGet]
+        [Route("receipt/api/v1/users/current/language")]
+        public IActionResult GetCurrentUserLanguage()
+        {
+            string language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(_httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"]);
+
+            try
+            {
+                if (string.IsNullOrEmpty(language))
                 {
-                    profile.ProfileSettingPreference.Language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(
-                        _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"],
-                        profile.ProfileSettingPreference.Language);
+                    return NoContent();
                 }
 
-                return Ok(profile);
+                return Ok(new { language });
             }
             catch (PlatformHttpException e)
             {

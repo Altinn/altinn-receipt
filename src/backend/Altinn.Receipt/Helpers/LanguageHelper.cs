@@ -9,13 +9,12 @@ public static class LanguageHelper
     /// Gets the language from the Altinn persistence cookie.
     /// </summary>
     /// <param name="cookieValue">The value of the Altinn persistence cookie containing language information.</param>
-    /// <param name="defaultLang">The default language to return if the cookie is not found or doesn't contain language information.</param>
-    /// <returns>The language code ('en', 'nb', 'nn') extracted from the Altinn persistence cookie, or the default language if not found.</returns>
-    public static string GetLanguageFromAltinnPersistenceCookie(string cookieValue, string defaultLang = "nb")
+    /// <returns>The language code ('en', 'nb', 'nn') extracted from the Altinn persistence cookie, or empty string if language not found.</returns>
+    public static string GetLanguageFromAltinnPersistenceCookie(string cookieValue)
     {
         if (string.IsNullOrEmpty(cookieValue))
         {
-            return defaultLang;
+            return string.Empty;
         }
 
         if (cookieValue.Contains("UL=1033"))
@@ -33,6 +32,6 @@ public static class LanguageHelper
             return "nn";
         }
         
-        return defaultLang;
+        return string.Empty;
     }
 }

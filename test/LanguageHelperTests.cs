@@ -5,11 +5,11 @@ namespace Altinn.Platform.Receipt.Helpers.Tests
     public class LanguageHelperTests
     {
         [Fact]
-        public void GetLanguageFromAltinnPersistenceCookie_NullCookie_ReturnsDefaultLanguage()
+        public void GetLanguageFromAltinnPersistenceCookie_NullCookie_ReturnsEmptyString()
         {
             // Arrange
             string cookieValue = null;
-            string expectedLanguage = "nb"; // Default language is 'nb'
+            string expectedLanguage = string.Empty; // Default is empty string
 
             // Act
             string result = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(cookieValue);
@@ -61,11 +61,11 @@ namespace Altinn.Platform.Receipt.Helpers.Tests
         }
 
         [Fact]
-        public void GetLanguageFromAltinnPersistenceCookie_UnsupportedLanguage_ReturnsDefaultLanguage()
+        public void GetLanguageFromAltinnPersistenceCookie_UnsupportedLanguage_ReturnsEmptyString()
         {
             // Arrange
             string cookieValue = "UL=9999"; // Cookie containing unsupported language
-            string expectedLanguage = "nb"; // Default language is 'nb'
+            string expectedLanguage = string.Empty; // Default is empty string
 
             // Act
             string result = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(cookieValue);
