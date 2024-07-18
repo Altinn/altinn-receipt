@@ -5,6 +5,8 @@ on:
     paths:
       - '.deploy/**'
       - '.github/workflows/build-and-deploy.yaml'
+      - 'src/**'
+      - 'Dockerfile'
 
 permissions:
       id-token: write
