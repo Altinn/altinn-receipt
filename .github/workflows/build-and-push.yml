@@ -18,7 +18,7 @@ env:
 
 jobs:
   docker-build-push:
-    name: Build and push eid logger image
+    name: Build and push Docker image
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.set_short_sha.outputs.short_sha }}
