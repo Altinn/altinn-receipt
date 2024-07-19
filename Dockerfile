@@ -9,12 +9,8 @@ COPY src/frontend/.yarnrc.yml .
 
 COPY src/frontend/ ./
 
-# Install
-RUN corepack enable
-RUN yarn --immutable
-
-# Build runtime
-RUN yarn run build
+# Install dependencies and build the frontend
+RUN corepack enable && yarn --immutable && yarn run build
 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.303-alpine3.20 AS build
