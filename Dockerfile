@@ -1,4 +1,4 @@
-FROM node:alpine3.20 AS build-receipt-frontend
+FROM node:current-alpine3.20 AS build-receipt-frontend
 
 WORKDIR /build
 
@@ -9,8 +9,12 @@ COPY src/frontend/.yarnrc.yml .
 
 COPY src/frontend/ ./
 
-# Install dependencies and build the frontend
-RUN corepack enable && yarn --version && yarn --immutable && yarn run build
+# Install
+RUN corepack enable
+RUN yarn --immutable
+
+# Build runtime
+RUN yarn run build
 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.303-alpine3.20 AS build
