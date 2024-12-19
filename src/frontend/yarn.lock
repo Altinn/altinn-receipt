@@ -2703,12 +2703,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:19.0.2":
-  version: 19.0.2
-  resolution: "@types/react-dom@npm:19.0.2"
-  peerDependencies:
-    "@types/react": ^19.0.0
-  checksum: d2ae81ec0b8eee7a4bf31918796fdaa34e8db68f69682163bc212d759de76783e6ffcc02c02722dcf508429067148841e6da81414cc730ca2a28c9c2b350c880
+"@types/react-dom@npm:18.3.2":
+  version: 18.3.2
+  resolution: "@types/react-dom@npm:18.3.2"
+  dependencies:
+    "@types/react": ^18
+  checksum: 7fd2bb31152c302febc8e18451f8351d6e48ee57dcf74f9b974a71f4f462945b9f1d8d96bed998c9e6aafa2b314fe64fdc210131c707539d3fdc9279ab73eb0e
   languageName: node
   linkType: hard
 
@@ -2731,12 +2731,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@types/react@npm:19.0.1"
+"@types/react@npm:18.3.14":
+  version: 18.3.14
+  resolution: "@types/react@npm:18.3.14"
   dependencies:
+    "@types/prop-types": "*"
     csstype: ^3.0.2
-  checksum: e5e05cdf5fc53804e94548ca4e139102fffaab95d4c19be821d30d81dbab75ca3e30b72f2e2e750b90fcb535058cb694c4403402f14eb8a19a1282629c8222d8
+  checksum: 40e2112301d784106bdc713e3eb925c8c710e676a3a31ef65c76ca7df8529cdde3dda2db6e0f6f1878253a79bc6cf87a461aa114bd8364f453bdd2be52c175e5
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^18":
+  version: 18.3.17
+  resolution: "@types/react@npm:18.3.17"
+  dependencies:
+    "@types/prop-types": "*"
+    csstype: ^3.0.2
+  checksum: 8107f6f5cc8706a3814e6c927e135ce0c7b40a6d9ae2b8dfb071fee03c6f714456041ecdf92dece599da0db8be7f56f6dc6353d4701f47a04772c7ec0cbb0b59
   languageName: node
   linkType: hard
 
@@ -10538,8 +10549,8 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/jsdom": 21.1.7
     "@types/marked": 6.0.0
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.14
+    "@types/react-dom": 18.3.2
     "@typescript-eslint/eslint-plugin": 8.18.0
     "@typescript-eslint/parser": 8.18.0
     altinn-designsystem: 4.2.0
