@@ -70,16 +70,11 @@ function Receipt(props: WithStyles<typeof styles>) {
   const isPrint = useMediaQuery('print');
 
   const getTitle = (): React.ReactNode => {
-    const applicationTitle = getAppName(
-      textResources,
-      application,
-      user.profileSettingPreference.language,
-    );
+    const applicationTitle = getAppName(textResources, application, user.profileSettingPreference.language);
 
     return (
       <>
-        <span>{applicationTitle}</span>{' '}
-        {getParsedLanguageFromKey('receipt_platform.is_sent', language)}
+        <span>{applicationTitle}</span>{' '}{instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt.is_sent', language)}
       </>
     );
   };
@@ -126,11 +121,11 @@ function Receipt(props: WithStyles<typeof styles>) {
         party={party || ({} as IParty)}
         userParty={user ? user.party : ({} as IParty)}
         logoutText={getParsedLanguageFromKey(
-          'receipt_platform.log_out',
+          'receipt.log_out',
           language,
         )}
         ariaLabelIcon={getLanguageFromKey(
-          'receipt_platform.profile_icon_aria_label',
+          'receipt.profile_icon_aria_label',
           language,
         )}
       />
@@ -161,7 +156,7 @@ function Receipt(props: WithStyles<typeof styles>) {
         printView={true}
         closeButtonOutsideModal={true}
         headerText={getParsedLanguageFromKey(
-          'receipt_platform.receipt',
+          'receipt.receipt',
           language,
         )}
       >
@@ -171,11 +166,11 @@ function Receipt(props: WithStyles<typeof styles>) {
           <AltinnReceipt
             title={getTitle()}
             body={getParsedLanguageFromKey(
-              'receipt_platform.helper_text',
+              instance.isA2Lookup ? 'receipt.body_a2lookup' : 'receipt.body',
               language,
             )}
             collapsibleTitle={getParsedLanguageFromKey(
-              'receipt_platform.attachments',
+              'receipt.attachments',
               language,
             )}
             attachmentGroupings={getAttachmentGroupings(
@@ -192,10 +187,7 @@ function Receipt(props: WithStyles<typeof styles>) {
               textResources,
               user.profileSettingPreference.language,
             )}
-            titleSubmitted={getParsedLanguageFromKey(
-              'receipt_platform.sent_content',
-              language,
-            )}
+            titleSubmitted={instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt.title_submitted', language)}
             pdf={pdf || null}
           />
         )}

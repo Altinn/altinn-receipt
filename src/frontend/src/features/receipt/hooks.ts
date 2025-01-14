@@ -38,9 +38,9 @@ const mergeLanguageWithOverrides = ({
   languageCode = 'nb',
 }: IMergeLanguageWithOverrides) => {
   const originalLanguage = getLanguageFromCode(languageCode);
-  const keyPrefix = 'receipt_platform.';
+  const keyPrefix = 'receipt.';
   const instanceContext: IInstanceContext = buildInstanceContext(instance);
-
+  
   const dataSources: IDataSources = {
     instanceContext,
   };
@@ -69,7 +69,7 @@ const mergeLanguageWithOverrides = ({
   );
 
   return {
-    ...originalLanguage.receipt_platform,
+    ...originalLanguage.receipt,
     ...newLanguage,
   };
 };
@@ -87,7 +87,7 @@ export const useLanguageWithOverrides = ({
 }: IUseLanguageWithOverrides) => {
 
   const [language, setLanguage] = useState({
-    receipt_platform: getLanguageFromCode(user?.profileSettingPreference.language ?? '').receipt_platform
+    receipt: getLanguageFromCode(user?.profileSettingPreference.language ?? '').receipt
   });
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export const useLanguageWithOverrides = ({
           instance,
         });
         setLanguage({
-          receipt_platform: mergedLanguage,
+          receipt: mergedLanguage,
         });
       } catch (error) {
         console.error(error);
@@ -203,6 +203,17 @@ export const useFetchInitialData = () => {
         langs.unshift(userResponse.data.profileSettingPreference.language); // Putting the current language in the beginning.
 
         const app = instanceResponse.data.instance.appId.split('/')[1];
+
+        instanceResponse.data.instance.isA2Lookup = false;
+        if (instanceResponse.data.instance.dataValues != null) {
+          Object.keys(instanceResponse.data.instance.dataValues).forEach((key, value) => {
+            if(key == 'A2ServiceType' && instanceResponse.data.instance.dataValues[key] == 'Lookup')
+            {
+              instanceResponse.data.instance.isA2Lookup = true;
+            }
+          });
+        }
+
         const [applicationResponse, appTextResourcesResponse] =
           await Promise.all([
             Axios.get<IApplication>(
