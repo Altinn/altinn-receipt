@@ -40,7 +40,6 @@ const mergeLanguageWithOverrides = ({
   const originalLanguage = getLanguageFromCode(languageCode);
   const keyPrefix = 'receipt_platform.';
   const instanceContext: IInstanceContext = buildInstanceContext(instance);
-  
   const dataSources: IDataSources = {
     instanceContext,
   };
@@ -69,7 +68,7 @@ const mergeLanguageWithOverrides = ({
   );
 
   return {
-    ...originalLanguage.receipt,
+    ...originalLanguage.receipt_platform,
     ...newLanguage,
   };
 };
@@ -87,7 +86,7 @@ export const useLanguageWithOverrides = ({
 }: IUseLanguageWithOverrides) => {
 
   const [language, setLanguage] = useState({
-    receipt: getLanguageFromCode(user?.profileSettingPreference.language ?? '').receipt
+    receipt_platform: getLanguageFromCode(user?.profileSettingPreference.language ?? '').receipt_platform
   });
 
   useEffect(() => {
@@ -99,7 +98,7 @@ export const useLanguageWithOverrides = ({
           instance,
         });
         setLanguage({
-          receipt: mergedLanguage,
+          receipt_platform: mergedLanguage,
         });
       } catch (error) {
         console.error(error);
