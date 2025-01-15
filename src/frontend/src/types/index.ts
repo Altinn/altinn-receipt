@@ -93,6 +93,8 @@ export interface IInstance {
   status: IInstanceStatus;
   title: ITitle;
   visibleAfter?: Date;
+  dataValues?: any;
+  isA2Lookup?: boolean;
 }
 
 export interface IInstanceStatus {

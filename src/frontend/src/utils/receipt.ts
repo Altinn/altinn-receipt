@@ -35,7 +35,12 @@ export const getInstanceMetaDataObject = (
     dateSubmitted = moment(instance.status.archived).format('DD.MM.YYYY / HH:mm');
   }
 
-  obj[getLanguageFromKey('receipt_platform.date_sent', language)] = dateSubmitted;
+  if (instance.isA2Lookup){
+    obj[getLanguageFromKey('receipt_platform.date_archived', language)] = dateSubmitted;
+  } else {
+    obj[getLanguageFromKey('receipt_platform.date_sent', language)] = dateSubmitted;
+  }
+  
   let sender = '';
 
   if (party && party.ssn) {
@@ -44,13 +49,11 @@ export const getInstanceMetaDataObject = (
     sender = `${party.orgNumber}-${party.name}`;
   }
 
-  obj[getLanguageFromKey('receipt_platform.sender', language)] = sender;
-  obj[getLanguageFromKey('receipt_platform.receiver', language)] = getAppReceiver(
-    textResources,
-    organisations,
-    instance.org,
-    userLanguage,
-  );
+  if (!instance.isA2Lookup) {
+    obj[getLanguageFromKey('receipt_platform.sender', language)] = sender;
+    obj[getLanguageFromKey('receipt_platform.receiver', language)] = getAppReceiver(textResources, organisations, instance.org, userLanguage);
+  }
+
   obj[getLanguageFromKey('receipt_platform.reference_number', language)] = getArchiveRef();
 
   return obj;

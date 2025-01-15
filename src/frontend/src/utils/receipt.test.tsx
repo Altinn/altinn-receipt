@@ -37,7 +37,7 @@ describe('utils > receipt', () => {
       date_sent: 'Dato sendt',
       sender: 'Avsender',
       receiver: 'Mottaker',
-      reference_number: 'Referansenummer',
+      ref_num: 'Referansenummer',
     },
   };
 

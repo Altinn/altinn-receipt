@@ -70,16 +70,11 @@ function Receipt(props: WithStyles<typeof styles>) {
   const isPrint = useMediaQuery('print');
 
   const getTitle = (): React.ReactNode => {
-    const applicationTitle = getAppName(
-      textResources,
-      application,
-      user.profileSettingPreference.language,
-    );
+    const applicationTitle = getAppName(textResources, application, user.profileSettingPreference.language);
 
     return (
       <>
-        <span>{applicationTitle}</span>{' '}
-        {getParsedLanguageFromKey('receipt_platform.is_sent', language)}
+        <span>{applicationTitle}</span>{' '}{instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.is_sent', language)}
       </>
     );
   };
@@ -171,7 +166,7 @@ function Receipt(props: WithStyles<typeof styles>) {
           <AltinnReceipt
             title={getTitle()}
             body={getParsedLanguageFromKey(
-              'receipt_platform.helper_text',
+              instance.isA2Lookup ? 'receipt_platform.helper_text_a2lookup' : 'receipt_platform.helper_text',
               language,
             )}
             collapsibleTitle={getParsedLanguageFromKey(
@@ -192,10 +187,7 @@ function Receipt(props: WithStyles<typeof styles>) {
               textResources,
               user.profileSettingPreference.language,
             )}
-            titleSubmitted={getParsedLanguageFromKey(
-              'receipt_platform.sent_content',
-              language,
-            )}
+            titleSubmitted={instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.sent_content', language)}
             pdf={pdf || null}
           />
         )}
