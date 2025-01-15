@@ -33,7 +33,7 @@ describe('utils > receipt', () => {
   } as IParty;
 
   const language: ILanguage = {
-    receipt: {
+    receipt_platform: {
       date_sent: 'Dato sendt',
       sender: 'Avsender',
       receiver: 'Mottaker',
