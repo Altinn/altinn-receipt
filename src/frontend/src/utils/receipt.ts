@@ -36,9 +36,9 @@ export const getInstanceMetaDataObject = (
   }
 
   if (instance.isA2Lookup){
-    obj[getLanguageFromKey('receipt.date_archived', language)] = dateSubmitted;
+    obj[getLanguageFromKey('receipt_platform.date_archived', language)] = dateSubmitted;
   } else {
-    obj[getLanguageFromKey('receipt.date_sent', language)] = dateSubmitted;
+    obj[getLanguageFromKey('receipt_platform.date_sent', language)] = dateSubmitted;
   }
   
   let sender = '';
@@ -50,11 +50,11 @@ export const getInstanceMetaDataObject = (
   }
 
   if (!instance.isA2Lookup) {
-    obj[getLanguageFromKey('receipt.sender', language)] = sender;
-    obj[getLanguageFromKey('receipt.receiver', language)] = getAppReceiver(textResources, organisations, instance.org, userLanguage);
+    obj[getLanguageFromKey('receipt_platform.sender', language)] = sender;
+    obj[getLanguageFromKey('receipt_platform.receiver', language)] = getAppReceiver(textResources, organisations, instance.org, userLanguage);
   }
 
-  obj[getLanguageFromKey('receipt.ref_num', language)] = getArchiveRef();
+  obj[getLanguageFromKey('receipt_platform.reference_number', language)] = getArchiveRef();
 
   return obj;
 };

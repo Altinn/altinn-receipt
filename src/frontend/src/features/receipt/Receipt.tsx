@@ -74,7 +74,7 @@ function Receipt(props: WithStyles<typeof styles>) {
 
     return (
       <>
-        <span>{applicationTitle}</span>{' '}{instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt.is_sent', language)}
+        <span>{applicationTitle}</span>{' '}{instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.is_sent', language)}
       </>
     );
   };
@@ -121,11 +121,11 @@ function Receipt(props: WithStyles<typeof styles>) {
         party={party || ({} as IParty)}
         userParty={user ? user.party : ({} as IParty)}
         logoutText={getParsedLanguageFromKey(
-          'receipt.log_out',
+          'receipt_platform.log_out',
           language,
         )}
         ariaLabelIcon={getLanguageFromKey(
-          'receipt.profile_icon_aria_label',
+          'receipt_platform.profile_icon_aria_label',
           language,
         )}
       />
@@ -156,7 +156,7 @@ function Receipt(props: WithStyles<typeof styles>) {
         printView={true}
         closeButtonOutsideModal={true}
         headerText={getParsedLanguageFromKey(
-          'receipt.receipt',
+          'receipt_platform.receipt',
           language,
         )}
       >
@@ -166,11 +166,11 @@ function Receipt(props: WithStyles<typeof styles>) {
           <AltinnReceipt
             title={getTitle()}
             body={getParsedLanguageFromKey(
-              instance.isA2Lookup ? 'receipt.body_a2lookup' : 'receipt.body',
+              instance.isA2Lookup ? 'receipt_platform.helper_text_a2lookup' : 'receipt_platform.helper_text',
               language,
             )}
             collapsibleTitle={getParsedLanguageFromKey(
-              'receipt.attachments',
+              'receipt_platform.attachments',
               language,
             )}
             attachmentGroupings={getAttachmentGroupings(
@@ -187,7 +187,7 @@ function Receipt(props: WithStyles<typeof styles>) {
               textResources,
               user.profileSettingPreference.language,
             )}
-            titleSubmitted={instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt.title_submitted', language)}
+            titleSubmitted={instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.sent_content', language)}
             pdf={pdf || null}
           />
         )}

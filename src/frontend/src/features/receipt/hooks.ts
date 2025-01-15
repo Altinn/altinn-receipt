@@ -38,7 +38,7 @@ const mergeLanguageWithOverrides = ({
   languageCode = 'nb',
 }: IMergeLanguageWithOverrides) => {
   const originalLanguage = getLanguageFromCode(languageCode);
-  const keyPrefix = 'receipt.';
+  const keyPrefix = 'receipt_platform.';
   const instanceContext: IInstanceContext = buildInstanceContext(instance);
   
   const dataSources: IDataSources = {

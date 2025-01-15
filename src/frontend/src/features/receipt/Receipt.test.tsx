@@ -85,7 +85,7 @@ describe('Receipt', () => {
       resources: [
         ...texts.resources,
         {
-          id: 'receipt.helper_text',
+          id: 'receipt_platform.helper_text',
           value: 'Help text override',
         },
       ],
@@ -106,7 +106,7 @@ describe('Receipt', () => {
       resources: [
         ...texts.resources,
         {
-          id: 'receipt.helper_text',
+          id: 'receipt_platform.helper_text',
           value: 'Help text override with instanceOwnerPartyId variable: {0}',
           variables: [
             {
@@ -133,7 +133,7 @@ describe('Receipt', () => {
       resources: [
         ...texts.resources,
         {
-          id: 'receipt.helper_text',
+          id: 'receipt_platform.helper_text',
           value: `Help text with [a link to altinn](https://altinn.no)`,
         },
       ],
