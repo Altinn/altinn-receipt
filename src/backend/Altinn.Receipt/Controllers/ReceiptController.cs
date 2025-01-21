@@ -70,7 +70,6 @@ namespace Altinn.Platform.Receipt
         public IActionResult Index(int instanceOwnerId, Guid instanceId)
         {
             _logger.LogInformation("Getting receipt for: {instanceOwnerId} for instance with id: {instanceId}", instanceOwnerId, instanceId);
-            Response.Cookies.Append("AltinnStudioRuntime", TokenHelper.GetUserToken());
             return View("receipt");
         }
 
