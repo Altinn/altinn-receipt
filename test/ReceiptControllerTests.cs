@@ -247,6 +247,23 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
         Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
     }
 
+    [Fact]
+    public async Task GetAttachmentGroupsToHide_TC01_ReturnsContent()
+    {
+        _profileMock.Setup(p => p.GetUser(It.IsAny<int>())).ReturnsAsync(UserProfiles.User1);
+
+        HttpClient client = GetTestClient(_registerMock, _storageMock, _profileMock);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetUserToken(3));
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        string url = $"{BasePath}application/attachmentgroupstohide";
+
+        HttpResponseMessage response = await client.GetAsync(url);
+        string actual = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+        Assert.IsType<string>(actual);
+    }
+
     private static string GetUserToken(int userId)
     {
         List<Claim> claims = new List<Claim>();
