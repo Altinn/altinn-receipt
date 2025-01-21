@@ -45,3 +45,8 @@ export function getAltinnUrl() {
   }
   return `${window.location.origin}/`;
 }
+
+export function getAttachmentGroupingsToHide() {
+  return `${window.location.origin}/receipt/api/v1/application/attachmentgroupstohide`;
+}
+

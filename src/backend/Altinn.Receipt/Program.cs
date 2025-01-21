@@ -152,6 +152,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
     services.AddControllersWithViews();
     services.AddHealthChecks().AddCheck<HealthCheck>("receipt_health_check");
     GeneralSettings generalSettings = config.GetSection("GeneralSettings").Get<GeneralSettings>();
+    services.Configure<GeneralSettings>(config.GetSection("GeneralSettings"));
 
     services.AddAuthentication(JwtCookieDefaults.AuthenticationScheme)
         .AddJwtCookie(JwtCookieDefaults.AuthenticationScheme, options =>
