@@ -172,7 +172,8 @@ namespace Altinn.Platform.Receipt
         [Route("receipt/api/v1/application/attachmentgroupstohide")]
         public ActionResult GetAttachmentGroupsToHide()
         {
-            return Ok(new { _generalSettings.Value.AttachmentGroupsToHide });
+            string attachmentgroupstohide = _generalSettings.Value.AttachmentGroupsToHide;
+            return Ok(new { attachmentgroupstohide });
         }
 
         private ActionResult HandlePlatformHttpException(PlatformHttpException e)

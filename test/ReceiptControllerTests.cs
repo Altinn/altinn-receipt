@@ -259,7 +259,7 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
 
         HttpResponseMessage response = await client.GetAsync(url);
         string actual = await response.Content.ReadAsStringAsync();
-        string expected = "{\"attachmentGroupsToHide\":\"group.formdatahtml;group.formdatasource;group.signaturesource;group.paymentsource;group.activities\"}";
+        string expected = "{\"attachmentgroupstohide\":\"group.formdatahtml;group.formdatasource;group.signaturesource;group.paymentsource;group.activities\"}";
 
         Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(expected, actual);

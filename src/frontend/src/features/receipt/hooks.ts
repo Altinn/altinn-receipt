@@ -233,7 +233,10 @@ export const useFetchInitialData = () => {
             fetchTextResources(instanceResponse.data.instance.org, app, langs),
           ]);
 
-          applicationResponse.data.attachmentGroupsToHide = attachmentGroupsToHide.data.attachmentgroupstohide.split(';');
+          if (attachmentGroupsToHide.data.attachmentgroupstohide != null)
+          {
+            applicationResponse.data.attachmentGroupsToHide = attachmentGroupsToHide.data.attachmentgroupstohide.split(';');
+          }
 
         setApplication(applicationResponse.data);
         setTextResources(appTextResourcesResponse.response.data.resources);
