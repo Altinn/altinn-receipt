@@ -67,11 +67,13 @@ export const getAttachmentGroupings = (
 
   attachments.forEach((attachment: IAttachment) => {
     const grouping = getGroupingForAttachment(attachment, applicationMetadata);
-    const title = getTextResourceByKey(grouping, textResources);
-    if (!attachmentGroupings[title]) {
-      attachmentGroupings[title] = [];
+    if (grouping == null || applicationMetadata.attachmentGroupsToHide == null || !applicationMetadata.attachmentGroupsToHide.includes(grouping)){
+      const title = getTextResourceByKey(grouping, textResources);
+      if (!attachmentGroupings[title]) {
+        attachmentGroupings[title] = [];
+      }
+      attachmentGroupings[title].push(attachment);
     }
-    attachmentGroupings[title].push(attachment);
   });
 
   return attachmentGroupings;

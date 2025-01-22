@@ -14,6 +14,7 @@ export interface IApplication {
   partyTypesAllowed: IPartyTypesAllowed;
   title: ITitle;
   onEntry?: IOnEntry;
+  attachmentGroupsToHide?: string[];
 }
 
 
@@ -208,6 +209,10 @@ export interface IProfileSettingPreference {
 
 export interface IUserCookieLanguage {
   language: string;
+}
+
+export interface IAttachmentGroupsToHide {
+  attachmentgroupstohide: string;
 }
 
 export interface ISelfLinks {

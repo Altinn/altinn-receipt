@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Altinn.Platform.Profile.Models;
+using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Helpers;
 using Altinn.Platform.Receipt.Model;
 using Altinn.Platform.Receipt.Services.Interfaces;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Altinn.Platform.Receipt
 {
@@ -30,6 +32,7 @@ namespace Altinn.Platform.Receipt
         private readonly IProfile _profile;
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOptions<GeneralSettings> _generalSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReceiptController"/> class
@@ -39,18 +42,21 @@ namespace Altinn.Platform.Receipt
         /// <param name="profile">the profile service</param>
         /// <param name="logger">the logger</param>
         /// <param name="httpContextAccessor">the HTTP context accessor</param>
+        /// <param name="generalSettings">The application general settings</param>
         public ReceiptController(
             IRegister register,
             IStorage storage,
             IProfile profile,
             ILogger<ReceiptController> logger,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<GeneralSettings> generalSettings)
         {
             _register = register;
             _storage = storage;
             _profile = profile;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _generalSettings = generalSettings;
         }
 
         /// <summary>
@@ -156,6 +162,18 @@ namespace Altinn.Platform.Receipt
             }
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets the attachment groups to hide
+        /// </summary>
+        /// <returns>The attachment groups</returns>
+        [HttpGet]
+        [Route("receipt/api/v1/application/attachmentgroupstohide")]
+        public ActionResult GetAttachmentGroupsToHide()
+        {
+            string attachmentgroupstohide = _generalSettings.Value.AttachmentGroupsToHide;
+            return Ok(new { attachmentgroupstohide });
         }
 
         private ActionResult HandlePlatformHttpException(PlatformHttpException e)

@@ -12,6 +12,7 @@ import type {
   IExtendedInstance,
   ITextResource,
   IAltinnOrgs,
+  IAttachmentGroupsToHide,
 } from 'src/types';
 
 import {
@@ -21,6 +22,7 @@ import {
   getUserLanguageUrl,
   getExtendedInstanceUrl,
   getTextResourceUrl,
+  getAttachmentGroupingsToHide,
 } from 'src/utils/receiptUrlHelper';
 import { buildInstanceContext } from 'src/utils/instanceContext';
 import { languageLookup, getLanguageFromCode } from 'src/language';
@@ -132,6 +134,7 @@ export const useFetchInitialData = () => {
     const languageAbortController = new AbortController();
     const appAbortController = new AbortController();
     const textAbortController = new AbortController();
+    const attachmentgroupsToHideAbortController = new AbortController();
 
     const fetchTextResources = (
       org: string,
@@ -175,7 +178,7 @@ export const useFetchInitialData = () => {
 
     const fetchInitialData = async () => {
       try {
-        const [instanceResponse, orgResponse, userResponse, userLanguage] = await Promise.all(
+        const [instanceResponse, orgResponse, userResponse, userLanguage, attachmentGroupsToHide] = await Promise.all(
           [
             Axios.get<IExtendedInstance>(getExtendedInstanceUrl(), {
               signal: instanceAbortController.signal,
@@ -189,11 +192,14 @@ export const useFetchInitialData = () => {
             Axios.get<IUserCookieLanguage>(getUserLanguageUrl(), {
               signal: languageAbortController.signal,
             }),
+            Axios.get<IAttachmentGroupsToHide>(getAttachmentGroupingsToHide(), {
+              signal: attachmentgroupsToHideAbortController.signal,
+            }),
           ],
         );
 
         if (userLanguage.status === 200 && userLanguage.data.language != "") {
-          userResponse.data.profileSettingPreference.language = userLanguage.data.language
+          userResponse.data.profileSettingPreference.language = userLanguage.data.language;
         }
 
         const langs = Object.keys(languageLookup).filter(
@@ -226,6 +232,11 @@ export const useFetchInitialData = () => {
             ),
             fetchTextResources(instanceResponse.data.instance.org, app, langs),
           ]);
+
+          if (attachmentGroupsToHide.data.attachmentgroupstohide != null)
+          {
+            applicationResponse.data.attachmentGroupsToHide = attachmentGroupsToHide.data.attachmentgroupstohide.split(';');
+          }
 
         setApplication(applicationResponse.data);
         setTextResources(appTextResourcesResponse.response.data.resources);

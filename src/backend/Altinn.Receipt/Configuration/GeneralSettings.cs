@@ -19,4 +19,9 @@ public class GeneralSettings
     /// Name of the cookie for runtime
     /// </summary>
     public string RuntimeCookieName { get; set; }
+
+    /// <summary>
+    /// The attachment groups to hide
+    /// </summary>
+    public string AttachmentGroupsToHide { get; set; }
 }
