@@ -11049,7 +11049,7 @@ __metadata:
     ts-jest: 29.2.5
     ts-loader: 9.5.1
     typescript: 4.9.5
-    undici: ^7.2.3
+    undici: ^7.3.0
     webpack: 5.97.1
     webpack-cli: 6.0.1
     webpack-dev-server: 5.2.0
@@ -12926,7 +12926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^7.2.3":
+"undici@npm:^7.3.0":
   version: 7.3.0
   resolution: "undici@npm:7.3.0"
   checksum: 5cf37a51d1449370c7c936fdfefb6be907a59af2829520475a837e81fe709771cf678428fe6beb4c80b168da0570496d13b2ecbf6f52211f844b2a360c6fc6e0
