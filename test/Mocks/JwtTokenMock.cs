@@ -36,7 +36,7 @@ namespace Altinn.Platform.Receipt.Tests.Mocks
 
         private static SigningCredentials GetSigningCredentials()
         {
-            X509Certificate2 cert = new X509Certificate2("selfSignedTestCertificate.pfx", "qwer1234");
+            X509Certificate2 cert = X509CertificateLoader.LoadPkcs12FromFile("selfSignedTestCertificate.pfx", "qwer1234");
             return new X509SigningCredentials(cert, SecurityAlgorithms.RsaSha256);
         }
     }
