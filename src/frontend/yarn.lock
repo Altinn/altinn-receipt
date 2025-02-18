@@ -5469,18 +5469,6 @@ __metadata:
   linkType: hard
 
 "dompurify@npm:*":
-  version: 3.2.2
-  resolution: "dompurify@npm:3.2.2"
-  dependencies:
-    "@types/trusted-types": ^2.0.7
-  dependenciesMeta:
-    "@types/trusted-types":
-      optional: true
-  checksum: e4831baa447cc7ed4350ede29f7ec4d2614a59287b6916f3691d287dd4a1c45eb3ce9cb26058edf37b3f2648bbf0a3ca5fb3b74c2f78bdcf6ebb7716c2f14252
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:3.2.4":
   version: 3.2.4
   resolution: "dompurify@npm:3.2.4"
   dependencies:
@@ -11289,7 +11277,6 @@ __metadata:
     classnames: 2.5.1
     cross-env: 7.0.3
     css-loader: 7.1.2
-    dompurify: 3.2.4
     eslint: 9.20.0
     eslint-config-prettier: 10.0.1
     eslint-import-resolver-typescript: 3.7.0
