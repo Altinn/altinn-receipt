@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,11 +11,12 @@ using Altinn.Platform.Receipt.Filters;
 using Altinn.Platform.Receipt.Health;
 using Altinn.Platform.Receipt.Services;
 using Altinn.Platform.Receipt.Services.Interfaces;
-using Altinn.Platform.Telemetry;
+using Altinn.Platform.Receipt.Telemetry;
 
 using AltinnCore.Authentication.JwtCookie;
 
 using Azure.Identity;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Azure.Security.KeyVault.Secrets;
 
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
@@ -30,6 +32,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 ILogger logger;
 
@@ -39,11 +45,11 @@ string applicationInsightsConnectionString = string.Empty;
 
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigureSetupLogging();
+ConfigureWebHostCreationLogging();
 
 await SetConfigurationProviders(builder.Configuration);
 
-ConfigureLogging(builder.Logging);
+ConfigureApplicationLogging(builder.Logging);
 
 ConfigureServices(builder.Services, builder.Configuration);
 
@@ -53,7 +59,16 @@ Configure(builder.Configuration);
 
 app.Run();
 
-void ConfigureSetupLogging()
+void ConfigureApplicationLogging(ILoggingBuilder logging)
+{
+    logging.AddOpenTelemetry(builder =>
+    {
+        builder.IncludeFormattedMessage = true;
+        builder.IncludeScopes = true;
+    });
+}
+
+void ConfigureWebHostCreationLogging()
 {
     var logFactory = LoggerFactory.Create(builder =>
     {
@@ -112,43 +127,59 @@ async Task ConnectToKeyVaultAndSetApplicationInsights(ConfigurationManager confi
     }
 }
 
-void ConfigureLogging(ILoggingBuilder logging)
+void AddAzureMonitorTelemetryExporters(IServiceCollection services, string applicationInsightsConnectionString)
 {
-    // The default ASP.NET Core project templates call CreateDefaultBuilder, which adds the following logging providers:
-    // Console, Debug, EventSource
-    // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.1
-
-    // Clear log providers
-    logging.ClearProviders();
-
-    // Setup up application insight if ApplicationInsightsConnectionString is available
-    if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
+    services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddAzureMonitorLogExporter(o =>
     {
-        // Add application insights https://docs.microsoft.com/en-us/azure/azure-monitor/app/ilogger
-        logging.AddApplicationInsights(
-            configureTelemetryConfiguration: (config) => config.ConnectionString = applicationInsightsConnectionString,
-            configureApplicationInsightsLoggerOptions: (options) => { });
-
-        // Optional: Apply filters to control what logs are sent to Application Insights.
-        // The following configures LogLevel Information or above to be sent to
-        // Application Insights for all categories.
-        logging.AddFilter<Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Warning);
-
-        // Adding the filter below to ensure logs of all severity from Program.cs
-        // is sent to ApplicationInsights.
-        logging.AddFilter<Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider>(typeof(Program).FullName, LogLevel.Trace);
-    }
-    else
+        o.ConnectionString = applicationInsightsConnectionString;
+    }));
+    services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddAzureMonitorMetricExporter(o =>
     {
-        // If not application insight is available log to console
-        logging.AddFilter("Microsoft", LogLevel.Warning);
-        logging.AddFilter("System", LogLevel.Warning);
-        logging.AddConsole();
-    }
+        o.ConnectionString = applicationInsightsConnectionString;
+    }));
+    services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddAzureMonitorTraceExporter(o =>
+    {
+        o.ConnectionString = applicationInsightsConnectionString;
+    }));
 }
 
 void ConfigureServices(IServiceCollection services, IConfiguration config)
 {
+    var attributes = new List<KeyValuePair<string, object>>(2)
+    {
+        KeyValuePair.Create("service.name", (object)"platform-receipt"),
+    };
+
+    services.AddOpenTelemetry()
+        .ConfigureResource(resourceBuilder => resourceBuilder.AddAttributes(attributes))
+        .WithMetrics(metrics =>
+        {
+            metrics.AddAspNetCoreInstrumentation();
+            metrics.AddMeter(
+                "Microsoft.AspNetCore.Hosting",
+                "Microsoft.AspNetCore.Server.Kestrel",
+                "System.Net.Http");
+        })
+        .WithTracing(tracing =>
+        {
+            if (builder.Environment.IsDevelopment())
+            {
+                tracing.SetSampler(new AlwaysOnSampler());
+            }
+
+            tracing.AddAspNetCoreInstrumentation(configOptions =>
+            {
+                configOptions.Filter = (httpContext) => !TelemetryHelpers.ShouldExclude(httpContext.Request.Path);
+            });
+
+            tracing.AddHttpClientInstrumentation();
+        });
+
+    if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
+    {
+        AddAzureMonitorTelemetryExporters(services, applicationInsightsConnectionString);
+    }
+
     services.AddControllersWithViews();
     services.AddHealthChecks().AddCheck<HealthCheck>("receipt_health_check");
     GeneralSettings generalSettings = config.GetSection("GeneralSettings").Get<GeneralSettings>();
@@ -184,19 +215,6 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
     services.AddTransient<ISigningCredentialsResolver, SigningCredentialsResolver>();
 
     services.Configure<PlatformSettings>(config.GetSection("PlatformSettings"));
-
-    if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
-    {
-        services.AddSingleton(typeof(ITelemetryChannel), new ServerTelemetryChannel() { StorageFolder = "/tmp/logtelemetry" });
-        services.AddApplicationInsightsTelemetry(new ApplicationInsightsServiceOptions
-        {
-            ConnectionString = applicationInsightsConnectionString
-        });
-
-        services.AddApplicationInsightsTelemetryProcessor<HealthTelemetryFilter>();
-        services.AddApplicationInsightsTelemetryProcessor<IdentityTelemetryFilter>();
-        services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
-    }
 }
 
 void Configure(IConfiguration config)
