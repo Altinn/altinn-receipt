@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Altinn.Common.AccessTokenClient.Services;
 
 using Altinn.Platform.Receipt.Configuration;
-using Altinn.Platform.Receipt.Filters;
 using Altinn.Platform.Receipt.Health;
 using Altinn.Platform.Receipt.Services;
 using Altinn.Platform.Receipt.Services.Interfaces;
@@ -19,10 +18,6 @@ using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Azure.Security.KeyVault.Secrets;
 
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -261,6 +256,7 @@ void Configure(IConfiguration config)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseTelemetryEnricher();
     app.MapControllers();
     app.MapControllerRoute(
         name: "languageRoute",
