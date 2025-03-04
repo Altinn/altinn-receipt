@@ -132,7 +132,6 @@ namespace Altinn.Platform.Receipt.Telemetry
             return localpath switch
             {
                 var path when path.TrimEnd('/').EndsWith("/health", StringComparison.OrdinalIgnoreCase) => true,
-                "/storage/api/v1/migration" => true,
                 _ => false
             };
         }
