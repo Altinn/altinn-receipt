@@ -162,12 +162,11 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
                 tracing.SetSampler(new AlwaysOnSampler());
             }
 
-            tracing.AddAspNetCoreInstrumentation(configOptions =>
-            {
-                configOptions.Filter = (httpContext) => !TelemetryHelpers.ShouldExclude(httpContext.Request.Path);
-            });
+            tracing.AddAspNetCoreInstrumentation();
 
             tracing.AddHttpClientInstrumentation();
+
+            tracing.AddProcessor(new RequestFilterProcessor(new HttpContextAccessor()));
         });
 
     if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
@@ -256,7 +255,6 @@ void Configure(IConfiguration config)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseTelemetryEnricher();
     app.MapControllers();
     app.MapControllerRoute(
         name: "languageRoute",
