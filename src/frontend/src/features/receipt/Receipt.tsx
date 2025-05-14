@@ -21,6 +21,7 @@ import {
   mapInstanceAttachments,
   getAttachmentGroupings,
   getInstancePdf,
+  filterAppOwnedAttachments,
 } from 'src/utils/attachmentsUtils';
 import {
   getAppName,
@@ -103,7 +104,12 @@ function Receipt(props: WithStyles<typeof styles>) {
         appLogicDataTypes.map((type: any) => type.id),
         true,
       );
-      setAttachments(attachmentsResult);
+
+      const filteredAttachments = filterAppOwnedAttachments({
+        attachments: attachmentsResult,
+        dataTypes: application.dataTypes,
+      });
+      setAttachments(filteredAttachments);
       setPdf(getInstancePdf(instance.data, true));
     }
   }, [instance, application]);

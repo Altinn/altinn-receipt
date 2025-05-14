@@ -1,6 +1,5 @@
-
-import { IData } from '../types';
-import { getInstancePdf, mapInstanceAttachments } from './attachmentsUtils';
+import { IAttachment, IData, IDataType } from '../types';
+import { filterAppOwnedAttachments, getInstancePdf, mapInstanceAttachments } from './attachmentsUtils';
 
 test('mapInstanceAttachments() returns correct attachment array', () => {
   const instance = {
@@ -228,4 +227,203 @@ test('getInstancePdf() returns correct attachement', () => {
   ];
 
   expect(getInstancePdf(data as unknown as IData[])).toEqual(expectedResult);
+});
+
+describe('filterAppOwnedAttachments', () => {
+  test('should return all attachments when no data types are app-owned', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+    ] as IAttachment[];
+
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: ['user'] },
+      { id: 'type2', allowedContributers: ['user'] },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result).toEqual(attachments);
+    expect(result.length).toBe(2);
+  });
+
+  test('should filter out attachments with app-owned data types', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+      {
+        name: 'attachment3.pdf',
+        dataType: 'type3',
+      },
+    ] as IAttachment[];
+
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: ['user'] },
+      { id: 'type2', allowedContributers: ['app:owned', 'user'] },
+      { id: 'type3', allowedContributers: ['user'] },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result).toEqual([
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment3.pdf',
+        dataType: 'type3',
+      },
+    ]);
+  });
+
+  test('should return empty array when all attachments have app-owned data types', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+    ] as IAttachment[];
+
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: ['app:owned'] },
+      { id: 'type2', allowedContributers: ['app:owned', 'user'] },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result).toEqual([]);
+    expect(result.length).toBe(0);
+  });
+
+  test('should handle empty attachments array', () => {
+    // Arrange
+    const attachments: IAttachment[] = [];
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: ['app:owned'] },
+      { id: 'type2', allowedContributers: ['user'] },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result).toEqual([]);
+    expect(result.length).toBe(0);
+  });
+
+  test('should handle empty dataTypes array', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+    ] as IAttachment[];
+    const dataTypes: IDataType[] = [];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result).toEqual(attachments);
+    expect(result.length).toBe(1);
+  });
+
+  test('should handle dataTypes with undefined or null allowedContributers', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+    ] as IAttachment[];
+
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: undefined },
+      { id: 'type2', allowedContributers: null },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result).toEqual(attachments);
+    expect(result.length).toBe(2);
+  });
+
+  test('should handle multiple app-owned data types', () => {
+    // Arrange
+    const attachments: IAttachment[] = [
+      {
+        name: 'attachment1.pdf',
+        dataType: 'type1',
+      },
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+      {
+        name: 'attachment3.pdf',
+        dataType: 'type3',
+      },
+      {
+        name: 'attachment4.pdf',
+        dataType: 'type4',
+      },
+    ] as IAttachment[];
+
+    const dataTypes: IDataType[] = [
+      { id: 'type1', allowedContributers: ['app:owned'] },
+      { id: 'type2', allowedContributers: ['user'] },
+      { id: 'type3', allowedContributers: ['app:owned', 'user'] },
+      { id: 'type4', allowedContributers: ['user', 'other'] },
+    ] as IDataType[];
+
+    // Act
+    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result).toEqual([
+      {
+        name: 'attachment2.pdf',
+        dataType: 'type2',
+      },
+      {
+        name: 'attachment4.pdf',
+        dataType: 'type4',
+      },
+    ]);
+  });
 });

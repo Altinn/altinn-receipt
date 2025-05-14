@@ -1,6 +1,20 @@
 import { IAttachment, IData, ITextResource, IAttachmentGrouping, IDataType, IApplication } from '../types/index';
 import { getTextResourceByKey } from './language';
 
+export function filterAppOwnedAttachments({
+  attachments,
+  dataTypes,
+}: {
+  attachments: IAttachment[];
+  dataTypes: IDataType[];
+}) {
+  const appOwnedDataTypeIds = dataTypes
+    .filter((dataType) => !!dataType.allowedContributers?.some((it) => it === 'app:owned'))
+    .map((dataType) => dataType.id);
+
+  return attachments.filter((attachment) => !appOwnedDataTypeIds.includes(attachment.dataType));
+}
+
 export const mapInstanceAttachments = (
   data: IData[],
   defaultElementIds: string[],
