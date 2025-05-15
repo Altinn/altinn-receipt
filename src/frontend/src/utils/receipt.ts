@@ -24,7 +24,7 @@ export const getInstanceMetaDataObject = (
 
   let dateSubmitted;
   if (instance.data && instance.data.length > 0) {
-    let currentTaskData = getCurrentTaskData(application, instance);
+    const currentTaskData = getCurrentTaskData(application, instance);
     if (currentTaskData !== undefined) {
       const lastChanged = getCurrentTaskData(application, instance).lastChanged;
       dateSubmitted = moment(lastChanged).format('DD.MM.YYYY / HH:mm');

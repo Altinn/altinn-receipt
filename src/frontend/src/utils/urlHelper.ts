@@ -70,7 +70,7 @@ export const makeUrlRelativeIfSameDomain = (
     if (parsed.hostname === location.hostname) {
       return parsed.pathname + parsed.search + parsed.hash;
     }
-  } catch (e) {
+  } catch (_e) {
     //ignore invalid (or dummy) urls
   }
   return url;

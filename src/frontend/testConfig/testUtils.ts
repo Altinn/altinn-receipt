@@ -1,13 +1,7 @@
 import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
-import {
-  instance,
-  altinnOrgs,
-  currentUser,
-  application,
-  texts,
-} from './apiResponses';
+import { instance, altinnOrgs, currentUser, application, texts } from './apiResponses';
 
 export const mockLocation = (location: object = {}) => {
   jest.spyOn(window, 'location', 'get').mockReturnValue({
@@ -36,7 +30,16 @@ export const handlers: any = [
 
   http.get('https://altinncdn.no/orgs/altinn-orgs.json', () => new Response(JSON.stringify(altinnOrgs))),
   http.get('https://localhost/receipt/api/v1/users/current', () => new Response(JSON.stringify(currentUser))),
-  http.get('https://platform.at21.altinn.cloud/storage/api/v1/applications/ttd/frontend-test',
+  http.get(
+    'https://localhost/receipt/api/v1/users/current/language',
+    () => new Response(JSON.stringify({ language: 'nb' })),
+  ),
+  http.get(
+    'https://localhost/receipt/api/v1/application/attachmentgroupstohide',
+    () => new Response(JSON.stringify({ attachmentgroupstohide: null })),
+  ),
+  http.get(
+    'https://platform.at21.altinn.cloud/storage/api/v1/applications/ttd/frontend-test',
     () => new Response(JSON.stringify(application)),
   ),
 ];
