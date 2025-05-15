@@ -141,7 +141,7 @@ export const useFetchInitialData = () => {
       app: string,
       languages: string[]
     ): Promise<{ response: AxiosResponse<any>; language: string; }> => {
-      return new Promise<{ response: AxiosResponse<any>; language: string; }>((resolve, reject) => {
+      return new Promise<{ response: AxiosResponse<any>; language: string; }>((resolve, _reject) => {
         const fetchNextLanguage = async (index: number): Promise<void> => {
           if (index >= languages.length) {
             // If all languages failed, reject the promise
@@ -211,7 +211,7 @@ export const useFetchInitialData = () => {
 
         instanceResponse.data.instance.isA2Lookup = false;
         if (instanceResponse.data.instance.dataValues != null) {
-          Object.keys(instanceResponse.data.instance.dataValues).forEach((key, value) => {
+          Object.keys(instanceResponse.data.instance.dataValues).forEach((key, _value) => {
             if(key == 'A2ServiceType' && instanceResponse.data.instance.dataValues[key] == 'Lookup')
             {
               instanceResponse.data.instance.isA2Lookup = true;
