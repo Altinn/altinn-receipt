@@ -1,35 +1,31 @@
 import { IAttachment, IData, IDataType } from '../types';
-import { filterAppOwnedAttachments, getInstancePdf, mapInstanceAttachments } from './attachmentsUtils';
+import { filterAppData, getInstancePdf, mapAppDataToAttachments } from './attachmentsUtils';
 
-test('mapInstanceAttachments() returns correct attachment array', () => {
-  const instance = {
-    id: '50001/c1572504-9fb6-4829-9652-3ca9c82dabb9',
-    instanceOwnerId: '50001',
-    selfLinks: {
-      apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9',
-    },
-    appId: 'matsgm/tjeneste-190814-1426',
-    org: 'matsgm',
-    createdDateTime: '2019-08-22T15:38:15.1437757Z',
-    createdBy: '0',
-    lastChangedDateTime: '2019-08-22T15:38:15.1440262Z',
-    lastChangedBy: '0',
-    process: {
-      currentTask: 'Archived',
-      isComplete: true,
-    },
-    instanceState: {
-      isDeleted: false,
-      isMarkedForHardDelete: false,
-      isArchived: true,
-    },
-    data: [
+describe(mapAppDataToAttachments.name, () => {
+  it('returns empty array when no data is provided', () => {
+    const result = mapAppDataToAttachments([]);
+    expect(result).toEqual([]);
+  });
+
+  it('returns empty array when data is null', () => {
+    const result = mapAppDataToAttachments(null);
+    expect(result).toEqual([]);
+  });
+
+  it('returns empty array when data is undefined', () => {
+    const result = mapAppDataToAttachments(undefined);
+    expect(result).toEqual([]);
+  });
+
+  it('returns correct attachment array when data is provided', () => {
+    const data = [
       {
         id: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
         dataType: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
         filename: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1.xml',
         contentType: 'application/Xml',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
         },
@@ -45,7 +41,8 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '4mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/03e06136-88be-4866-a216-7959afe46137',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/03e06136-88be-4866-a216-7959afe46137',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/03e06136-88be-4866-a216-7959afe46137',
         },
@@ -61,7 +58,8 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '8mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/11943e38-9fc4-43f6-84c4-12e529eebd28',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/11943e38-9fc4-43f6-84c4-12e529eebd28',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/11943e38-9fc4-43f6-84c4-12e529eebd28',
         },
@@ -77,7 +75,8 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '2mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/092f032d-f54f-49c1-ae42-ebc0d10a2fcb',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/092f032d-f54f-49c1-ae42-ebc0d10a2fcb',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/092f032d-f54f-49c1-ae42-ebc0d10a2fcb',
         },
@@ -93,7 +92,8 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '4mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/8698103b-fad1-4665-85c6-bf88a75ad708',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/8698103b-fad1-4665-85c6-bf88a75ad708',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/8698103b-fad1-4665-85c6-bf88a75ad708',
         },
@@ -109,15 +109,11 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '8mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/e950864d-e304-41ca-a60c-0c5019166df8',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/e950864d-e304-41ca-a60c-0c5019166df8',
         },
         size: 8388608,
-        isLocked: false,
-        createdDateTime: '2019-08-22T15:38:44.6846318Z',
         createdBy: '50001',
-        lastChangedDateTime: '2019-08-22T15:38:44.684632Z',
         lastChangedBy: '50001',
       },
       {
@@ -125,7 +121,8 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
         filename: '2mb.txt',
         contentType: 'text/plain',
-        storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
         selfLinks: {
           apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
         },
@@ -136,294 +133,224 @@ test('mapInstanceAttachments() returns correct attachment array', () => {
         lastChangedDateTime: '2019-08-22T15:38:46.8968955Z',
         lastChangedBy: '50001',
       },
-    ],
-  };
+    ] as IData[];
 
-  const attachmentsTestData = [
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '4mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/03e06136-88be-4866-a216-7959afe46137',
-    },
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '8mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/11943e38-9fc4-43f6-84c4-12e529eebd28',
-    },
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '2mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/092f032d-f54f-49c1-ae42-ebc0d10a2fcb',
-    },
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '4mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/8698103b-fad1-4665-85c6-bf88a75ad708',
-    },
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '8mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/e950864d-e304-41ca-a60c-0c5019166df8',
-    },
-    {
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      iconClass: 'reg reg-attachment',
-      name: '2mb.txt',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
-    },
-  ];
-
-  expect(mapInstanceAttachments(instance.data as unknown as IData[], ['585b2f4e-5ecb-417b-9d01-82b6e889e1d1'])).toEqual(attachmentsTestData);
-});
-
-test('getInstancePdf() returns correct attachement', () => {
-  const data = [
-    {
-      id: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
-      dataType: 'ref-data-as-pdf',
-      filename: 'kvittering.pdf',
-      contentType: 'application/pdf',
-      storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
-      selfLinks: {
-        apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
-      },
-      size: 0,
-      isLocked: false,
-      createdDateTime: '2019-08-22T15:38:15.1480698Z',
-      createdBy: '50001',
-      lastChangedDateTime: '2019-08-22T15:38:15.14807Z',
-      lastChangedBy: '50001',
-    },
-    {
-      id: '005d5bc3-a315-4705-9b06-3788fed86da1',
-      dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
-      filename: '2mb.txt',
-      contentType: 'text/plain',
-      storageUrl: 'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
-      selfLinks: {
-        apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
-      },
-      size: 2097152,
-      isLocked: false,
-      createdDateTime: '2019-08-22T15:38:46.8968953Z',
-      createdBy: '50001',
-      lastChangedDateTime: '2019-08-22T15:38:46.8968955Z',
-      lastChangedBy: '50001',
-    },
-  ];
-
-  const expectedResult = [
-    {
-      dataType: 'ref-data-as-pdf',
-      iconClass: 'reg reg-attachment',
-      name: 'kvittering.pdf',
-      url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
-    },
-  ];
-
-  expect(getInstancePdf(data as unknown as IData[])).toEqual(expectedResult);
-});
-
-describe('filterAppOwnedAttachments', () => {
-  test('should return all attachments when no data types are app-owned', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
+    const attachmentsTestData = [
       {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
+        dataType: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+        iconClass: 'reg reg-attachment',
+        name: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1.xml',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
       },
       {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '4mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/03e06136-88be-4866-a216-7959afe46137',
+      },
+      {
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '8mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/11943e38-9fc4-43f6-84c4-12e529eebd28',
+      },
+      {
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '2mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/092f032d-f54f-49c1-ae42-ebc0d10a2fcb',
+      },
+      {
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '4mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/8698103b-fad1-4665-85c6-bf88a75ad708',
+      },
+      {
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '8mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/e950864d-e304-41ca-a60c-0c5019166df8',
+      },
+      {
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        iconClass: 'reg reg-attachment',
+        name: '2mb.txt',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
       },
     ] as IAttachment[];
 
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: ['user'] },
-      { id: 'type2', allowedContributers: ['user'] },
-    ] as IDataType[];
+    expect(mapAppDataToAttachments(data)).toEqual(attachmentsTestData);
+  });
+});
 
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+describe(getInstancePdf.name, () => {
+  it('returns correct attachment', () => {
+    const data = [
+      {
+        id: '585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+        dataType: 'ref-data-as-pdf',
+        filename: 'kvittering.pdf',
+        contentType: 'application/pdf',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+        selfLinks: {
+          apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+        },
+        size: 0,
+        isLocked: false,
+        createdDateTime: '2019-08-22T15:38:15.1480698Z',
+        createdBy: '50001',
+        lastChangedDateTime: '2019-08-22T15:38:15.14807Z',
+        lastChangedBy: '50001',
+      },
+      {
+        id: '005d5bc3-a315-4705-9b06-3788fed86da1',
+        dataType: 'cca36865-8f2e-4d29-8036-fa33bc4c3c34',
+        filename: '2mb.txt',
+        contentType: 'text/plain',
+        storageUrl:
+          'tjeneste-190814-1426/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
+        selfLinks: {
+          apps: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/005d5bc3-a315-4705-9b06-3788fed86da1',
+        },
+        size: 2097152,
+        isLocked: false,
+        createdDateTime: '2019-08-22T15:38:46.8968953Z',
+        createdBy: '50001',
+        lastChangedDateTime: '2019-08-22T15:38:46.8968955Z',
+        lastChangedBy: '50001',
+      },
+    ];
 
-    // Assert
-    expect(result).toEqual(attachments);
-    expect(result.length).toBe(2);
+    const expectedResult = [
+      {
+        dataType: 'ref-data-as-pdf',
+        iconClass: 'reg reg-attachment',
+        name: 'kvittering.pdf',
+        url: 'https://altinn3.no/matsgm/tjeneste-190814-1426/instances/50001/c1572504-9fb6-4829-9652-3ca9c82dabb9/data/585b2f4e-5ecb-417b-9d01-82b6e889e1d1',
+      },
+    ];
+
+    expect(getInstancePdf(data as unknown as IData[])).toEqual(expectedResult);
+  });
+});
+
+describe(filterAppData.name, () => {
+  it('should return empty array when appData is empty', () => {
+    const dataTypes = [{ id: 'test-id', allowedContributers: ['app:owned'] }] as IDataType[];
+    const appData: IData[] = [];
+
+    const result = filterAppData(appData, dataTypes);
+
+    expect(result).toEqual([]);
   });
 
-  test('should filter out attachments with app-owned data types', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-      {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
-      },
-      {
-        name: 'attachment3.pdf',
-        dataType: 'type3',
-      },
-    ] as IAttachment[];
+  it('should return all appData when no dataTypes match exclusion criteria', () => {
+    const dataTypes = [{ id: 'type1' }, { id: 'type2', allowedContributers: ['user'] }] as IDataType[];
 
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: ['user'] },
-      { id: 'type2', allowedContributers: ['app:owned', 'user'] },
-      { id: 'type3', allowedContributers: ['user'] },
-    ] as IDataType[];
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type2', id: '2' },
+      { dataType: 'type3', id: '3' },
+    ] as IData[];
 
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+    const result = filterAppData(appData, dataTypes);
 
-    // Assert
-    expect(result.length).toBe(2);
+    expect(result).toEqual(appData);
+  });
+
+  it('should exclude appData with dataType that has appLogic=true', () => {
+    const dataTypes = [{ id: 'type1', appLogic: true }, { id: 'type2' }] as IDataType[];
+
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type2', id: '2' },
+      { dataType: 'type3', id: '3' },
+    ] as IData[];
+
+    const result = filterAppData(appData, dataTypes);
+
     expect(result).toEqual([
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-      {
-        name: 'attachment3.pdf',
-        dataType: 'type3',
-      },
+      { dataType: 'type2', id: '2' },
+      { dataType: 'type3', id: '3' },
     ]);
   });
 
-  test('should return empty array when all attachments have app-owned data types', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-      {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
-      },
-    ] as IAttachment[];
-
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: ['app:owned'] },
+  it('should exclude appData with dataType that has allowedContributers including app:owned', () => {
+    const dataTypes = [
+      { id: 'type1', allowedContributers: ['user'] },
       { id: 'type2', allowedContributers: ['app:owned', 'user'] },
     ] as IDataType[];
 
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type2', id: '2' },
+      { dataType: 'type3', id: '3' },
+    ] as IData[];
 
-    // Assert
-    expect(result).toEqual([]);
-    expect(result.length).toBe(0);
-  });
+    const result = filterAppData(appData, dataTypes);
 
-  test('should handle empty attachments array', () => {
-    // Arrange
-    const attachments: IAttachment[] = [];
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: ['app:owned'] },
-      { id: 'type2', allowedContributers: ['user'] },
-    ] as IDataType[];
-
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
-
-    // Assert
-    expect(result).toEqual([]);
-    expect(result.length).toBe(0);
-  });
-
-  test('should handle empty dataTypes array', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-    ] as IAttachment[];
-    const dataTypes: IDataType[] = [];
-
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
-
-    // Assert
-    expect(result).toEqual(attachments);
-    expect(result.length).toBe(1);
-  });
-
-  test('should handle dataTypes with undefined or null allowedContributers', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-      {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
-      },
-    ] as IAttachment[];
-
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: undefined },
-      { id: 'type2', allowedContributers: null },
-    ] as IDataType[];
-
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
-
-    // Assert
-    expect(result).toEqual(attachments);
-    expect(result.length).toBe(2);
-  });
-
-  test('should handle multiple app-owned data types', () => {
-    // Arrange
-    const attachments: IAttachment[] = [
-      {
-        name: 'attachment1.pdf',
-        dataType: 'type1',
-      },
-      {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
-      },
-      {
-        name: 'attachment3.pdf',
-        dataType: 'type3',
-      },
-      {
-        name: 'attachment4.pdf',
-        dataType: 'type4',
-      },
-    ] as IAttachment[];
-
-    const dataTypes: IDataType[] = [
-      { id: 'type1', allowedContributers: ['app:owned'] },
-      { id: 'type2', allowedContributers: ['user'] },
-      { id: 'type3', allowedContributers: ['app:owned', 'user'] },
-      { id: 'type4', allowedContributers: ['user', 'other'] },
-    ] as IDataType[];
-
-    // Act
-    const result = filterAppOwnedAttachments({ attachments, dataTypes });
-
-    // Assert
-    expect(result.length).toBe(2);
     expect(result).toEqual([
-      {
-        name: 'attachment2.pdf',
-        dataType: 'type2',
-      },
-      {
-        name: 'attachment4.pdf',
-        dataType: 'type4',
-      },
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type3', id: '3' },
     ]);
+  });
+
+  it('should exclude appData with dataType id equal to ref-data-as-pdf', () => {
+    const dataTypes = [{ id: 'type1' }, { id: 'ref-data-as-pdf' }] as IDataType[];
+
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'ref-data-as-pdf', id: '2' },
+      { dataType: 'type3', id: '3' },
+    ] as IData[];
+
+    const result = filterAppData(appData, dataTypes);
+
+    expect(result).toEqual([
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type3', id: '3' },
+    ]);
+  });
+
+  it('should exclude appData based on multiple exclusion criteria', () => {
+    const dataTypes = [
+      { id: 'type1', appLogic: true },
+      { id: 'type2', allowedContributers: ['app:owned'] },
+      { id: 'ref-data-as-pdf' },
+      { id: 'type4' },
+    ] as IDataType[];
+
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type2', id: '2' },
+      { dataType: 'ref-data-as-pdf', id: '3' },
+      { dataType: 'type4', id: '4' },
+      { dataType: 'type5', id: '5' },
+    ] as IData[];
+
+    const result = filterAppData(appData, dataTypes);
+
+    expect(result).toEqual([
+      { dataType: 'type4', id: '4' },
+      { dataType: 'type5', id: '5' },
+    ]);
+  });
+
+  it('should return empty array when all appData match exclusion criteria', () => {
+    const dataTypes = [
+      { id: 'type1', appLogic: true },
+      { id: 'type2', allowedContributers: ['app:owned'] },
+    ] as IDataType[];
+
+    const appData = [
+      { dataType: 'type1', id: '1' },
+      { dataType: 'type2', id: '2' },
+    ] as IData[];
+
+    const result = filterAppData(appData, dataTypes);
+
+    expect(result).toEqual([]);
   });
 });

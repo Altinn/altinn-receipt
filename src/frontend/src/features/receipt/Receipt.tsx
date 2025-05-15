@@ -1,22 +1,22 @@
-import { createStyles, WithStyles, Grid, withStyles, createTheme } from '@material-ui/core';
+import { createStyles, createTheme, Grid, WithStyles, withStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React from 'react';
 
 import type { IAttachment, IParty } from 'src/types';
 
-import { AltinnContentLoader, AltinnModal, AltinnAppHeader, AltinnReceipt, AltinnSubstatusPaper } from 'src/components';
+import { AltinnAppHeader, AltinnContentLoader, AltinnModal, AltinnReceipt, AltinnSubstatusPaper } from 'src/components';
+import AltinnReceiptTheme from 'src/theme/altinnReceiptTheme';
 import {
-  mapInstanceAttachments,
+  filterAppData,
   getAttachmentGroupings,
   getInstancePdf,
-  filterAppOwnedAttachments,
+  mapAppDataToAttachments,
 } from 'src/utils/attachmentsUtils';
 import { getAppName, getLanguageFromKey, getParsedLanguageFromKey, getTextResourceByKey } from 'src/utils/language';
-import { returnUrlToMessagebox } from 'src/utils/urlHelper';
-import AltinnReceiptTheme from 'src/theme/altinnReceiptTheme';
 import { getInstanceMetaDataObject } from 'src/utils/receipt';
+import { returnUrlToMessagebox } from 'src/utils/urlHelper';
 
-import { useLanguageWithOverrides, useFetchInitialData } from './hooks';
+import { useFetchInitialData, useLanguageWithOverrides } from './hooks';
 
 const theme = createTheme(AltinnReceiptTheme);
 
@@ -71,19 +71,10 @@ function Receipt(props: WithStyles<typeof styles>) {
 
   React.useEffect(() => {
     if (instance && application) {
-      const appLogicDataTypes = application.dataTypes.filter((dataType) => !!dataType.appLogic);
+      const filteredAppData = filterAppData(instance.data, application.dataTypes);
+      const attachments = mapAppDataToAttachments(filteredAppData, true);
 
-      const attachmentsResult = mapInstanceAttachments(
-        instance.data,
-        appLogicDataTypes.map((type: any) => type.id),
-        true,
-      );
-
-      const filteredAttachments = filterAppOwnedAttachments({
-        attachments: attachmentsResult,
-        dataTypes: application.dataTypes,
-      });
-      setAttachments(filteredAttachments);
+      setAttachments(attachments);
       setPdf(getInstancePdf(instance.data, true));
     }
   }, [instance, application]);
