@@ -8,7 +8,7 @@ export function filterAppData(appData: IData[], dataTypes: IDataType[]) {
         return true;
       }
 
-      if (dataType.allowedContributers?.includes('app:owned')) {
+      if (dataType.allowedContributers?.includes('app:owned') || dataType.allowedContributors?.includes('app:owned')) {
         return true;
       }
 

@@ -17,7 +17,6 @@ export interface IApplication {
   attachmentGroupsToHide?: string[];
 }
 
-
 export interface IAltinnOrg {
   name: ITitle;
   logo: string;
@@ -39,7 +38,7 @@ export interface IAttachment {
   iconClass: string;
   url: string;
   dataType: string;
-  tags?: string[]
+  tags?: string[];
 }
 
 export interface IData {
@@ -65,7 +64,11 @@ export interface IDataType {
   id: string;
   description?: string;
   allowedContentTypes: string[];
+  /**
+   * @deprecated Will be removed in future versions.
+   */
   allowedContributers?: string[];
+  allowedContributors?: string[];
   appLogic?: any;
   taskId?: string;
   maxSize?: number;
@@ -122,7 +125,7 @@ export interface IInstanceState {
 }
 
 export interface ILanguage {
-    [key: string]: string | ILanguage;
+  [key: string]: string | ILanguage;
 }
 
 export interface IOrganisation {
@@ -256,7 +259,7 @@ export interface IAttachmentGrouping {
   [title: string]: IAttachment[];
 }
 
-export interface IDataSource{
+export interface IDataSource {
   [key: string]: any;
 }
 
