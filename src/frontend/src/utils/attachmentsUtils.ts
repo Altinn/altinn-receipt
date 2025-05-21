@@ -1,28 +1,37 @@
 import { IAttachment, IData, ITextResource, IAttachmentGrouping, IDataType, IApplication } from '../types/index';
 import { getTextResourceByKey } from './language';
 
-export const mapInstanceAttachments = (
-  data: IData[],
-  defaultElementIds: string[],
-  platform?: boolean,
-): IAttachment[] => {
+export function filterAppData(appData: IData[], dataTypes: IDataType[]) {
+  const dataTypeIdsToExclude = dataTypes
+    .filter((dataType) => {
+      if (dataType.appLogic) {
+        return true;
+      }
+
+      if (dataType.allowedContributers?.includes('app:owned') || dataType.allowedContributors?.includes('app:owned')) {
+        return true;
+      }
+
+      return dataType.id === 'ref-data-as-pdf';
+    })
+    .map((dataType) => dataType.id);
+
+  return appData.filter((it) => !dataTypeIdsToExclude.includes(it.dataType));
+}
+
+export const mapAppDataToAttachments = (data: IData[], platform?: boolean): IAttachment[] => {
   if (!data) {
     return [];
   }
-  const tempAttachments: IAttachment[] = [];
-  data.forEach((dataElement: IData) => {
-    if (defaultElementIds.indexOf(dataElement.dataType) > -1 || dataElement.dataType === 'ref-data-as-pdf') {
-      return;
-    }
 
-    tempAttachments.push({
+  return data.map<IAttachment>((dataElement: IData) => {
+    return {
       name: dataElement.filename,
       url: platform ? dataElement.selfLinks.platform : dataElement.selfLinks.apps,
       iconClass: 'reg reg-attachment',
       dataType: dataElement.dataType,
-    });
+    };
   });
-  return tempAttachments;
 };
 
 export const getInstancePdf = (data: IData[], platform?: boolean): IAttachment[] => {
@@ -67,7 +76,11 @@ export const getAttachmentGroupings = (
 
   attachments.forEach((attachment: IAttachment) => {
     const grouping = getGroupingForAttachment(attachment, applicationMetadata);
-    if (grouping == null || applicationMetadata.attachmentGroupsToHide == null || !applicationMetadata.attachmentGroupsToHide.includes(grouping)){
+    if (
+      grouping == null ||
+      applicationMetadata.attachmentGroupsToHide == null ||
+      !applicationMetadata.attachmentGroupsToHide.includes(grouping)
+    ) {
       const title = getTextResourceByKey(grouping, textResources);
       if (!attachmentGroupings[title]) {
         attachmentGroupings[title] = [];
@@ -84,10 +97,7 @@ export const getAttachmentGroupings = (
  * @param attachment the attachment
  * @param applicationMetadata the application metadata
  */
-const getGroupingForAttachment = (
-  attachment: IAttachment,
-  applicationMetadata: IApplication,
-): string => {
+const getGroupingForAttachment = (attachment: IAttachment, applicationMetadata: IApplication): string => {
   if (!applicationMetadata || !applicationMetadata.dataTypes || !attachment) {
     return null;
   }

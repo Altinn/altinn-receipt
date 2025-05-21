@@ -1,38 +1,22 @@
-import {
-  createStyles,
-  WithStyles,
-  Grid,
-  withStyles,
-  createTheme,
-} from '@material-ui/core';
+import { createStyles, createTheme, Grid, WithStyles, withStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React from 'react';
 
 import type { IAttachment, IParty } from 'src/types';
 
+import { AltinnAppHeader, AltinnContentLoader, AltinnModal, AltinnReceipt, AltinnSubstatusPaper } from 'src/components';
+import AltinnReceiptTheme from 'src/theme/altinnReceiptTheme';
 import {
-  AltinnContentLoader,
-  AltinnModal,
-  AltinnAppHeader,
-  AltinnReceipt,
-  AltinnSubstatusPaper,
-} from 'src/components';
-import {
-  mapInstanceAttachments,
+  filterAppData,
   getAttachmentGroupings,
   getInstancePdf,
+  mapAppDataToAttachments,
 } from 'src/utils/attachmentsUtils';
-import {
-  getAppName,
-  getLanguageFromKey,
-  getParsedLanguageFromKey,
-  getTextResourceByKey,
-} from 'src/utils/language';
-import { returnUrlToMessagebox } from 'src/utils/urlHelper';
-import AltinnReceiptTheme from 'src/theme/altinnReceiptTheme';
+import { getAppName, getLanguageFromKey, getParsedLanguageFromKey, getTextResourceByKey } from 'src/utils/language';
 import { getInstanceMetaDataObject } from 'src/utils/receipt';
+import { returnUrlToMessagebox } from 'src/utils/urlHelper';
 
-import { useLanguageWithOverrides, useFetchInitialData } from './hooks';
+import { useFetchInitialData, useLanguageWithOverrides } from './hooks';
 
 const theme = createTheme(AltinnReceiptTheme);
 
@@ -58,8 +42,7 @@ function Receipt(props: WithStyles<typeof styles>) {
   const [attachments, setAttachments] = React.useState<IAttachment[]>();
   const [pdf, setPdf] = React.useState<IAttachment[]>();
 
-  const { application, textResources, party, instance, organisations, user } =
-    useFetchInitialData();
+  const { application, textResources, party, instance, organisations, user } = useFetchInitialData();
 
   const { language } = useLanguageWithOverrides({
     textResources,
@@ -74,7 +57,8 @@ function Receipt(props: WithStyles<typeof styles>) {
 
     return (
       <>
-        <span>{applicationTitle}</span>{' '}{instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.is_sent', language)}
+        <span>{applicationTitle}</span>{' '}
+        {instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.is_sent', language)}
       </>
     );
   };
@@ -83,27 +67,14 @@ function Receipt(props: WithStyles<typeof styles>) {
     window.location.href = returnUrlToMessagebox(window.location.origin);
   };
 
-  const isLoading =
-    !party ||
-    !instance ||
-    !organisations ||
-    !application ||
-    !language ||
-    !user ||
-    !textResources;
+  const isLoading = !party || !instance || !organisations || !application || !language || !user || !textResources;
 
   React.useEffect(() => {
     if (instance && application) {
-      const appLogicDataTypes = application.dataTypes.filter(
-        (dataType: any) => !!dataType.appLogic,
-      );
+      const filteredAppData = filterAppData(instance.data, application.dataTypes);
+      const attachments = mapAppDataToAttachments(filteredAppData, true);
 
-      const attachmentsResult = mapInstanceAttachments(
-        instance.data,
-        appLogicDataTypes.map((type: any) => type.id),
-        true,
-      );
-      setAttachments(attachmentsResult);
+      setAttachments(attachments);
       setPdf(getInstancePdf(instance.data, true));
     }
   }, [instance, application]);
@@ -120,14 +91,8 @@ function Receipt(props: WithStyles<typeof styles>) {
         headerBackgroundColor={theme.altinnPalette.primary.blue}
         party={party || ({} as IParty)}
         userParty={user ? user.party : ({} as IParty)}
-        logoutText={getParsedLanguageFromKey(
-          'receipt_platform.log_out',
-          language,
-        )}
-        ariaLabelIcon={getLanguageFromKey(
-          'receipt_platform.profile_icon_aria_label',
-          language,
-        )}
+        logoutText={getParsedLanguageFromKey('receipt_platform.log_out', language)}
+        ariaLabelIcon={getLanguageFromKey('receipt_platform.profile_icon_aria_label', language)}
       />
       {instance?.status?.substatus && (
         <Grid
@@ -136,14 +101,8 @@ function Receipt(props: WithStyles<typeof styles>) {
           data-testid='receipt-substatus'
         >
           <AltinnSubstatusPaper
-            label={getTextResourceByKey(
-              instance.status.substatus.label,
-              textResources,
-            )}
-            description={getTextResourceByKey(
-              instance.status.substatus.description,
-              textResources,
-            )}
+            label={getTextResourceByKey(instance.status.substatus.label, textResources)}
+            description={getTextResourceByKey(instance.status.substatus.description, textResources)}
           />
         </Grid>
       )}
@@ -155,10 +114,7 @@ function Receipt(props: WithStyles<typeof styles>) {
         hideCloseIcon={isPrint}
         printView={true}
         closeButtonOutsideModal={true}
-        headerText={getParsedLanguageFromKey(
-          'receipt_platform.receipt',
-          language,
-        )}
+        headerText={getParsedLanguageFromKey('receipt_platform.receipt', language)}
       >
         {isLoading ? (
           <AltinnContentLoader />
@@ -169,15 +125,8 @@ function Receipt(props: WithStyles<typeof styles>) {
               instance.isA2Lookup ? 'receipt_platform.helper_text_a2lookup' : 'receipt_platform.helper_text',
               language,
             )}
-            collapsibleTitle={getParsedLanguageFromKey(
-              'receipt_platform.attachments',
-              language,
-            )}
-            attachmentGroupings={getAttachmentGroupings(
-              attachments,
-              application,
-              textResources,
-            )}
+            collapsibleTitle={getParsedLanguageFromKey('receipt_platform.attachments', language)}
+            attachmentGroupings={getAttachmentGroupings(attachments, application, textResources)}
             instanceMetaDataObject={getInstanceMetaDataObject(
               instance,
               party,
@@ -187,7 +136,9 @@ function Receipt(props: WithStyles<typeof styles>) {
               textResources,
               user.profileSettingPreference.language,
             )}
-            titleSubmitted={instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.sent_content', language)}
+            titleSubmitted={
+              instance.isA2Lookup ? '' : getParsedLanguageFromKey('receipt_platform.sent_content', language)
+            }
             pdf={pdf || null}
           />
         )}

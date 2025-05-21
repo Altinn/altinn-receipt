@@ -37,7 +37,7 @@ describe('utils > receipt', () => {
       date_sent: 'Dato sendt',
       sender: 'Avsender',
       receiver: 'Mottaker',
-      ref_num: 'Referansenummer',
+      reference_number: 'Referansenummer',
     },
   };
 
@@ -62,85 +62,37 @@ describe('utils > receipt', () => {
 
   describe('getInstanceMetaDataObject', () => {
     it('should return instance metadata object with correct values for person', () => {
-      const result = getInstanceMetaDataObject(
-        instance,
-        partyPerson,
-        language,
-        organisations,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(instance, partyPerson, language, organisations, application, [], 'nb');
       expect(result).toEqual(expectedResult);
     });
 
     it('should return instance metadata object with correct values for org', () => {
-      const result = getInstanceMetaDataObject(
-        instance,
-        partyOrg,
-        language,
-        organisations,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(instance, partyOrg, language, organisations, application, [], 'nb');
       const expectedOrgResult = expectedResult;
       expectedOrgResult.Avsender = '12345-FIRMA AS';
       expect(result).toEqual(expectedOrgResult);
     });
 
     it('should return empty object if no instance is provided', () => {
-      const result = getInstanceMetaDataObject(
-        undefined,
-        partyOrg,
-        language,
-        organisations,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(undefined, partyOrg, language, organisations, application, [], 'nb');
 
       expect(result).toEqual({});
     });
 
     it('should return empty object if no party is provided', () => {
-      const result = getInstanceMetaDataObject(
-        instance,
-        undefined,
-        language,
-        organisations,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(instance, undefined, language, organisations, application, [], 'nb');
 
       expect(result).toEqual({});
     });
 
     it('should return empty object if no language is provided', () => {
-      const result = getInstanceMetaDataObject(
-        instance,
-        partyOrg,
-        undefined,
-        organisations,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(instance, partyOrg, undefined, organisations, application, [], 'nb');
 
       expect(result).toEqual({});
     });
 
     it('should return empty object if no organisations is provided', () => {
-      const result = getInstanceMetaDataObject(
-        instance,
-        partyOrg,
-        language,
-        undefined,
-        application,
-        [],
-        'nb',
-      );
+      const result = getInstanceMetaDataObject(instance, partyOrg, language, undefined, application, [], 'nb');
 
       expect(result).toEqual({});
     });

@@ -1,0 +1,58 @@
+name: Frontend Test and Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/frontend/**"
+      - ".github/workflows/frontend-test-build.yml"
+  pull_request:
+    paths:
+      - "src/frontend/**"
+      - ".github/workflows/frontend-test-build.yml"
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    name: Test and Build Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: "src/frontend/yarn.lock"
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test --coverage
+
+      - name: Build
+        run: yarn build
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: src/frontend/coverage
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: src/frontend/dist
