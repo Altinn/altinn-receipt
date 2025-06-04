@@ -71,26 +71,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.27.3":
-  version: 7.27.3
-  resolution: "@babel/core@npm:7.27.3"
+"@babel/core@npm:7.27.4":
+  version: 7.27.4
+  resolution: "@babel/core@npm:7.27.4"
   dependencies:
     "@ampproject/remapping": ^2.2.0
     "@babel/code-frame": ^7.27.1
     "@babel/generator": ^7.27.3
     "@babel/helper-compilation-targets": ^7.27.2
     "@babel/helper-module-transforms": ^7.27.3
-    "@babel/helpers": ^7.27.3
-    "@babel/parser": ^7.27.3
+    "@babel/helpers": ^7.27.4
+    "@babel/parser": ^7.27.4
     "@babel/template": ^7.27.2
-    "@babel/traverse": ^7.27.3
+    "@babel/traverse": ^7.27.4
     "@babel/types": ^7.27.3
     convert-source-map: ^2.0.0
     debug: ^4.1.0
     gensync: ^1.0.0-beta.2
     json5: ^2.2.3
     semver: ^6.3.1
-  checksum: d70d5e4e99d87d07e9dd51ef20f6558e2145562c6bab9db4b26a9d1ca3fe96db87f3b0385d85df6e6582faf623e4bec4150a417095fdb598956dbd8608cd6270
+  checksum: e7f961274f2cfc14c81e32dc0f10b06123a847e9fe73ec7b4df90411c3ebdad8ffecd7086f06aa46c2b24d8d27f2f8bef4b7c7319228c768256fc0e13819d395
   languageName: node
   linkType: hard
 
@@ -464,7 +464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helpers@npm:^7.27.3":
+"@babel/helpers@npm:^7.27.4":
   version: 7.27.4
   resolution: "@babel/helpers@npm:7.27.4"
   dependencies:
@@ -1633,7 +1633,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.27.3":
+"@babel/traverse@npm:^7.27.3, @babel/traverse@npm:^7.27.4":
   version: 7.27.4
   resolution: "@babel/traverse@npm:7.27.4"
   dependencies:
@@ -1874,10 +1874,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.27.0":
-  version: 9.27.0
-  resolution: "@eslint/js@npm:9.27.0"
-  checksum: b31cfd61bb64e187f8758d13c893bf710f0500c29ced5dd6958c4fda254059489f1cee69567c20ba21608ce51224019b1fd10975b09d41adf16616d875da6ea4
+"@eslint/js@npm:9.28.0":
+  version: 9.28.0
+  resolution: "@eslint/js@npm:9.28.0"
+  checksum: f54c11d192b95ab30141e9434ed33c3f9f49877f42fd14294edb59f904aa2d5dfa63fe6e9d8c9c8ccde378d88058b255f66f774ec1f1ede5f7ce0d18992f4105
   languageName: node
   linkType: hard
 
@@ -6421,9 +6421,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-typescript@npm:4.4.1":
-  version: 4.4.1
-  resolution: "eslint-import-resolver-typescript@npm:4.4.1"
+"eslint-import-resolver-typescript@npm:4.4.2":
+  version: 4.4.2
+  resolution: "eslint-import-resolver-typescript@npm:4.4.2"
   dependencies:
     debug: ^4.4.1
     eslint-import-context: ^0.1.5
@@ -6441,7 +6441,7 @@ __metadata:
       optional: true
     eslint-plugin-import-x:
       optional: true
-  checksum: b9031deaff4ae9879fa3b3f10f2d81deaf0166e9813c2b0a1776028118c0e7b6e9f644d0df3deef5b1ec36224f5c1a00ae07afad880f5a72f5092db0d20f7f60
+  checksum: ab5fa23dcfe119b62c0580267d04e97889054277649e21c2cff6e9a1811cfcb6da116e51da70f994d882ac9f375d91a2659c8a1403f3115ccdac169ee30cf47f
   languageName: node
   linkType: hard
 
@@ -6582,9 +6582,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:9.27.0":
-  version: 9.27.0
-  resolution: "eslint@npm:9.27.0"
+"eslint@npm:9.28.0":
+  version: 9.28.0
+  resolution: "eslint@npm:9.28.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.12.1
@@ -6592,7 +6592,7 @@ __metadata:
     "@eslint/config-helpers": ^0.2.1
     "@eslint/core": ^0.14.0
     "@eslint/eslintrc": ^3.3.1
-    "@eslint/js": 9.27.0
+    "@eslint/js": 9.28.0
     "@eslint/plugin-kit": ^0.3.1
     "@humanfs/node": ^0.16.6
     "@humanwhocodes/module-importer": ^1.0.1
@@ -6628,7 +6628,7 @@ __metadata:
       optional: true
   bin:
     eslint: bin/eslint.js
-  checksum: 7e2f220574466a6dcd4ebbec19d47a39c3d964bad5bb96706dee7e814d2000d6da78b4515a368515979e1addd59546e24841090101585e5d816c9819077f753c
+  checksum: 0691c7135050b46db69c583b8c0e8eade5826036c5a60597dbda134bcdb2eaa1a8516b59083d528eb93c04b45daa41fb5845974b889c3588ca2e5889f0c8c2b6
   languageName: node
   linkType: hard
 
@@ -10423,9 +10423,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.8.6":
-  version: 2.8.6
-  resolution: "msw@npm:2.8.6"
+"msw@npm:2.8.7":
+  version: 2.8.7
+  resolution: "msw@npm:2.8.7"
   dependencies:
     "@bundled-es-modules/cookie": ^2.0.1
     "@bundled-es-modules/statuses": ^1.0.1
@@ -10452,7 +10452,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: b7a93b99712bcae5ea953cfb7911946842057f6b7f50e3a273e9c66ac5470027dea11d1605550512bba96d58eec3ac0c04b471f1e311f9a6b5b6a6fe5dac0d73
+  checksum: 9814e9306364d9cc17be7d9683d7000e3ea3c41b6325b473e192f26cc953c4a2e7f2160b01785880c883ebc2af560fc117aea6dda5cf22503979c0f5a4ec986b
   languageName: node
   linkType: hard
 
@@ -11663,7 +11663,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "receipt-react-app@workspace:."
   dependencies:
-    "@babel/core": 7.27.3
+    "@babel/core": 7.27.4
     "@babel/polyfill": 7.12.1
     "@babel/preset-env": 7.27.2
     "@babel/preset-react": 7.27.1
@@ -11688,9 +11688,9 @@ __metadata:
     cross-env: 7.0.3
     css-loader: 7.1.2
     dompurify: 3.2.6
-    eslint: 9.27.0
+    eslint: 9.28.0
     eslint-config-prettier: 10.1.5
-    eslint-import-resolver-typescript: 4.4.1
+    eslint-import-resolver-typescript: 4.4.2
     eslint-plugin-import: 2.31.0
     eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-react: 7.37.5
@@ -11706,7 +11706,7 @@ __metadata:
     marked: 15.0.12
     mini-css-extract-plugin: 2.9.2
     moment: 2.30.1
-    msw: 2.8.6
+    msw: 2.8.7
     prettier: 3.5.3
     react: 18.3.1
     react-content-loader: 7.0.2
