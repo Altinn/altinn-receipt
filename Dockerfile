@@ -1,4 +1,4 @@
-FROM node:22.16-alpine3.21@sha256:9f3ae04faa4d2188825803bf890792f33cc39033c9241fc6bb201149470436ca AS build-receipt-frontend
+FROM node:22.17-alpine3.21@sha256:f00440c423ce5657e4d2347fa3b9bf5887389f6fcf3daa25cc79ea11a6a00f80 AS build-receipt-frontend
 
 WORKDIR /build
 
@@ -17,7 +17,7 @@ RUN yarn --immutable
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0.302-alpine3.21@sha256:0192a5b88148c3d94ef02cadc2b888218804003324e9dd8c77169327aeb9ce79 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.303-alpine3.21@sha256:2fe880002c458a6e95a3f8bb38b63c0f2e21ffefcb01c0223c4408cc91ad7d9d AS build
 
 # Copy receipt backend
 WORKDIR /Receipt/
