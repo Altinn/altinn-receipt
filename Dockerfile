@@ -29,7 +29,7 @@ RUN dotnet build Altinn.Platform.Receipt.csproj -c Release -o /app_output
 RUN dotnet publish Altinn.Platform.Receipt.csproj -c Release -o /app_output
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.7-alpine3.21@sha256:91e477e260390e2fc18987e552daf7958491c2e247bf07ae3b876e4f629b6504 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.7-alpine3.22@sha256:89a7a398c5acaa773642cfabd6456f33e29687c1529abfaf068929ff9991cb66 AS final
 EXPOSE 5060
 WORKDIR /app
 COPY --from=build /app_output .
