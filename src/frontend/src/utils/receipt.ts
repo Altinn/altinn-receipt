@@ -7,6 +7,34 @@ import { getAppReceiver, getLanguageFromKey } from 'src/utils/language';
 
 import { getArchiveRef } from './instance';
 
+const formatDate = (date: any): string => moment(date).format('DD.MM.YYYY / HH:mm');
+
+const getDateSubmitted = (instance: IInstance, application: IApplication): string | undefined => {
+  if (instance.data && instance.data.length > 0) {
+    const currentTaskData = getCurrentTaskData(application, instance);
+    if (currentTaskData !== undefined) {
+      return instance.process?.ended 
+        ? formatDate(instance.process.ended) 
+        : formatDate(currentTaskData.lastChanged);
+    }
+  }
+
+  if (instance.status.isArchived) {
+    return formatDate(instance.status.archived);
+  }
+
+  return undefined;
+};
+
+const getSender = (party: IParty): string => {
+  if (party.ssn) {
+    return `${party.ssn}-${party.name}`;
+  } else if (party.orgNumber) {
+    return `${party.orgNumber}-${party.name}`;
+  }
+  return '';
+};
+
 export const getInstanceMetaDataObject = (
   instance: IInstance,
   party: IParty,
@@ -22,13 +50,7 @@ export const getInstanceMetaDataObject = (
     return obj;
   }
 
-  let dateSubmitted: any;
-  if (instance.data && instance.data.length > 0) {
-    const currentTaskData = getCurrentTaskData(application, instance);
-    if (currentTaskData !== undefined) {
-      dateSubmitted = instance.process?.ended ? moment(instance.process?.ended).format('DD.MM.YYYY / HH:mm') : moment(currentTaskData?.lastChanged).format('DD.MM.YYYY / HH:mm');
-    }
-  }
+  let dateSubmitted: any = getDateSubmitted(instance, application);
 
   if (dateSubmitted === undefined && instance.status.isArchived) {
     dateSubmitted = moment(instance.status.archived).format('DD.MM.YYYY / HH:mm');
@@ -39,14 +61,8 @@ export const getInstanceMetaDataObject = (
   } else {
     obj[getLanguageFromKey('receipt_platform.date_sent', language)] = dateSubmitted;
   }
-  
-  let sender = '';
 
-  if (party && party.ssn) {
-    sender = `${party.ssn}-${party.name}`;
-  } else if (party && party.orgNumber) {
-    sender = `${party.orgNumber}-${party.name}`;
-  }
+  const sender = getSender(party);
 
   if (!instance.isA2Lookup) {
     obj[getLanguageFromKey('receipt_platform.sender', language)] = sender;
