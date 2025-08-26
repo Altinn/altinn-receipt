@@ -22,12 +22,11 @@ export const getInstanceMetaDataObject = (
     return obj;
   }
 
-  let dateSubmitted;
+  let dateSubmitted: any;
   if (instance.data && instance.data.length > 0) {
     const currentTaskData = getCurrentTaskData(application, instance);
     if (currentTaskData !== undefined) {
-      const lastChanged = getCurrentTaskData(application, instance).lastChanged;
-      dateSubmitted = moment(lastChanged).format('DD.MM.YYYY / HH:mm');
+      dateSubmitted = instance.process?.ended ? moment(instance.process?.ended).format('DD.MM.YYYY / HH:mm') : moment(currentTaskData?.lastChanged).format('DD.MM.YYYY / HH:mm');
     }
   }
 
