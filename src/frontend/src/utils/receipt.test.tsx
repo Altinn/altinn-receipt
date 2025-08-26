@@ -115,5 +115,25 @@ describe('utils > receipt', () => {
       );
       expect(result.Mottaker).toEqual('Name from resources');
     });
+
+    it('should return process.ended date if it exists', () => {
+      const instanceWithEndedProcess = {
+        ...instance,
+        process: {
+          ended: new Date(2019, 11, 24, 10, 33).toISOString(),
+        },
+      } as IInstance;
+
+      const result = getInstanceMetaDataObject(
+        instanceWithEndedProcess,
+        partyPerson,
+        language,
+        organisations,
+        application,
+        [],
+        'nb',
+      );
+      expect(result['Dato sendt']).toEqual('24.12.2019 / 10:33');
+    });
   });
 });
