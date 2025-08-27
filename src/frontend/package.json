@@ -5,6 +5,7 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.development.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.production.js --progress",
     "test": "jest",
+    "test:coverage": "jest --coverage --coverageReporters=lcov",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint \"./src/**/*.ts*\"",
     "compile-ts": "tsc",
     "clean": "rimraf dist compiled"
