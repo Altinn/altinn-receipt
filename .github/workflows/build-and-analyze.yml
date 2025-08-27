@@ -16,39 +16,15 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
         with:
-            dotnet-version: |
-              9.0.x
+              dotnet-version: |
+                9.0.x
       - name: Build & Test
         run: |
            dotnet build Altinn.Receipt.sln -v m
            dotnet test Altinn.Receipt.sln -v m
 
   frontend-test:
-    name: Frontend Test
-    if: ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false) || github.event_name == 'push') &&  github.repository_owner == 'Altinn' && github.actor != 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - name: Setup Node.js
-        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
-        with:
-          node-version: '18'
-          cache: 'yarn'
-          cache-dependency-path: 'src/frontend/yarn.lock'
-      - name: Install dependencies
-        run: |
-          cd src/frontend
-          yarn install --immutable
-      - name: Run frontend tests with coverage
-        run: |
-          cd src/frontend
-          yarn test --coverage --coverageReporters=lcov --testPathPattern="\.(test|spec)\.(ts|tsx)$"
-      - name: Upload frontend coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage
-          path: src/frontend/coverage/
-
+    uses: ./.github/workflows/frontend-test-build.yml
   analyze:
     name: Analyze
     needs: [build-and-test, frontend-test]
