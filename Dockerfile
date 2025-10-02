@@ -1,4 +1,4 @@
-FROM node:22.19-alpine3.21@sha256:6b2127043c2faa4f15cdcdeb65a39fc9afbecf5559301898b754bbff561a8aa9 AS build-receipt-frontend
+FROM node:22.20-alpine3.21@sha256:b1ab5252ffe4191d7b8728606c5b943fc78d6e306950cef9963e50bcdb3c47a7 AS build-receipt-frontend
 
 WORKDIR /build
 
