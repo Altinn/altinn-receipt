@@ -79,11 +79,30 @@
   "packageManager": "yarn@3.8.7",
   "jest": {
     "transform": {
-      ".(ts|tsx)": "ts-jest",
-      "^.+\\.jsx?$": "babel-jest"
+      "^.+\\.(ts|tsx)$": [
+        "ts-jest",
+        {
+          "isolatedModules": true
+        }
+      ],
+      "^.+\\.(js|jsx|mjs|cjs)$": [
+        "babel-jest",
+        {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ]
+          ]
+        }
+      ]
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!until-async|msw)"
+      "/node_modules/(?!(until-async|msw|@mswjs|@bundled-es-modules)/)"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
@@ -95,7 +114,8 @@
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "mjs"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/testConfig/setupTests.ts"
