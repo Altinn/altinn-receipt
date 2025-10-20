@@ -26,8 +26,7 @@ export const returnUrlToMessagebox = (
     return returnUrl;
   }
 
-  const isAltinn3 = url.includes('/af.');
-  const generatedReturnUrl = isAltinn3 ? returnUrlToA2Messagebox(url, partyId) : returnUrlToA3Messagebox(url);
+  const generatedReturnUrl = returnUrlToA2Messagebox(url, partyId);
   return generatedReturnUrl;
 };
 
@@ -47,13 +46,6 @@ export const returnUrlToA2Messagebox = (
   return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${baseUrl}${pathToMessageBox}&R=${partyId}`;
 };
 
-export const returnUrlToA3Messagebox = (
-  url: string,
-): string => {
-  // Inbox in Altinn 3 is located at baseUrl
-  const baseUrl = returnBaseUrlToAltinn3(url);
-  return baseUrl;
-};
 
 export const returnBaseUrlToAltinn2 = (url: string): string => {
   let result: string;
@@ -77,33 +69,13 @@ export const returnBaseUrlToAltinn2 = (url: string): string => {
   return result;
 };
 
-export const returnBaseUrlToAltinn3 = (url: string): string => {
-  let result: string;
-  if (url.search(prodRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    if (env === 'tt02') {
-      result = `https://af.tt.${baseHostnameAltinnProd}/`;
-    } else {
-      result = `https://af.${baseHostnameAltinnProd}/`;
-    }
-  } else if (url.search(testRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    result = `https://af.${env}.${baseHostnameAltinnTest}/`;
-  } else if (url.search(localRegex) >= 0) {
-    result = '/';
-  } else {
-    result = null;
-  }
-  return result;
-};
-
 export const logoutUrlAltinn = (url: string): string => {
-  const isAltinn3 = url.includes('/af.');
-  if (isAltinn3) {
-    return `${returnBaseUrlToAltinn3(url)}logout`;
+  const returnUrl = getReturnUrl();
+
+  if (returnUrl) {
+    return returnUrl + '/logout';
   }
+
   return `${returnBaseUrlToAltinn2(url)}ui/authentication/LogOut`;
 };
 
