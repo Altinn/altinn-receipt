@@ -20,14 +20,14 @@ export const returnUrlToMessagebox = (
   url: string,
   partyId?: string | undefined,
 ): string => {
-  let returnUrl = getReturnUrl();
+  const returnUrl = getReturnUrl();
 
   if (returnUrl) {
     return returnUrl;
   }
 
   const isAltinn3 = url.includes('/af.');
-  const generatedReturnUrl = isAltinn3 ? returnUrlToA2Messagebox(url) : returnUrlToA3Messagebox(url);
+  const generatedReturnUrl = isAltinn3 ? returnUrlToA2Messagebox(url, partyId) : returnUrlToA3Messagebox(url);
   return generatedReturnUrl;
 };
 
@@ -49,7 +49,6 @@ export const returnUrlToA2Messagebox = (
 
 export const returnUrlToA3Messagebox = (
   url: string,
-  partyId?: string | undefined,
 ): string => {
   // Inbox in Altinn 3 is located at baseUrl
   const baseUrl = returnBaseUrlToAltinn3(url);
