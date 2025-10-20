@@ -64,12 +64,13 @@ namespace Altinn.Platform.Receipt
         /// </summary>
         /// <param name="instanceOwnerId">The instance owner id </param>
         /// <param name="instanceId">The instance id</param>
+        /// <param name="returnUrl">The return URL</param>
         /// <returns>The receipt frontend</returns>
         [HttpGet]
         [Route("receipt/{instanceOwnerId}/{instanceId}")]
-        public IActionResult Index(int instanceOwnerId, Guid instanceId)
+        public IActionResult Index(int instanceOwnerId, Guid instanceId, [FromQuery] string returnUrl = null)
         {
-            _logger.LogInformation("Getting receipt for: {instanceOwnerId} for instance with id: {instanceId}", instanceOwnerId, instanceId);
+            _logger.LogInformation("Getting receipt for: {instanceOwnerId} for instance with id: {instanceId}. returnUrl: {returnUrl}", instanceOwnerId, instanceId, returnUrl);
             return View("receipt");
         }
 

@@ -19,3 +19,11 @@ export function getArchiveRef(): string {
     return '';
   }
 }
+
+export function getReturnUrl(): string {
+  if (!window.location.search) {
+    return '';
+  }
+
+  return new URLSearchParams(window.location.search).get('returnUrl');
+}
