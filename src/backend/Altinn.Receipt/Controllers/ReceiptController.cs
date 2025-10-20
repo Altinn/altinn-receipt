@@ -70,7 +70,7 @@ namespace Altinn.Platform.Receipt
         [Route("receipt/{instanceOwnerId}/{instanceId}")]
         public IActionResult Index(int instanceOwnerId, Guid instanceId, [FromQuery] string returnUrl = null)
         {
-            _logger.LogInformation("Getting receipt for: {instanceOwnerId} for instance with id: {instanceId}. returnUrl: {returnUrl}", instanceOwnerId, instanceId, returnUrl);
+            _logger.LogInformation("Getting receipt for: {instanceOwnerId} for instance with id: {instanceId}.", instanceOwnerId, instanceId);
             return View("receipt");
         }
 
