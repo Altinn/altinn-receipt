@@ -21,9 +21,9 @@ export function getArchiveRef(): string {
 }
 
 export function getReturnUrl(): string {
-  if (!window.location.search) {
+  if (!globalThis.location.search) {
     return '';
   }
 
-  return new URLSearchParams(window.location.search).get('returnUrl');
+  return new URLSearchParams(globalThis.location.search).get('returnUrl');
 }
