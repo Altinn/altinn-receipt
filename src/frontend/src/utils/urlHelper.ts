@@ -26,8 +26,7 @@ export const returnUrlToMessagebox = (
     return returnUrl;
   }
 
-  const generatedReturnUrl = returnUrlToA2Messagebox(url, partyId);
-  return generatedReturnUrl;
+  return returnUrlToA2Messagebox(url, partyId);
 };
 
 export const returnUrlToA2Messagebox = (
