@@ -76,9 +76,9 @@ describe('Shared urlHelper.ts', () => {
 
     test('logoutUrlAltinn() returning production messagebox', () => {
     const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
-    const target = 'https://af.altinn.no/logout';
+    const target = 'https://af.altinn.no/location';
     mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
-    expect(logoutUrlAltinn(origin)).toContain('af.altinn.no');
+    expect(logoutUrlAltinn(origin)).toContain('af.altinn.no/logout');
   });
 
   test('makeUrlRelativeIfSameDomain()', () => {

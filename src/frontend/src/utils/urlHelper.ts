@@ -71,8 +71,10 @@ export const returnBaseUrlToAltinn2 = (url: string): string => {
 export const logoutUrlAltinn = (url: string): string => {
   const returnUrl = getReturnUrl();
 
+  // We assume returnUrl is only used by Altinn3
   if (returnUrl) {
-    return returnUrl + '/logout';
+    var baseUrl = new URL(returnUrl).origin
+    return baseUrl + '/logout';
   }
 
   return `${returnBaseUrlToAltinn2(url)}ui/authentication/LogOut`;
