@@ -25,7 +25,7 @@ export function getReturnUrl(): string {
     return '';
   }
 
-  var params = new URLSearchParams(globalThis.location.search)
+  let params = new URLSearchParams(globalThis.location.search)
   const lowerCaseParams = new URLSearchParams();
   for (const [name, value] of params) {
       lowerCaseParams.append(name.toLowerCase(), value);
