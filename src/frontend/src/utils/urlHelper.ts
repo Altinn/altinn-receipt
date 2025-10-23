@@ -73,7 +73,7 @@ export const logoutUrlAltinn = (url: string): string => {
 
   // We assume returnUrl is only used by Altinn3
   if (returnUrl) {
-    var baseUrl = new URL(returnUrl).origin
+    const baseUrl = new URL(returnUrl).origin
     return baseUrl + '/logout';
   }
 
