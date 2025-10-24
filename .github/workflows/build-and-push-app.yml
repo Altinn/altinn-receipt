@@ -7,7 +7,6 @@ on:
       - '.github/workflows/build-and-push-app.yml'
       - 'src/**'
       - 'Dockerfile'
-  workflow_dispatch:
 
 permissions:
       id-token: write
