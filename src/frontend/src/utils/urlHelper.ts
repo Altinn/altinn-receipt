@@ -1,4 +1,5 @@
 import type { IAltinnWindow } from '../types';
+import { getReturnUrl } from './instance';
 
 const { org, app } = window as Window as IAltinnWindow;
 const origin = window.location.origin;
@@ -19,7 +20,20 @@ export const returnUrlToMessagebox = (
   url: string,
   partyId?: string | undefined,
 ): string => {
-  const baseUrl = returnBaseUrlToAltinn(url);
+  const returnUrl = getReturnUrl();
+
+  if (returnUrl) {
+    return returnUrl;
+  }
+
+  return returnUrlToA2Messagebox(url, partyId);
+};
+
+export const returnUrlToA2Messagebox = (
+  url: string,
+  partyId?: string | undefined,
+): string => {
+  const baseUrl = returnBaseUrlToAltinn2(url);
   if (!baseUrl) {
     return null;
   }
@@ -31,7 +45,8 @@ export const returnUrlToMessagebox = (
   return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${baseUrl}${pathToMessageBox}&R=${partyId}`;
 };
 
-export const returnBaseUrlToAltinn = (url: string): string => {
+
+export const returnBaseUrlToAltinn2 = (url: string): string => {
   let result: string;
   if (url.search(prodRegex) >= 0) {
     const split = url.split('.');
@@ -54,7 +69,7 @@ export const returnBaseUrlToAltinn = (url: string): string => {
 };
 
 export const logoutUrlAltinn = (url: string): string => {
-  return `${returnBaseUrlToAltinn(url)}ui/authentication/LogOut`;
+  return `${returnBaseUrlToAltinn2(url)}ui/authentication/LogOut`;
 };
 
 // Storage is always returning https:// links for attachments.

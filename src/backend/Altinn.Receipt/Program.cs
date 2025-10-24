@@ -240,13 +240,14 @@ void Configure(IConfiguration config)
     {
         var request = context.HttpContext.Request;
         var response = context.HttpContext.Response;
-        string url = $"https://platform.{config["GeneralSettings:Hostname"]}{request.Path}";
+        string url = $"https://platform.{config["GeneralSettings:Hostname"]}{request.Path}{request.QueryString}";
+        string gotoUrl = WebUtility.UrlEncode(url);
 
         // you may also check requests path to do this only for specific methods
         // && request.Path.Value.StartsWith("/specificPath")
         if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
         {
-            response.Redirect($"{authenticationEndpoint}authentication?goto={url}");
+            response.Redirect($"{authenticationEndpoint}authentication?goto={gotoUrl}");
         }
 
         return Task.CompletedTask;

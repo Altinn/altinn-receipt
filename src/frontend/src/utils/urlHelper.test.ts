@@ -1,10 +1,11 @@
 import 'jest';
 import {
   returnUrlToMessagebox,
-  returnBaseUrlToAltinn,
+  returnBaseUrlToAltinn2,
   logoutUrlAltinn,
   makeUrlRelativeIfSameDomain,
 } from './urlHelper';
+import { mockLocation } from 'testConfig/testUtils';
 
 describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() returning production messagebox', () => {
@@ -36,11 +37,11 @@ describe('Shared urlHelper.ts', () => {
       'https://ttd.apps.yt01.altinn.cloud/tdd/tjeneste-20190826-1130';
     const originProd = 'https://ttd.apps.altinn.no/tdd/tjeneste-20190826-1130';
     const originUnknown = 'https://www.vg.no';
-    expect(returnBaseUrlToAltinn(originTT)).toContain('tt02.altinn.no');
-    expect(returnBaseUrlToAltinn(originAT)).toContain('at21.altinn.cloud');
-    expect(returnBaseUrlToAltinn(originYT)).toContain('yt01.altinn.cloud');
-    expect(returnBaseUrlToAltinn(originProd)).toContain('altinn.no');
-    expect(returnBaseUrlToAltinn(originUnknown)).toBe(null);
+    expect(returnBaseUrlToAltinn2(originTT)).toContain('tt02.altinn.no');
+    expect(returnBaseUrlToAltinn2(originAT)).toContain('at21.altinn.cloud');
+    expect(returnBaseUrlToAltinn2(originYT)).toContain('yt01.altinn.cloud');
+    expect(returnBaseUrlToAltinn2(originProd)).toContain('altinn.no');
+    expect(returnBaseUrlToAltinn2(originUnknown)).toBe(null);
   });
 
   test('logoutUrlAltinn() should return correct url for each env.', () => {
@@ -64,6 +65,22 @@ describe('Shared urlHelper.ts', () => {
       'altinn.no/ui/authentication/LogOut',
     );
   });
+
+  // ReturnUrl test for altinn3
+  test('returnUrlToMessagebox() returning production messagebox', () => {
+    const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
+    const target = 'https://af.altinn.no/';
+    mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
+    expect(returnUrlToMessagebox(origin)).toContain('af.altinn.no');
+  });
+
+    test('logoutUrlAltinn() returning production messagebox', () => {
+    const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
+    const target = 'https://af.altinn.no/location';
+    mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
+    expect(logoutUrlAltinn(origin)).toContain(
+      'altinn.no/ui/authentication/LogOut',
+    );  });
 
   test('makeUrlRelativeIfSameDomain()', () => {
     // Simple testcase make relative

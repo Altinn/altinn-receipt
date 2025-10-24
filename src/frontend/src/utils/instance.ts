@@ -19,3 +19,16 @@ export function getArchiveRef(): string {
     return '';
   }
 }
+
+export function getReturnUrl(): string {
+  if (!globalThis.location.search) {
+    return '';
+  }
+
+  const params = new URLSearchParams(globalThis.location.search)
+  const lowerCaseParams = new URLSearchParams();
+  for (const [name, value] of params) {
+      lowerCaseParams.append(name.toLowerCase(), value);
+  }
+  return lowerCaseParams.get('returnurl');
+}
