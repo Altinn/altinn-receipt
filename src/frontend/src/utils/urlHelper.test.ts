@@ -13,9 +13,9 @@ describe('Shared urlHelper.ts', () => {
     expect(returnUrlToMessagebox(origin)).toContain('altinn.no');
   });
 
-  test('returnUrlToMessagebox() returning at21 messagebox', () => {
-    const origin = 'https://tdd.apps.at21.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toContain('at21.altinn.cloud');
+  test('returnUrlToMessagebox() returning at22 messagebox', () => {
+    const origin = 'https://tdd.apps.at22.altinn.cloud/tdd/myappname';
+    expect(returnUrlToMessagebox(origin)).toContain('at22.altinn.cloud');
   });
 
   test('returnUrlToMessagebox() returning tt02 messagebox', () => {
@@ -32,13 +32,13 @@ describe('Shared urlHelper.ts', () => {
     const originTT =
       'https://ttd.apps.tt02.altinn.no/tdd/tjeneste-20190826-1130';
     const originAT =
-      'https://ttd.apps.at21.altinn.cloud/tdd/tjeneste-20190826-1130';
+      'https://ttd.apps.at22.altinn.cloud/tdd/tjeneste-20190826-1130';
     const originYT =
       'https://ttd.apps.yt01.altinn.cloud/tdd/tjeneste-20190826-1130';
     const originProd = 'https://ttd.apps.altinn.no/tdd/tjeneste-20190826-1130';
     const originUnknown = 'https://www.vg.no';
     expect(returnBaseUrlToAltinn2(originTT)).toContain('tt02.altinn.no');
-    expect(returnBaseUrlToAltinn2(originAT)).toContain('at21.altinn.cloud');
+    expect(returnBaseUrlToAltinn2(originAT)).toContain('at22.altinn.cloud');
     expect(returnBaseUrlToAltinn2(originYT)).toContain('yt01.altinn.cloud');
     expect(returnBaseUrlToAltinn2(originProd)).toContain('altinn.no');
     expect(returnBaseUrlToAltinn2(originUnknown)).toBe(null);
@@ -48,7 +48,7 @@ describe('Shared urlHelper.ts', () => {
     const originTT =
       'https://ttd.apps.tt02.altinn.no/tdd/tjeneste-20190826-1130';
     const originAT =
-      'https://ttd.apps.at21.altinn.cloud/tdd/tjeneste-20190826-1130';
+      'https://ttd.apps.at22.altinn.cloud/tdd/tjeneste-20190826-1130';
     const originYT =
       'https://ttd.apps.yt01.altinn.cloud/tdd/tjeneste-20190826-1130';
     const originProd = 'https://ttd.apps.altinn.no/tdd/tjeneste-20190826-1130';
@@ -56,7 +56,7 @@ describe('Shared urlHelper.ts', () => {
       'tt02.altinn.no/ui/authentication/LogOut',
     );
     expect(logoutUrlAltinn(originAT)).toContain(
-      'at21.altinn.cloud/ui/authentication/LogOut',
+      'at22.altinn.cloud/ui/authentication/LogOut',
     );
     expect(logoutUrlAltinn(originYT)).toContain(
       'yt01.altinn.cloud/ui/authentication/LogOut',
