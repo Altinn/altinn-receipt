@@ -1,7 +1,7 @@
 import { getInstanceId, getInstanceOwnerId } from './instance';
 
-export const altinnAt21PlatformUrl = 'https://platform.at21.altinn.cloud/';
-export const altinnAt21Url = 'https://at21.altinn.cloud/';
+export const altinnAt22PlatformUrl = 'https://platform.at22.altinn.cloud/';
+export const altinnAt22Url = 'https://at22.altinn.cloud/';
 export const altinnOrganisationsUrl =
   'https://altinncdn.no/orgs/altinn-orgs.json';
 
@@ -15,8 +15,8 @@ export function getAltinnCloudUrl() {
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname === 'altinn3.no'
   ) {
-    // if we are developing locally, point to test data in at21
-    return altinnAt21PlatformUrl;
+    // if we are developing locally, point to test data in at22
+    return altinnAt22PlatformUrl;
   }
 
   // Point to origin. Can be multiple environments.
@@ -41,7 +41,7 @@ export function getTextResourceUrl(org: string, app: string, language: string) {
 
 export function getAltinnUrl() {
   if (window.location.hostname === 'localhost') {
-    return altinnAt21Url;
+    return altinnAt22Url;
   }
   return `${window.location.origin}/`;
 }

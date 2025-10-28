@@ -3,8 +3,8 @@ import { getInstanceId, getInstanceOwnerId } from './instance';
 import { mockLocation } from 'testConfig/testUtils';
 
 import {
-  altinnAt21Url,
-  altinnAt21PlatformUrl,
+  altinnAt22Url,
+  altinnAt22PlatformUrl,
   getAltinnUrl,
   getTextResourceUrl,
   getUserUrl,
@@ -21,10 +21,10 @@ describe('receiptUrlHelper', () => {
   });
 
   describe('getAltinnUrl', () => {
-    it('should return altinnAt21Url when hostname is localhost', () => {
+    it('should return altinnAt22Url when hostname is localhost', () => {
       mockLocation({ hostname: 'localhost' });
 
-      expect(getAltinnUrl()).toEqual(altinnAt21Url);
+      expect(getAltinnUrl()).toEqual(altinnAt22Url);
     });
 
     it('should return window.location.origin followed by trailing slash when hostname is not localhost', () => {
@@ -55,7 +55,7 @@ describe('receiptUrlHelper', () => {
       mockLocation({ hostname: 'localhost' });
 
       expect(getApplicationMetadataUrl('org-name', 'app-name')).toEqual(
-        `${altinnAt21PlatformUrl}storage/api/v1/applications/org-name/app-name`,
+        `${altinnAt22PlatformUrl}storage/api/v1/applications/org-name/app-name`,
       );
     });
 
@@ -69,22 +69,22 @@ describe('receiptUrlHelper', () => {
   });
 
   describe('getAltinnCloudUrl', () => {
-    it('should return altinnAt21PlatformUrl when running on localhost', () => {
+    it('should return altinnAt22PlatformUrl when running on localhost', () => {
       mockLocation({ hostname: 'localhost' });
 
-      expect(getAltinnCloudUrl()).toEqual(altinnAt21PlatformUrl);
+      expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
-    it('should return altinnAt21PlatformUrl when running on 127.0.0.1', () => {
+    it('should return altinnAt22PlatformUrl when running on 127.0.0.1', () => {
       mockLocation({ hostname: '127.0.0.1' });
 
-      expect(getAltinnCloudUrl()).toEqual(altinnAt21PlatformUrl);
+      expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
-    it('should return altinnAt21PlatformUrl when running on altinn3.no', () => {
+    it('should return altinnAt22PlatformUrl when running on altinn3.no', () => {
       mockLocation({ hostname: 'altinn3.no' });
 
-      expect(getAltinnCloudUrl()).toEqual(altinnAt21PlatformUrl);
+      expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
     it('should return window.location.origin followed by trailing slash when running on altinn3.no', () => {
@@ -99,7 +99,7 @@ describe('receiptUrlHelper', () => {
       mockLocation({ hostname: 'localhost' });
 
       expect(getExtendedInstanceUrl()).toEqual(
-        `${altinnAt21PlatformUrl}receipt/api/v1/instances/${getInstanceOwnerId()}/${getInstanceId()}?includeParty=true`,
+        `${altinnAt22PlatformUrl}receipt/api/v1/instances/${getInstanceOwnerId()}/${getInstanceId()}?includeParty=true`,
       );
     });
 
