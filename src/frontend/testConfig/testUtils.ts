@@ -12,7 +12,7 @@ export const mockLocation = (location: object = {}) => {
 
 export const instanceHandler = (response: any) => {
   return http.get(
-    'https://platform.2.altinn.cloud/receipt/api/v1/instances/mockInstanceOwnerId/6697de17-18c7-4fb9-a428-d6a414a797ae',
+    'https://platform.at22.altinn.cloud/receipt/api/v1/instances/mockInstanceOwnerId/6697de17-18c7-4fb9-a428-d6a414a797ae',
     () => new Response(JSON.stringify(response)),
   );
 };
