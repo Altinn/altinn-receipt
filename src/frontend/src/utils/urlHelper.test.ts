@@ -15,17 +15,17 @@ describe('Shared urlHelper.ts', () => {
 
   test('returnUrlToMessagebox() returning AT inbox', () => {
     const origin = 'https://tdd.apps.at22.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.at.altinn.cloud');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.at23.altinn.cloud');
   });
 
   test('returnUrlToMessagebox() returning TT inbox', () => {
     const origin = 'https://tdd.apps.tt02.altinn.no/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.tt.altinn.no');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.tt02.altinn.no');
   });
 
   test('returnUrlToMessagebox() returning YT inbox', () => {
     const origin = 'https://tdd.apps.yt01.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.yt.altinn.cloud');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.yt01.altinn.cloud');
   });
 
   test('returnUrlToMessagebox() returning null when unknown origin', () => {

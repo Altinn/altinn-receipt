@@ -16,13 +16,13 @@ const ALTINN_HOSTNAMES = {
 
 const INBOX_URLS = {
   PROD: 'https://af.altinn.no',
-  TT: 'https://af.tt.altinn.no',
-  AT: 'https://af.at.altinn.cloud',
-  YT: 'https://af.yt.altinn.cloud',
+  TT: 'https://af.tt02.altinn.no',
+  AT: 'https://af.at23.altinn.cloud',
+  YT: 'https://af.yt01.altinn.cloud',
   LOCAL: '/',
 } as const;
 
-const isATEnvironment = (url: string): boolean => url.includes('.at.') || url.includes('.at22.');
+const isATEnvironment = (url: string): boolean => url.includes('.at.') || url.includes('.at22.') || url.includes('.at23.');
 const isYTEnvironment = (url: string): boolean => url.includes('.yt.') || url.includes('.yt01.');
 const isTTEnvironment = (url: string): boolean => url.includes('.tt.') || url.includes('.tt02.');
 const isProdEnvironment = (url: string): boolean => url.includes(ALTINN_HOSTNAMES.PROD);
