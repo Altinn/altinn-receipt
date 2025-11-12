@@ -8,64 +8,85 @@ export const getApplicationMetadataUrl = (): string => {
   return `${origin}/designer/api/v1/${org}/${app}`;
 };
 
-const baseHostnameAltinnProd = 'altinn.no';
-const baseHostnameAltinnTest = 'altinn.cloud';
-const baseHostnameAltinnLocal = 'altinn3local.no';
-const pathToMessageBox = 'ui/messagebox';
-const prodRegex = new RegExp(baseHostnameAltinnProd);
-const testRegex = new RegExp(baseHostnameAltinnTest);
-const localRegex = new RegExp(baseHostnameAltinnLocal);
+const ALTINN_HOSTNAMES = {
+  PROD: 'altinn.no',
+  TEST: 'altinn.cloud',
+  LOCAL: 'altinn3local.no',
+} as const;
 
-export const returnUrlToMessagebox = (
-  url: string,
-  partyId?: string | undefined,
-): string => {
-  const returnUrl = getReturnUrl();
+const INBOX_URLS = {
+  PROD: 'https://af.altinn.no',
+  TT: 'https://af.tt.altinn.no',
+  AT: 'https://af.at.altinn.cloud',
+  YT: 'https://af.yt.altinn.cloud',
+  LOCAL: '/',
+} as const;
 
-  if (returnUrl) {
-    return returnUrl;
-  }
+const isATEnvironment = (url: string): boolean => url.includes('.at.') || url.includes('.at22.');
+const isYTEnvironment = (url: string): boolean => url.includes('.yt.') || url.includes('.yt01.');
+const isTTEnvironment = (url: string): boolean => url.includes('.tt.') || url.includes('.tt02.');
+const isProdEnvironment = (url: string): boolean => url.includes(ALTINN_HOSTNAMES.PROD);
+const isLocalEnvironment = (url: string): boolean => url.includes(ALTINN_HOSTNAMES.LOCAL);
 
-  return returnUrlToA2Messagebox(url, partyId);
+const getInboxBaseUrl = (url: string): string | null => {
+  if (isLocalEnvironment(url)) return INBOX_URLS.LOCAL;
+  if (isATEnvironment(url)) return INBOX_URLS.AT;
+  if (isYTEnvironment(url)) return INBOX_URLS.YT;
+  if (isTTEnvironment(url)) return INBOX_URLS.TT;
+  if (isProdEnvironment(url)) return INBOX_URLS.PROD;
+  return null;
 };
 
-export const returnUrlToA2Messagebox = (
-  url: string,
-  partyId?: string | undefined,
-): string => {
-  const baseUrl = returnBaseUrlToAltinn2(url);
-  if (!baseUrl) {
+const addPartyIdToUrl = (baseUrl: string, partyId?: string): string => {
+  if (!partyId) return baseUrl;
+  return `${baseUrl}?partyId=${partyId}`;
+};
+
+export const returnUrlToMessagebox = (url: string, partyId?: string): string => {
+  const customReturnUrl = getReturnUrl();
+  if (customReturnUrl) {
+    return customReturnUrl;
+  }
+
+  const inboxBaseUrl = getInboxBaseUrl(url);
+  if (!inboxBaseUrl) {
     return null;
   }
 
-  if (partyId === undefined) {
-    return baseUrl + pathToMessageBox;
-  }
-
-  return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${baseUrl}${pathToMessageBox}&R=${partyId}`;
+  return addPartyIdToUrl(inboxBaseUrl, partyId);
 };
 
+const getEnvironmentFromUrl = (url: string): string => {
+  const parts = url.split('.');
+  return parts[parts.length - 3];
+};
 
-export const returnBaseUrlToAltinn2 = (url: string): string => {
-  let result: string;
-  if (url.search(prodRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    if (env === 'tt02') {
-      result = `https://${env}.${baseHostnameAltinnProd}/`;
-    } else {
-      result = `https://${baseHostnameAltinnProd}/`;
-    }
-  } else if (url.search(testRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    result = `https://${env}.${baseHostnameAltinnTest}/`;
-  } else if (url.search(localRegex) >= 0) {
-    result = '/';
-  } else {
-    result = null;
+const buildAltinn2BaseUrl = (hostname: string, environment?: string): string => {
+  if (environment) {
+    return `https://${environment}.${hostname}/`;
   }
-  return result;
+  return `https://${hostname}/`;
+};
+
+export const returnBaseUrlToAltinn2 = (url: string): string | null => {
+  if (isLocalEnvironment(url)) {
+    return '/';
+  }
+
+  if (isProdEnvironment(url)) {
+    const environment = getEnvironmentFromUrl(url);
+    if (environment === 'tt02') {
+      return buildAltinn2BaseUrl(ALTINN_HOSTNAMES.PROD, environment);
+    }
+    return buildAltinn2BaseUrl(ALTINN_HOSTNAMES.PROD);
+  }
+
+  if (url.includes(ALTINN_HOSTNAMES.TEST)) {
+    const environment = getEnvironmentFromUrl(url);
+    return buildAltinn2BaseUrl(ALTINN_HOSTNAMES.TEST, environment);
+  }
+
+  return null;
 };
 
 export const logoutUrlAltinn = (url: string): string => {

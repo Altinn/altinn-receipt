@@ -8,19 +8,24 @@ import {
 import { mockLocation } from 'testConfig/testUtils';
 
 describe('Shared urlHelper.ts', () => {
-  test('returnUrlToMessagebox() returning production messagebox', () => {
+  test('returnUrlToMessagebox() returning production inbox', () => {
     const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toContain('altinn.no');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.altinn.no');
   });
 
-  test('returnUrlToMessagebox() returning at22 messagebox', () => {
+  test('returnUrlToMessagebox() returning AT inbox', () => {
     const origin = 'https://tdd.apps.at22.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toContain('at22.altinn.cloud');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.at.altinn.cloud');
   });
 
-  test('returnUrlToMessagebox() returning tt02 messagebox', () => {
+  test('returnUrlToMessagebox() returning TT inbox', () => {
     const origin = 'https://tdd.apps.tt02.altinn.no/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toContain('tt02.altinn.no');
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.tt.altinn.no');
+  });
+
+  test('returnUrlToMessagebox() returning YT inbox', () => {
+    const origin = 'https://tdd.apps.yt01.altinn.cloud/tdd/myappname';
+    expect(returnUrlToMessagebox(origin)).toBe('https://af.yt.altinn.cloud');
   });
 
   test('returnUrlToMessagebox() returning null when unknown origin', () => {
