@@ -4,12 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - "src/frontend/**"
-      - ".github/workflows/frontend-test-build.yml"
+      - 'src/frontend/**'
+      - '.github/workflows/frontend-test-build.yml'
   pull_request:
     paths:
-      - "src/frontend/**"
-      - ".github/workflows/frontend-test-build.yml"
+      - 'src/frontend/**'
+      - '.github/workflows/frontend-test-build.yml'
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
@@ -19,6 +19,8 @@ jobs:
   test-and-build:
     name: Test and Build Frontend
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     defaults:
       run:
@@ -31,9 +33,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "20"
-          cache: "yarn"
-          cache-dependency-path: "src/frontend/yarn.lock"
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: 'src/frontend/yarn.lock'
 
       - name: Install dependencies
         run: yarn install --immutable
