@@ -1,91 +1,105 @@
 import 'jest';
 import {
   returnUrlToMessagebox,
-  returnBaseUrlToAltinn2,
+  returnBaseUrlToAltinn,
   logoutUrlAltinn,
   makeUrlRelativeIfSameDomain,
+  getDialogIdFromDataValues,
 } from './urlHelper';
 import { mockLocation } from 'testConfig/testUtils';
 
 describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() returning production inbox', () => {
-    const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.altinn.no');
+    const host = 'tdd.apps.altinn.no';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.altinn.no/');
   });
 
   test('returnUrlToMessagebox() returning AT inbox', () => {
-    const origin = 'https://tdd.apps.at22.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.at23.altinn.cloud');
+    const host = 'tdd.apps.at22.altinn.cloud';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.at22.altinn.cloud/');
   });
 
   test('returnUrlToMessagebox() returning TT inbox', () => {
-    const origin = 'https://tdd.apps.tt02.altinn.no/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.tt02.altinn.no');
+    const host = 'tdd.apps.tt02.altinn.no';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.tt02.altinn.no/');
   });
 
   test('returnUrlToMessagebox() returning YT inbox', () => {
-    const origin = 'https://tdd.apps.yt01.altinn.cloud/tdd/myappname';
-    expect(returnUrlToMessagebox(origin)).toBe('https://af.yt01.altinn.cloud');
+    const host = 'tdd.apps.yt01.altinn.cloud';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.yt01.altinn.cloud/');
   });
 
-  test('returnUrlToMessagebox() returning null when unknown origin', () => {
-    const origin = 'https://www.vg.no';
-    expect(returnUrlToMessagebox(origin)).toBe(null);
+  test('returnUrlToMessagebox() returning undefined when unknown host', () => {
+    const host = 'www.ikkealtinn.no';
+    expect(returnUrlToMessagebox(host)).toBe(undefined);
   });
 
-  test('returnBaseUrlToAltinn() returning correct environemnts', () => {
-    const originTT =
-      'https://ttd.apps.tt02.altinn.no/tdd/tjeneste-20190826-1130';
-    const originAT =
-      'https://ttd.apps.at22.altinn.cloud/tdd/tjeneste-20190826-1130';
-    const originYT =
-      'https://ttd.apps.yt01.altinn.cloud/tdd/tjeneste-20190826-1130';
-    const originProd = 'https://ttd.apps.altinn.no/tdd/tjeneste-20190826-1130';
-    const originUnknown = 'https://www.vg.no';
-    expect(returnBaseUrlToAltinn2(originTT)).toContain('tt02.altinn.no');
-    expect(returnBaseUrlToAltinn2(originAT)).toContain('at22.altinn.cloud');
-    expect(returnBaseUrlToAltinn2(originYT)).toContain('yt01.altinn.cloud');
-    expect(returnBaseUrlToAltinn2(originProd)).toContain('altinn.no');
-    expect(returnBaseUrlToAltinn2(originUnknown)).toBe(null);
+  test('returnUrlToMessagebox() with partyId uses redirect mechanism', () => {
+    const host = 'tdd.apps.altinn.no';
+    const result = returnUrlToMessagebox(host, 12345);
+    expect(result).toBe('https://altinn.no/ui/Reportee/ChangeReporteeAndRedirect?goTo=https%3A%2F%2Faf.altinn.no%2F&R=12345');
+  });
+
+  test('returnUrlToMessagebox() with dialogId returns inbox URL with dialogId', () => {
+    const host = 'tdd.apps.altinn.no';
+    const result = returnUrlToMessagebox(host, undefined, 'abc-123');
+    expect(result).toBe('https://af.altinn.no/inbox/abc-123');
+  });
+
+  test('returnUrlToMessagebox() with partyId and dialogId uses redirect with dialogId', () => {
+    const host = 'tdd.apps.altinn.no';
+    const result = returnUrlToMessagebox(host, 12345, 'abc-123');
+    expect(result).toBe('https://altinn.no/ui/Reportee/ChangeReporteeAndRedirect?goTo=https%3A%2F%2Faf.altinn.no%2Finbox%2Fabc-123&R=12345');
+  });
+
+  test('returnUrlToMessagebox() for local environment', () => {
+    const host = 'local.altinn.cloud';
+    expect(returnUrlToMessagebox(host)).toBe('http://local.altinn.cloud/');
+  });
+
+  test('returnBaseUrlToAltinn() returning correct environments', () => {
+    const hostTT = 'ttd.apps.tt02.altinn.no';
+    const hostAT = 'ttd.apps.at22.altinn.cloud';
+    const hostYT = 'ttd.apps.yt01.altinn.cloud';
+    const hostProd = 'ttd.apps.altinn.no';
+    const hostUnknown = 'www.ikkealtinn.no';
+    expect(returnBaseUrlToAltinn(hostTT)).toBe('https://tt02.altinn.no/');
+    expect(returnBaseUrlToAltinn(hostAT)).toBe('https://at22.altinn.cloud/');
+    expect(returnBaseUrlToAltinn(hostYT)).toBe('https://yt01.altinn.cloud/');
+    expect(returnBaseUrlToAltinn(hostProd)).toBe('https://altinn.no/');
+    expect(returnBaseUrlToAltinn(hostUnknown)).toBe(undefined);
   });
 
   test('logoutUrlAltinn() should return correct url for each env.', () => {
-    const originTT =
-      'https://ttd.apps.tt02.altinn.no/tdd/tjeneste-20190826-1130';
-    const originAT =
-      'https://ttd.apps.at22.altinn.cloud/tdd/tjeneste-20190826-1130';
-    const originYT =
-      'https://ttd.apps.yt01.altinn.cloud/tdd/tjeneste-20190826-1130';
-    const originProd = 'https://ttd.apps.altinn.no/tdd/tjeneste-20190826-1130';
-    expect(logoutUrlAltinn(originTT)).toContain(
-      'tt02.altinn.no/ui/authentication/LogOut',
-    );
-    expect(logoutUrlAltinn(originAT)).toContain(
-      'at22.altinn.cloud/ui/authentication/LogOut',
-    );
-    expect(logoutUrlAltinn(originYT)).toContain(
-      'yt01.altinn.cloud/ui/authentication/LogOut',
-    );
-    expect(logoutUrlAltinn(originProd)).toContain(
-      'altinn.no/ui/authentication/LogOut',
-    );
+    const hostTT = 'ttd.apps.tt02.altinn.no';
+    const hostAT = 'ttd.apps.at22.altinn.cloud';
+    const hostYT = 'ttd.apps.yt01.altinn.cloud';
+    const hostProd = 'ttd.apps.altinn.no';
+    expect(logoutUrlAltinn(hostTT)).toBe('https://tt02.altinn.no/ui/authentication/LogOut');
+    expect(logoutUrlAltinn(hostAT)).toBe('https://at22.altinn.cloud/ui/authentication/LogOut');
+    expect(logoutUrlAltinn(hostYT)).toBe('https://yt01.altinn.cloud/ui/authentication/LogOut');
+    expect(logoutUrlAltinn(hostProd)).toBe('https://altinn.no/ui/authentication/LogOut');
+  });
+
+  test('logoutUrlAltinn() for local environment', () => {
+    const host = 'local.altinn.cloud';
+    expect(logoutUrlAltinn(host)).toBe('http://local.altinn.cloud/');
   });
 
   // ReturnUrl test for altinn3
-  test('returnUrlToMessagebox() returning production messagebox', () => {
-    const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
-    const target = 'https://af.altinn.no/';
+  test('returnUrlToMessagebox() with custom returnUrl', () => {
+    const host = 'tdd.apps.altinn.no';
+    const target = 'https://af.altinn.no/custom-path';
     mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
-    expect(returnUrlToMessagebox(origin)).toContain('af.altinn.no');
+    expect(returnUrlToMessagebox(host)).toBe(target);
   });
 
-    test('logoutUrlAltinn() returning production messagebox', () => {
-    const origin = 'https://tdd.apps.altinn.no/tdd/myappname';
+  test('logoutUrlAltinn() ignores custom returnUrl', () => {
+    const host = 'tdd.apps.altinn.no';
     const target = 'https://af.altinn.no/location';
     mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
-    expect(logoutUrlAltinn(origin)).toContain(
-      'altinn.no/ui/authentication/LogOut',
-    );  });
+    expect(logoutUrlAltinn(host)).toBe('https://altinn.no/ui/authentication/LogOut');
+  });
 
   test('makeUrlRelativeIfSameDomain()', () => {
     // Simple testcase make relative
@@ -118,5 +132,27 @@ describe('Shared urlHelper.ts', () => {
         hostname: 'altinn3local.no',
       } as Location),
     ).toBe('/');
+  });
+
+  describe('getDialogIdFromDataValues', () => {
+    test('returns dialogId when it exists as string', () => {
+      expect(getDialogIdFromDataValues({ 'dialog.id': 'abc-123' })).toBe('abc-123');
+    });
+
+    test('returns dialogId when it exists as number', () => {
+      expect(getDialogIdFromDataValues({ 'dialog.id': 12345 })).toBe('12345');
+    });
+
+    test('returns undefined when dialog.id does not exist', () => {
+      expect(getDialogIdFromDataValues({ other: 'value' })).toBe(undefined);
+    });
+
+    test('returns undefined when dataValues is null', () => {
+      expect(getDialogIdFromDataValues(null)).toBe(undefined);
+    });
+
+    test('returns undefined when dataValues is undefined', () => {
+      expect(getDialogIdFromDataValues(undefined)).toBe(undefined);
+    });
   });
 });

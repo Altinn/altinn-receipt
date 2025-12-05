@@ -103,7 +103,7 @@ function AltinnAppHeaderMenu(props: IAltinnAppHeaderMenuProps) {
           className={classes.menuItem}
           id='logout-menu-item'
         >
-          <a href={logoutUrlAltinn(window.location.origin)}>
+          <a href={logoutUrlAltinn(window.location.host)}>
             {logoutText}
           </a>
         </MenuItem>
