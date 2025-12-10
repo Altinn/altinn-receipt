@@ -14,7 +14,7 @@ import {
 } from 'src/utils/attachmentsUtils';
 import { getAppName, getLanguageFromKey, getParsedLanguageFromKey, getTextResourceByKey } from 'src/utils/language';
 import { getInstanceMetaDataObject } from 'src/utils/receipt';
-import { returnUrlToMessagebox } from 'src/utils/urlHelper';
+import { returnUrlToMessagebox, getDialogIdFromDataValues } from 'src/utils/urlHelper';
 
 import { useFetchInitialData, useLanguageWithOverrides } from './hooks';
 
@@ -64,7 +64,12 @@ function Receipt(props: WithStyles<typeof styles>) {
   };
 
   const handleModalClose = () => {
-    window.location.href = returnUrlToMessagebox(window.location.origin);
+    const partyId = instance?.instanceOwner?.partyId ? Number(instance.instanceOwner.partyId) : undefined;
+    const dialogId = getDialogIdFromDataValues(instance?.dataValues);
+    const returnUrl = returnUrlToMessagebox(window.location.host, partyId, dialogId);
+    if (returnUrl) {
+      window.location.href = returnUrl;
+    }
   };
 
   const isLoading = !party || !instance || !organisations || !application || !language || !user || !textResources;

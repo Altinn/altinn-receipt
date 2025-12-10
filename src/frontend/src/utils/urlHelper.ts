@@ -8,68 +8,93 @@ export const getApplicationMetadataUrl = (): string => {
   return `${origin}/designer/api/v1/${org}/${app}`;
 };
 
-const baseHostnameAltinnProd = 'altinn.no';
-const baseHostnameAltinnTest = 'altinn.cloud';
-const baseHostnameAltinnLocal = 'altinn3local.no';
-const pathToMessageBox = 'ui/messagebox';
-const prodRegex = new RegExp(baseHostnameAltinnProd);
-const testRegex = new RegExp(baseHostnameAltinnTest);
-const localRegex = new RegExp(baseHostnameAltinnLocal);
+const prodStagingRegex = /^\w+\.apps\.((\w+\.)?altinn\.(no|cloud))$/;
+const localRegex = /^local\.altinn\.cloud(:\d+)?$/;
+const localhostRegex = /^localhost(:\d+)?$/;
 
-export const returnUrlToMessagebox = (
-  url: string,
-  partyId?: string | undefined,
-): string => {
-  const returnUrl = getReturnUrl();
+function isLocalEnvironment(host: string): boolean {
+  return localRegex.test(host) || localhostRegex.test(host);
+}
 
-  if (returnUrl) {
-    return returnUrl;
+function extractAltinnHost(host: string): string | undefined {
+  const match = host.match(prodStagingRegex);
+  return match?.[1];
+}
+
+function isProductionEnvironment(altinnHost: string): boolean {
+  return altinnHost === 'altinn.no';
+}
+
+function buildArbeidsflateUrl(altinnHost: string): string {
+  if (isProductionEnvironment(altinnHost)) {
+    return 'https://af.altinn.no/';
   }
+  return `https://af.${altinnHost}/`;
+}
 
-  return returnUrlToA2Messagebox(url, partyId);
+export const returnBaseUrlToAltinn = (host: string): string | undefined => {
+  const altinnHost = extractAltinnHost(host);
+  if (!altinnHost) {
+    return undefined;
+  }
+  return `https://${altinnHost}/`;
 };
 
-export const returnUrlToA2Messagebox = (
-  url: string,
-  partyId?: string | undefined,
-): string => {
-  const baseUrl = returnBaseUrlToAltinn2(url);
-  if (!baseUrl) {
-    return null;
+function buildArbeidsflateRedirectUrl(host: string, partyId?: number, dialogId?: string): string | undefined {
+  if (isLocalEnvironment(host)) {
+    return `http://${host}/`;
   }
+
+  const baseUrl = returnBaseUrlToAltinn(host);
+  const altinnHost = extractAltinnHost(host);
+  if (!baseUrl || !altinnHost) {
+    return undefined;
+  }
+
+  const arbeidsflateBaseUrl = buildArbeidsflateUrl(altinnHost);
+  const targetUrl = dialogId
+    ? `${arbeidsflateBaseUrl.replace(/\/$/, '')}/inbox/${dialogId}`
+    : arbeidsflateBaseUrl;
 
   if (partyId === undefined) {
-    return baseUrl + pathToMessageBox;
+    return targetUrl;
   }
 
-  return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${baseUrl}${pathToMessageBox}&R=${partyId}`;
-};
+  // Use A2 redirect mechanism with A3 arbeidsflate URL to maintain party context
+  return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${encodeURIComponent(targetUrl)}&R=${partyId}`;
+}
 
-
-export const returnBaseUrlToAltinn2 = (url: string): string => {
-  let result: string;
-  if (url.search(prodRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    if (env === 'tt02') {
-      result = `https://${env}.${baseHostnameAltinnProd}/`;
-    } else {
-      result = `https://${baseHostnameAltinnProd}/`;
-    }
-  } else if (url.search(testRegex) >= 0) {
-    const split = url.split('.');
-    const env = split[split.length - 3];
-    result = `https://${env}.${baseHostnameAltinnTest}/`;
-  } else if (url.search(localRegex) >= 0) {
-    result = '/';
-  } else {
-    result = null;
+export function getDialogIdFromDataValues(dataValues: unknown): string | undefined {
+  const data = dataValues as Record<string, unknown> | null | undefined;
+  const id = data?.['dialog.id'];
+  if (typeof id === 'string') {
+    return id;
   }
-  return result;
+  if (typeof id === 'number') {
+    return String(id);
+  }
+  return undefined;
+}
+
+export const returnUrlToMessagebox = (host: string, partyId?: number, dialogId?: string): string | undefined => {
+  const customReturnUrl = getReturnUrl();
+  if (customReturnUrl) {
+    return customReturnUrl;
+  }
+
+  return buildArbeidsflateRedirectUrl(host, partyId, dialogId);
 };
 
-export const logoutUrlAltinn = (url: string): string => {
-  return `${returnBaseUrlToAltinn2(url)}ui/authentication/LogOut`;
+export const logoutUrlAltinn = (host: string): string | undefined => {
+  if (isLocalEnvironment(host)) {
+    return `http://${host}/`;
+  }
+
+  const baseUrl = returnBaseUrlToAltinn(host);
+  if (!baseUrl) {
+    return undefined;
+  }
+  return `${baseUrl}ui/authentication/LogOut`;
 };
 
 // Storage is always returning https:// links for attachments.
