@@ -8,7 +8,7 @@ export const getApplicationMetadataUrl = (): string => {
   return `${origin}/designer/api/v1/${org}/${app}`;
 };
 
-const prodStagingRegex = /^\w+\.apps\.((\w+\.)?altinn\.(no|cloud))$/;
+const prodStagingRegex = /^(?:\w+\.apps|platform)\.((\w+\.)?altinn\.(no|cloud))$/;
 const localRegex = /^local\.altinn\.cloud(:\d+)?$/;
 const localhostRegex = /^localhost(:\d+)?$/;
 

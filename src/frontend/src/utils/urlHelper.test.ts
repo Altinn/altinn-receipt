@@ -29,6 +29,16 @@ describe('Shared urlHelper.ts', () => {
     expect(returnUrlToMessagebox(host)).toBe('https://af.yt01.altinn.cloud/');
   });
 
+  test('returnUrlToMessagebox() returning production inbox for platform host', () => {
+    const host = 'platform.altinn.no';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.altinn.no/');
+  });
+
+  test('returnUrlToMessagebox() returning AT inbox for platform host', () => {
+    const host = 'platform.at23.altinn.cloud';
+    expect(returnUrlToMessagebox(host)).toBe('https://af.at23.altinn.cloud/');
+  });
+
   test('returnUrlToMessagebox() returning undefined when unknown host', () => {
     const host = 'www.ikkealtinn.no';
     expect(returnUrlToMessagebox(host)).toBe(undefined);
