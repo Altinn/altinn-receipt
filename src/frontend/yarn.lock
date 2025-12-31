@@ -9481,12 +9481,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-fixed-jsdom@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "jest-fixed-jsdom@npm:0.0.10"
+"jest-fixed-jsdom@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "jest-fixed-jsdom@npm:0.0.11"
   peerDependencies:
     jest-environment-jsdom: ">=28.0.0"
-  checksum: 165e3655dc9f2bb8825b36022e5d6cbf596c3d45444105ebd3eae20ab32bf8225cbaeedf0ee5af22a3e672d289225ba5f17af2ed21729a8c47581b88fcc65e78
+  checksum: 211ff25bb73cbf40152119029b3fc46f805bc8a1ef21cac3ac2f37ea80b64d5bdfaf7597d23cf67f9532a7676fbfec0f717102ccb1a39879ab17335612e20500
   languageName: node
   linkType: hard
 
@@ -12120,7 +12120,7 @@ __metadata:
     html-react-parser: 5.2.7
     jest: 29.7.0
     jest-environment-jsdom: 29.7.0
-    jest-fixed-jsdom: ^0.0.10
+    jest-fixed-jsdom: ^0.0.11
     jest-junit: 16.0.0
     jsdom: 26.1.0
     marked: 15.0.12
