@@ -32,6 +32,10 @@ function buildArbeidsflateUrl(altinnHost: string): string {
   return `https://af.${altinnHost}/`;
 }
 
+function buildAccessManagementBaseUrl(altinnHost: string): string {
+  return `https://am.ui.${altinnHost}/`;
+}
+
 export const returnBaseUrlToAltinn = (host: string): string | undefined => {
   const altinnHost = extractAltinnHost(host);
   if (!altinnHost) {
@@ -45,9 +49,8 @@ function buildArbeidsflateRedirectUrl(host: string, partyId?: number, dialogId?:
     return `http://${host}/`;
   }
 
-  const baseUrl = returnBaseUrlToAltinn(host);
   const altinnHost = extractAltinnHost(host);
-  if (!baseUrl || !altinnHost) {
+  if (!altinnHost) {
     return undefined;
   }
 
@@ -60,8 +63,9 @@ function buildArbeidsflateRedirectUrl(host: string, partyId?: number, dialogId?:
     return targetUrl;
   }
 
-  // Use A2 redirect mechanism with A3 arbeidsflate URL to maintain party context
-  return `${baseUrl}ui/Reportee/ChangeReporteeAndRedirect?goTo=${encodeURIComponent(targetUrl)}&R=${partyId}`;
+  // Use access management changeandredirect endpoint to switch party and redirect to A3 arbeidsflate
+  const amBaseUrl = buildAccessManagementBaseUrl(altinnHost);
+  return `${amBaseUrl}accessmanagement/api/v1/reportee/changeandredirect?partyId=${partyId}&goTo=${encodeURIComponent(targetUrl)}`;
 }
 
 export function getDialogIdFromDataValues(dataValues: unknown): string | undefined {

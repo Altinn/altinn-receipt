@@ -47,7 +47,20 @@ describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() with partyId uses redirect mechanism', () => {
     const host = 'tdd.apps.altinn.no';
     const result = returnUrlToMessagebox(host, 12345);
-    expect(result).toBe('https://altinn.no/ui/Reportee/ChangeReporteeAndRedirect?goTo=https%3A%2F%2Faf.altinn.no%2F&R=12345');
+    expect(result).toBe('https://am.ui.altinn.no/accessmanagement/api/v1/reportee/changeandredirect?partyId=12345&goTo=https%3A%2F%2Faf.altinn.no%2F');
+  });
+
+  test('returnUrlToMessagebox() with partyId uses redirect mechanism across environments', () => {
+    const partyId = 12345;
+    expect(returnUrlToMessagebox('tdd.apps.tt02.altinn.no', partyId)).toBe(
+      'https://am.ui.tt02.altinn.no/accessmanagement/api/v1/reportee/changeandredirect?partyId=12345&goTo=https%3A%2F%2Faf.tt02.altinn.no%2F',
+    );
+    expect(returnUrlToMessagebox('tdd.apps.at22.altinn.cloud', partyId)).toBe(
+      'https://am.ui.at22.altinn.cloud/accessmanagement/api/v1/reportee/changeandredirect?partyId=12345&goTo=https%3A%2F%2Faf.at22.altinn.cloud%2F',
+    );
+    expect(returnUrlToMessagebox('tdd.apps.yt01.altinn.cloud', partyId)).toBe(
+      'https://am.ui.yt01.altinn.cloud/accessmanagement/api/v1/reportee/changeandredirect?partyId=12345&goTo=https%3A%2F%2Faf.yt01.altinn.cloud%2F',
+    );
   });
 
   test('returnUrlToMessagebox() with dialogId returns inbox URL with dialogId', () => {
@@ -59,7 +72,7 @@ describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() with partyId and dialogId uses redirect with dialogId', () => {
     const host = 'tdd.apps.altinn.no';
     const result = returnUrlToMessagebox(host, 12345, 'abc-123');
-    expect(result).toBe('https://altinn.no/ui/Reportee/ChangeReporteeAndRedirect?goTo=https%3A%2F%2Faf.altinn.no%2Finbox%2Fabc-123&R=12345');
+    expect(result).toBe('https://am.ui.altinn.no/accessmanagement/api/v1/reportee/changeandredirect?partyId=12345&goTo=https%3A%2F%2Faf.altinn.no%2Finbox%2Fabc-123');
   });
 
   test('returnUrlToMessagebox() for local environment', () => {
