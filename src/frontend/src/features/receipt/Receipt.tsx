@@ -1,4 +1,4 @@
-import { createStyles, createTheme, Grid, WithStyles, withStyles } from '@material-ui/core';
+import { Button, createStyles, createTheme, Grid, WithStyles, withStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import React from 'react';
 
@@ -36,6 +36,14 @@ const styles = () =>
         width: '80%',
       },
     },
+    backToInbox: {
+      marginTop: 36,
+      textTransform: 'none',
+      fontSize: '1.6rem',
+      '@media only print': {
+        display: 'none',
+      },
+    },
   });
 
 function Receipt(props: WithStyles<typeof styles>) {
@@ -63,10 +71,14 @@ function Receipt(props: WithStyles<typeof styles>) {
     );
   };
 
-  const handleModalClose = () => {
+  const getReturnUrl = (): string | undefined => {
     const partyId = instance?.instanceOwner?.partyId ? Number(instance.instanceOwner.partyId) : undefined;
     const dialogId = getDialogIdFromDataValues(instance?.dataValues);
-    const returnUrl = returnUrlToMessagebox(window.location.host, partyId, dialogId);
+    return returnUrlToMessagebox(window.location.host, partyId, dialogId);
+  };
+
+  const handleModalClose = () => {
+    const returnUrl = getReturnUrl();
     if (returnUrl) {
       window.location.href = returnUrl;
     }
@@ -93,7 +105,7 @@ function Receipt(props: WithStyles<typeof styles>) {
     >
       <AltinnAppHeader
         logoColor={theme.altinnPalette.primary.blueDarker}
-        headerBackgroundColor={theme.altinnPalette.primary.blue}
+        headerBackgroundColor={theme.altinnPalette.primary.greenLight}
         party={party || ({} as IParty)}
         userParty={user ? user.party : ({} as IParty)}
         logoutText={getParsedLanguageFromKey('receipt_platform.log_out', language)}
@@ -146,6 +158,17 @@ function Receipt(props: WithStyles<typeof styles>) {
             }
             pdf={pdf || null}
           />
+        )}
+        {!isLoading && getReturnUrl() && (
+          <Button
+            component='a'
+            href={getReturnUrl()}
+            variant='contained'
+            color='primary'
+            className={props.classes.backToInbox}
+          >
+            {getParsedLanguageFromKey('receipt_platform.back_to_inbox', language)}
+          </Button>
         )}
       </AltinnModal>
     </Grid>

@@ -13,5 +13,6 @@ export const en: Record<string, Record<string, string>> = {
     sent_content: 'The following is submitted:',
     log_out: 'Log out',
     profile_icon_aria_label: 'Profile icon button',
+    back_to_inbox: 'Back to inbox',
   },
 };

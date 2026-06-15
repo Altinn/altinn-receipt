@@ -13,5 +13,6 @@ export const nn: Record<string, Record<string, string>> = {
     sent_content: 'Følgjande er sendt inn:',
     log_out: 'Logg ut',
     profile_icon_aria_label: 'Profil ikon knapp',
+    back_to_inbox: 'Tilbake til innboks',
   },
 };
