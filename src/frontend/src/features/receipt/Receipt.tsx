@@ -1,5 +1,6 @@
 import { Button, createStyles, createTheme, Grid, WithStyles, withStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { ArrowLeftIcon } from '@navikt/aksel-icons';
 import React from 'react';
 
 import type { IAttachment, IParty } from 'src/types';
@@ -12,7 +13,7 @@ import {
   getInstancePdf,
   mapAppDataToAttachments,
 } from 'src/utils/attachmentsUtils';
-import { getAppName, getLanguageFromKey, getParsedLanguageFromKey, getTextResourceByKey } from 'src/utils/language';
+import { getAppName, getAppReceiver, getLanguageFromKey, getParsedLanguageFromKey, getTextResourceByKey } from 'src/utils/language';
 import { getInstanceMetaDataObject } from 'src/utils/receipt';
 import { returnUrlToMessagebox, getDialogIdFromDataValues } from 'src/utils/urlHelper';
 
@@ -36,13 +37,28 @@ const styles = () =>
         width: '80%',
       },
     },
-    backToInbox: {
-      marginTop: 36,
-      textTransform: 'none',
-      fontSize: '1.6rem',
+    backToInboxContainer: {
+      maxWidth: '875px',
+      [theme.breakpoints.down('sm')]: {
+        width: '95%',
+      },
+      [theme.breakpoints.up('md')]: {
+        width: '80%',
+      },
+      marginTop: '6rem',
+      // slot the link into the card's top margin so it sits just above the white card
+      marginBottom: '-9rem',
+      display: 'flex',
+      justifyContent: 'flex-start',
       '@media only print': {
         display: 'none',
       },
+    },
+    backToInbox: {
+      textTransform: 'none',
+      fontSize: '1.6rem',
+      fontWeight: 500,
+      color: '#005DB1'
     },
   });
 
@@ -123,6 +139,23 @@ function Receipt(props: WithStyles<typeof styles>) {
           />
         </Grid>
       )}
+      {!isLoading && getReturnUrl() && (
+        <Grid
+          item={true}
+          className={props.classes.backToInboxContainer}
+        >
+          <Button
+            component='a'
+            href={getReturnUrl()}
+            variant='text'
+            color='primary'
+            className={props.classes.backToInbox}
+            startIcon={<ArrowLeftIcon aria-hidden={true} />}
+          >
+            {getParsedLanguageFromKey('receipt_platform.back_to_inbox', language)}
+          </Button>
+        </Grid>
+      )}
       <AltinnModal
         classes={{ body: props.classes.body }}
         isOpen={true}
@@ -132,6 +165,11 @@ function Receipt(props: WithStyles<typeof styles>) {
         printView={true}
         closeButtonOutsideModal={true}
         headerText={getParsedLanguageFromKey('receipt_platform.receipt', language)}
+        subHeaderText={
+          isLoading
+            ? undefined
+            : getAppReceiver(textResources, organisations, instance.org, user.profileSettingPreference.language)
+        }
       >
         {isLoading ? (
           <AltinnContentLoader />
@@ -158,17 +196,6 @@ function Receipt(props: WithStyles<typeof styles>) {
             }
             pdf={pdf || null}
           />
-        )}
-        {!isLoading && getReturnUrl() && (
-          <Button
-            component='a'
-            href={getReturnUrl()}
-            variant='contained'
-            color='primary'
-            className={props.classes.backToInbox}
-          >
-            {getParsedLanguageFromKey('receipt_platform.back_to_inbox', language)}
-          </Button>
         )}
       </AltinnModal>
     </Grid>

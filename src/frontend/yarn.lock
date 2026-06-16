@@ -2686,6 +2686,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@navikt/aksel-icons@npm:^8.12.1":
+  version: 8.12.1
+  resolution: "@navikt/aksel-icons@npm:8.12.1"
+  checksum: 630c1510531f6ec062456359e153e62e4399b25d6484fde0b64aec03e6dc1995fd6c8d80764647a916f675ed9d670f69ea662cb909c1fdb48bae2df2eb95b9e6
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -12088,6 +12095,7 @@ __metadata:
     "@babel/preset-env": 7.28.5
     "@babel/preset-react": 7.28.5
     "@material-ui/core": 4.12.4
+    "@navikt/aksel-icons": ^8.12.1
     "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": 6.9.1
     "@testing-library/react": 16.3.0

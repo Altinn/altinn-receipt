@@ -1,6 +1,5 @@
-import { createTheme, createStyles, IconButton, Modal, Typography } from '@material-ui/core';
+import { createTheme, createStyles, Modal, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
 import React from 'react';
 import altinnTheme from 'src/theme/altinnStudioTheme';
 
@@ -9,6 +8,8 @@ export interface IAltinnModalComponentProvidedProps {
   classes: any;
   /** Text or react element shown in the header */
   headerText?: any;
+  /** Text as sub-header */
+  subHeaderText?: string;
   /** Boolean value of the modal being open or not */
   isOpen: boolean;
   /** Show close-icon outside modal */
@@ -53,17 +54,23 @@ const styles = createStyles({
     },
   },
   header: {
-    backgroundColor: altinnTheme.altinnPalette.primary.blueDarker,
+    backgroundColor: altinnTheme.altinnPalette.primary.white,
+    borderBottom: `1px solid ${altinnTheme.altinnPalette.primary.greyLight}`,
     paddingLeft: 12,
     '@media (min-width: 786px)': {
       paddingLeft: 96,
     },
-    paddingTop: 30,
-    paddingBottom: 30,
+    paddingTop: 18,
+    paddingBottom: 18,
   },
   headerText: {
     fontSize: '2.8rem',
-    color: altinnTheme.altinnPalette.primary.white,
+    fontWeight: 500,
+    color: altinnTheme.altinnPalette.primary.black,
+  },
+  subHeaderText: {
+    fontSize: '1.8rem',
+    fontWeight:300
   },
   body: {
     paddingLeft: 12,
@@ -85,7 +92,7 @@ const styles = createStyles({
     marginTop: '-27px',
   },
   iconStyling: {
-    color: altinnTheme.altinnPalette.primary.white,
+    color: altinnTheme.altinnPalette.primary.black,
     fontSize: 38,
   },
   closeButtonOutsideModal: {
@@ -110,24 +117,10 @@ export class AltinnModal extends React.Component<IAltinnModalComponentProvidedPr
         >
           <div className={classes.modal}>
             <div className={classes.header}>
-              {this.props.hideCloseIcon && this.props.hideCloseIcon === true ? null :
-                <IconButton
-                  className={classNames(
-                    classes.iconBtn,
-                    { [classes.closeButtonOutsideModal]: this.props.closeButtonOutsideModal === true},
-                  )}
-                  onClick={this.props.onClose}
-                >
-                  <i tabIndex={-1} className={classNames('ai ai-exit-test', classes.iconStyling)} />
-                </IconButton>
-              }
-              <Typography className={classes.headerText}>
-                {this.props.headerText}
-              </Typography>
+              <Typography className={classes.subHeaderText}>{this.props.subHeaderText}</Typography>
+              <Typography className={classes.headerText}>{this.props.headerText}</Typography>
             </div>
-            <div className={classes.body}>
-              {this.props.children}
-            </div>
+            <div className={classes.body}>{this.props.children}</div>
           </div>
         </Modal>
       );
@@ -135,24 +128,10 @@ export class AltinnModal extends React.Component<IAltinnModalComponentProvidedPr
       return (
         <div className={classes.modal}>
           <div className={classes.header}>
-            {this.props.hideCloseIcon && this.props.hideCloseIcon === true ? null :
-              <IconButton
-                className={classNames(
-                  classes.iconBtn,
-                  { [classes.closeButtonOutsideModal]: this.props.closeButtonOutsideModal === true},
-                )}
-                onClick={this.props.onClose}
-              >
-                <i tabIndex={-1} className={classNames('ai ai-exit-test', classes.iconStyling)} />
-              </IconButton>
-            }
-            <Typography className={classes.headerText}>
-              {this.props.headerText}
-            </Typography>
+            <Typography className={classes.subHeaderText}>{this.props.subHeaderText}</Typography>
+            <Typography className={classes.headerText}>{this.props.headerText}</Typography>
           </div>
-          <div className={classes.body}>
-            {this.props.children}
-          </div>
+          <div className={classes.body}>{this.props.children}</div>
         </div>
       );
     }
