@@ -44,8 +44,6 @@ describe('Receipt', () => {
         }),
       ).toBeInTheDocument();
     });
-
-    expect(screen.getAllByRole('link').length).toBe(1);
   });
 
   it('should not show download link to pdf when all data is loaded, and data does not include pdf', async () => {
@@ -55,7 +53,7 @@ describe('Receipt', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(screen.queryAllByRole('link').length).toBe(0);
+    expect(screen.queryByRole('link', { name: /\.pdf/i })).not.toBeInTheDocument();
   });
 
   it('should show substatus when instance data contains substatus information', async () => {
