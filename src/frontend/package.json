@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.development.js --mode development",
-    "preview": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.preview.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.production.js --progress",
     "test": "jest",
     "test:coverage": "jest --coverage --coverageReporters=lcov",
