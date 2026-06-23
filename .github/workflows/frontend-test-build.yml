@@ -1,4 +1,4 @@
-name: Frontend Test and Build
+name: Frontend Typecheck, Lint, Test and Build
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
         run: yarn lint
 
       - name: Typecheck
-        run: yarn compile-ts
+        run: yarn typecheck
 
       - name: Run tests
         run: yarn test --coverage
