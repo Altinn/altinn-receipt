@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify';
+import DOMPurify, { Config } from 'dompurify';
 import type { HTMLReactParserOptions } from 'html-react-parser';
 import parseHtmlToReact from 'html-react-parser';
 import { marked } from 'marked';
@@ -40,7 +40,7 @@ export const getParsedLanguageFromKey = (key: string, language: ILanguage, param
 
 export const getParsedLanguageFromText = (text: string, allowedTags?: string[], allowedAttr?: string[]) => {
   const dirty = marked.parse(text);
-  const options: DOMPurify.Config = {};
+  const options: Config = {};
   if (allowedTags) {
     options.ALLOWED_TAGS = allowedTags;
   }

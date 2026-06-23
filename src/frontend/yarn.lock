@@ -3152,15 +3152,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dompurify@npm:3.2.0":
-  version: 3.2.0
-  resolution: "@types/dompurify@npm:3.2.0"
-  dependencies:
-    dompurify: "*"
-  checksum: 0194dd9024e76e856f3373e8b080c7a5ac9910543ac1ee85db45277efbbea820b2f27fe22c8a6f02bb51833e0a8540d732be0d11d156efd16cb0b97f88e41ebf
-  languageName: node
-  linkType: hard
-
 "@types/eslint-scope@npm:^3.7.7":
   version: 3.7.7
   resolution: "@types/eslint-scope@npm:3.7.7"
@@ -5560,18 +5551,6 @@ __metadata:
   dependencies:
     domelementtype: ^2.3.0
   checksum: 0f58f4a6af63e6f3a4320aa446d28b5790a009018707bce2859dcb1d21144c7876482b5188395a188dfa974238c019e0a1e610d2fc269a12b2c192ea2b0b131c
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:*":
-  version: 3.2.2
-  resolution: "dompurify@npm:3.2.2"
-  dependencies:
-    "@types/trusted-types": ^2.0.7
-  dependenciesMeta:
-    "@types/trusted-types":
-      optional: true
-  checksum: e4831baa447cc7ed4350ede29f7ec4d2614a59287b6916f3691d287dd4a1c45eb3ce9cb26058edf37b3f2648bbf0a3ca5fb3b74c2f78bdcf6ebb7716c2f14252
   languageName: node
   linkType: hard
 
@@ -10469,7 +10448,6 @@ __metadata:
     "@testing-library/jest-dom": 6.9.1
     "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.6.1
-    "@types/dompurify": 3.2.0
     "@types/jest": 29.5.14
     "@types/marked": 6.0.0
     "@types/react": 18.3.26
