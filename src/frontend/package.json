@@ -7,7 +7,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage --coverageReporters=lcov",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint \"./src/**/*.ts*\"",
-    "compile-ts": "tsc",
+    "typecheck": "tsc --noEmit",
     "clean": "rimraf dist compiled"
   },
   "author": "Altinn",
