@@ -3,11 +3,18 @@ import { setupServer } from 'msw/node';
 
 import { instance, altinnOrgs, currentUser, application, texts } from './apiResponses';
 
-export const mockLocation = (location: object = {}) => {
-  jest.spyOn(window, 'location', 'get').mockReturnValue({
-    ...window.location,
-    ...location,
-  });
+import type { JSDOM } from 'jsdom';
+
+// `jsdom` is exposed on the global by the custom test environment
+// (testConfig/jsdomEnvironment.js).
+declare const jsdom: JSDOM;
+
+// jsdom 26 (bundled with jest 30) makes `window.location` non-configurable, so
+// it can no longer be replaced via jest.spyOn. Navigate the jsdom document
+// instead, which is the supported way to change the url.
+// Docs: https://github.com/jsdom/jsdom#reconfiguring-the-jsdom-with-reconfiguresettings
+export const setUrl = (url: string) => {
+  jsdom.reconfigure({ url });
 };
 
 export const instanceHandler = (response: any) => {

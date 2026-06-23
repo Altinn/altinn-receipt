@@ -19,6 +19,7 @@
     "strictNullChecks": false,
     "noUnusedLocals": true,
     "esModuleInterop": true,
+    "isolatedModules": true,
     "skipLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx"],

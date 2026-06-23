@@ -6,7 +6,7 @@ import {
   makeUrlRelativeIfSameDomain,
   getDialogIdFromDataValues,
 } from './urlHelper';
-import { mockLocation } from 'testConfig/testUtils';
+import { setUrl } from 'testConfig/testUtils';
 
 describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() returning production inbox', () => {
@@ -113,14 +113,14 @@ describe('Shared urlHelper.ts', () => {
   test('returnUrlToMessagebox() with custom returnUrl', () => {
     const host = 'tdd.apps.altinn.no';
     const target = 'https://af.altinn.no/custom-path';
-    mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
+    setUrl(`https://localhost/?returnUrl=${encodeURIComponent(target)}`);
     expect(returnUrlToMessagebox(host)).toBe(target);
   });
 
   test('logoutUrlAltinn() ignores custom returnUrl', () => {
     const host = 'tdd.apps.altinn.no';
     const target = 'https://af.altinn.no/location';
-    mockLocation({ search: `?returnUrl=${encodeURIComponent(target)}` });
+    setUrl(`https://localhost/?returnUrl=${encodeURIComponent(target)}`);
     expect(logoutUrlAltinn(host)).toBe('https://altinn.no/ui/authentication/LogOut');
   });
 
