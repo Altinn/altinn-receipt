@@ -43,6 +43,9 @@ jobs:
       - name: Lint
         run: yarn lint
 
+      - name: Typecheck
+        run: yarn compile-ts
+
       - name: Run tests
         run: yarn test --coverage
 
