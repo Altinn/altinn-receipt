@@ -1,6 +1,6 @@
 import { getInstanceId, getInstanceOwnerId } from './instance';
 
-import { mockLocation } from 'testConfig/testUtils';
+import { setUrl } from 'testConfig/testUtils';
 
 import {
   altinnAt22Url,
@@ -13,24 +13,26 @@ import {
   getExtendedInstanceUrl,
 } from './receiptUrlHelper';
 
-const originalLocation = window.location;
+const instancePath =
+  '/receipt/mockInstanceOwnerId/6697de17-18c7-4fb9-a428-d6a414a797ae';
+const urlFor = (host: string) => `https://${host}${instancePath}`;
 
 describe('receiptUrlHelper', () => {
   beforeEach(() => {
-    mockLocation(originalLocation);
+    setUrl(urlFor('localhost'));
   });
 
   describe('getAltinnUrl', () => {
     it('should return altinnAt22Url when hostname is localhost', () => {
-      mockLocation({ hostname: 'localhost' });
+      setUrl(urlFor('localhost'));
 
       expect(getAltinnUrl()).toEqual(altinnAt22Url);
     });
 
     it('should return window.location.origin followed by trailing slash when hostname is not localhost', () => {
-      mockLocation({ hostname: 'not-localhost', origin: 'https://origin' });
+      setUrl(urlFor('tdd.apps.altinn.no'));
 
-      expect(getAltinnUrl()).toEqual('https://origin/');
+      expect(getAltinnUrl()).toEqual('https://tdd.apps.altinn.no/');
     });
   });
 
@@ -52,7 +54,7 @@ describe('receiptUrlHelper', () => {
 
   describe('getApplicationMetadataUrl', () => {
     it('should return correct path when running on localhost', () => {
-      mockLocation({ hostname: 'localhost' });
+      setUrl(urlFor('localhost'));
 
       expect(getApplicationMetadataUrl('org-name', 'app-name')).toEqual(
         `${altinnAt22PlatformUrl}storage/api/v1/applications/org-name/app-name`,
@@ -60,43 +62,43 @@ describe('receiptUrlHelper', () => {
     });
 
     it('should return correct path when not running on localhost', () => {
-      mockLocation({ hostname: 'not-localhost', origin: 'https://origin' });
+      setUrl(urlFor('tdd.apps.altinn.no'));
 
       expect(getApplicationMetadataUrl('org-name', 'app-name')).toEqual(
-        `https://origin/storage/api/v1/applications/org-name/app-name`,
+        `https://tdd.apps.altinn.no/storage/api/v1/applications/org-name/app-name`,
       );
     });
   });
 
   describe('getAltinnCloudUrl', () => {
     it('should return altinnAt22PlatformUrl when running on localhost', () => {
-      mockLocation({ hostname: 'localhost' });
+      setUrl(urlFor('localhost'));
 
       expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
     it('should return altinnAt22PlatformUrl when running on 127.0.0.1', () => {
-      mockLocation({ hostname: '127.0.0.1' });
+      setUrl(urlFor('127.0.0.1'));
 
       expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
     it('should return altinnAt22PlatformUrl when running on altinn3.no', () => {
-      mockLocation({ hostname: 'altinn3.no' });
+      setUrl(urlFor('altinn3.no'));
 
       expect(getAltinnCloudUrl()).toEqual(altinnAt22PlatformUrl);
     });
 
     it('should return window.location.origin followed by trailing slash when running on altinn3.no', () => {
-      mockLocation({ hostname: 'not-localhost', origin: 'https://origin' });
+      setUrl(urlFor('tdd.apps.altinn.no'));
 
-      expect(getAltinnCloudUrl()).toEqual('https://origin/');
+      expect(getAltinnCloudUrl()).toEqual('https://tdd.apps.altinn.no/');
     });
   });
 
   describe('getExtendedInstanceUrl', () => {
     it('should return correct path when running on localhost', () => {
-      mockLocation({ hostname: 'localhost' });
+      setUrl(urlFor('localhost'));
 
       expect(getExtendedInstanceUrl()).toEqual(
         `${altinnAt22PlatformUrl}receipt/api/v1/instances/${getInstanceOwnerId()}/${getInstanceId()}?includeParty=true`,
@@ -104,10 +106,10 @@ describe('receiptUrlHelper', () => {
     });
 
     it('should return correct path when not running on localhost', () => {
-      mockLocation({ hostname: 'not-localhost', origin: 'https://origin' });
+      setUrl(urlFor('tdd.apps.altinn.no'));
 
       expect(getExtendedInstanceUrl()).toEqual(
-        `https://origin/receipt/api/v1/instances/${getInstanceOwnerId()}/${getInstanceId()}?includeParty=true`,
+        `https://tdd.apps.altinn.no/receipt/api/v1/instances/${getInstanceOwnerId()}/${getInstanceId()}?includeParty=true`,
       );
     });
   });
