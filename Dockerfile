@@ -36,6 +36,8 @@ COPY --from=build /app_output .
 COPY --from=build-receipt-frontend /build/dist/receipt.js ./wwwroot/receipt/js/react/receipt.js
 COPY --from=build-receipt-frontend /build/dist/receipt.css ./wwwroot/receipt/css/receipt.css
 
+RUN apk upgrade --no-cache libcrypto3 libssl3
+
 # setup the user and group
 # the user will have no password, using shell /bin/false and using the group dotnet
 RUN addgroup -g 3000 dotnet && adduser -u 1000 -G dotnet -D -s /bin/false dotnet
