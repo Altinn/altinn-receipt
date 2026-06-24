@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Altinn.Common.AccessTokenClient.Services;
 
 using Altinn.Platform.Receipt.Configuration;
+using Altinn.Platform.Receipt.Extensions;
 using Altinn.Platform.Receipt.Health;
 using Altinn.Platform.Receipt.Services;
 using Altinn.Platform.Receipt.Services.Interfaces;
@@ -43,6 +44,8 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigureWebHostCreationLogging();
 
 await SetConfigurationProviders(builder.Configuration);
+
+builder.UseGracefulShutdown();
 
 ConfigureApplicationLogging(builder.Logging);
 
