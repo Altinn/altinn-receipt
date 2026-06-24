@@ -16,7 +16,7 @@ spec:
       retries: 1
   chart:
     spec:
-      version: "0.1.0+f1f317a0e" # Comes from altinn-studio-ops
+      version: "0.1.0+22c94c519" # Comes from altinn-studio-ops
       chart: altinn-receipt
       sourceRef:
         kind: HelmRepository
