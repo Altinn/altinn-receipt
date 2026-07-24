@@ -16,7 +16,7 @@ RUN npm install --ignore-scripts -g -- corepack@0.35.0 && yarn --immutable
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0.315-alpine3.24@sha256:011500266c639eb5f4c585cb26661337a58108e35164aa292660a154a53878eb AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:8e06170c6cdaacb1a91bdc671fdb7c37ed2241b73c8dadaae789c71c56d46115 AS build
 
 # Copy receipt backend
 WORKDIR /Receipt/
@@ -28,7 +28,7 @@ RUN dotnet build Altinn.Platform.Receipt.csproj -c Release -o /app_output
 RUN dotnet publish Altinn.Platform.Receipt.csproj -c Release -o /app_output
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.17-alpine3.24@sha256:50f2dccb17be5f2c7e75814ca70e6c913a969b503214fe978a82301a450a63cb AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine3.24@sha256:0685cf40c9ba563c4ff9487f96ffbda3d7ee3ff43e80e313e31afc7f59996362 AS final
 EXPOSE 5060
 WORKDIR /app
 COPY --from=build /app_output .
