@@ -54,7 +54,7 @@
     "fork-ts-checker-webpack-plugin": "9.1.0",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
-    "jest-fixed-jsdom": "^0.0.10",
+    "jest-fixed-jsdom": "^0.0.11",
     "mini-css-extract-plugin": "2.9.4",
     "msw": "2.11.6",
     "react": "18.3.1",
