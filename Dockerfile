@@ -1,4 +1,4 @@
-FROM node:22.21-alpine3.21@sha256:af8023ec879993821f6d5b21382ed915622a1b0f1cc03dbeb6804afaf01f8885 AS build-receipt-frontend
+FROM node:26.5-alpine3.24@sha256:e88a35be04478413b7c71c455cd9865de9b9360e1f43456be5951032d7ac1a66 AS build-receipt-frontend
 
 WORKDIR /build
 
@@ -10,14 +10,13 @@ COPY src/frontend/.yarnrc.yml .
 COPY src/frontend/ ./
 
 # Install
-RUN corepack enable
-RUN yarn --immutable
+RUN npm install -g corepack@0.35.0 && yarn --immutable
 
 # Build runtime
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0.315-alpine3.23@sha256:2412b9f7db4aa7ceac5a8c9d41385616cbd7bb8d18c298334cafad22f7647e04 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.315-alpine3.24@sha256:011500266c639eb5f4c585cb26661337a58108e35164aa292660a154a53878eb AS build
 
 # Copy receipt backend
 WORKDIR /Receipt/
@@ -29,7 +28,7 @@ RUN dotnet build Altinn.Platform.Receipt.csproj -c Release -o /app_output
 RUN dotnet publish Altinn.Platform.Receipt.csproj -c Release -o /app_output
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.17-alpine3.23@sha256:99a749b0dadd9e11d30d3804d94c8f1edb06db00148df52814219d5ff838f551 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.17-alpine3.24@sha256:50f2dccb17be5f2c7e75814ca70e6c913a969b503214fe978a82301a450a63cb AS final
 EXPOSE 5060
 WORKDIR /app
 COPY --from=build /app_output .

@@ -1,5 +1,5 @@
 # base image
-FROM node:alpine3.16@sha256:f9b54b46639a9017b39eba677cf44c8cb96760ca69dadcc1d4cbd1daea753225 AS generate-receipt-app
+FROM node:alpine3.24@sha256:e88a35be04478413b7c71c455cd9865de9b9360e1f43456be5951032d7ac1a66 AS generate-receipt-app
 
 WORKDIR /build
 
@@ -14,8 +14,7 @@ COPY ./frontend/shared/ ./shared/
 COPY ./frontend/receipt/ ./receipt/
 
 # Install
-RUN corepack enable
-RUN yarn --immutable
+RUN npm install -g corepack@0.35.0 && yarn --immutable
 
 # Build runtime
 RUN yarn workspace receipt-react-app run build; exit 0
