@@ -10,7 +10,7 @@ COPY src/frontend/.yarnrc.yml .
 COPY src/frontend/ ./
 
 # Install
-RUN npm install -g corepack@0.35.0 && yarn --immutable
+RUN npm install --ignore-scripts -g corepack@0.35.0 && yarn --immutable
 
 # Build runtime
 RUN yarn run build

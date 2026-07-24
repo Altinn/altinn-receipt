@@ -14,7 +14,7 @@ COPY ./frontend/shared/ ./shared/
 COPY ./frontend/receipt/ ./receipt/
 
 # Install
-RUN npm install -g corepack@0.35.0 && yarn --immutable
+RUN npm install --ignore-scripts -g corepack@0.35.0 && yarn --immutable
 
 # Build runtime
 RUN yarn workspace receipt-react-app run build; exit 0
