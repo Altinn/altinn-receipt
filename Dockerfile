@@ -16,7 +16,7 @@ RUN npm install --ignore-scripts -g -- corepack@0.35.0 && yarn --immutable
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:8e06170c6cdaacb1a91bdc671fdb7c37ed2241b73c8dadaae789c71c56d46115 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:e602f99c22392a6782d7cd0bcb6e259bad2f29dc50efbdc1f5f1d72431894477 AS build
 # Copy receipt backend
 WORKDIR /Receipt/
 
