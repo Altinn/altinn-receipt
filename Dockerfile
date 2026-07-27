@@ -1,4 +1,4 @@
-FROM node:22.21-alpine3.21@sha256:af8023ec879993821f6d5b21382ed915622a1b0f1cc03dbeb6804afaf01f8885 AS build-receipt-frontend
+FROM node:24.18-alpine3.24@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd AS build-receipt-frontend
 
 WORKDIR /build
 
@@ -17,8 +17,7 @@ RUN yarn --immutable
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0.315-alpine3.23@sha256:2412b9f7db4aa7ceac5a8c9d41385616cbd7bb8d18c298334cafad22f7647e04 AS build
-
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:e602f99c22392a6782d7cd0bcb6e259bad2f29dc50efbdc1f5f1d72431894477 AS build
 # Copy receipt backend
 WORKDIR /Receipt/
 
@@ -29,7 +28,7 @@ RUN dotnet build Altinn.Platform.Receipt.csproj -c Release -o /app_output
 RUN dotnet publish Altinn.Platform.Receipt.csproj -c Release -o /app_output
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.17-alpine3.23@sha256:99a749b0dadd9e11d30d3804d94c8f1edb06db00148df52814219d5ff838f551 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine3.24@sha256:0685cf40c9ba563c4ff9487f96ffbda3d7ee3ff43e80e313e31afc7f59996362 AS final
 EXPOSE 5060
 WORKDIR /app
 COPY --from=build /app_output .
