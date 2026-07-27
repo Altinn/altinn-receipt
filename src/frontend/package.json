@@ -54,7 +54,7 @@
     "fork-ts-checker-webpack-plugin": "9.1.0",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
-    "jest-fixed-jsdom": "^0.0.10",
+    "jest-fixed-jsdom": "0.0.11",
     "mini-css-extract-plugin": "2.10.2",
     "msw": "2.15.0",
     "react": "18.3.1",
@@ -90,7 +90,7 @@
       ]
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(until-async|msw|@mswjs|@bundled-es-modules)/)"
+      "/node_modules/(?!(until-async|msw|@mswjs|@bundled-es-modules|rettime|@open-draft)/)"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
