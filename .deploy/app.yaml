@@ -1,5 +1,5 @@
 # Only change this file to update the chart
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: altinn-receipt
@@ -16,7 +16,7 @@ spec:
       retries: 1
   chart:
     spec:
-      version: "0.1.0+eeb06efa8" # Comes from altinn-studio-ops
+      version: "0.1.0+ffbe955e2" # Comes from altinn-studio-ops
       chart: altinn-receipt
       sourceRef:
         kind: HelmRepository
