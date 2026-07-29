@@ -32,6 +32,11 @@ describe('utils > receipt', () => {
     orgNumber: 12345,
   } as IParty;
 
+  const partySelfIdentified = {
+    name: 'email@example.com',
+    partyTypeName: 3,
+  } as IParty;
+
   const language: ILanguage = {
     receipt_platform: {
       date_sent: 'Dato sendt',
@@ -71,6 +76,24 @@ describe('utils > receipt', () => {
       const expectedOrgResult = expectedResult;
       expectedOrgResult.Avsender = '12345-FIRMA AS';
       expect(result).toEqual(expectedOrgResult);
+    });
+
+    it('should use the party name as sender for a self-identified party without ssn or orgNumber', () => {
+      const result = getInstanceMetaDataObject(
+        instance,
+        partySelfIdentified,
+        language,
+        organisations,
+        application,
+        [],
+        'nb',
+      );
+      expect(result.Avsender).toEqual('email@example.com');
+    });
+
+    it('should return an empty sender when the party has no ssn, orgNumber or name', () => {
+      const result = getInstanceMetaDataObject(instance, {} as IParty, language, organisations, application, [], 'nb');
+      expect(result.Avsender).toEqual('');
     });
 
     it('should return empty object if no instance is provided', () => {

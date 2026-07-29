@@ -13,8 +13,8 @@ const getDateSubmitted = (instance: IInstance, application: IApplication): strin
   if (instance.data && instance.data.length > 0) {
     const currentTaskData = getCurrentTaskData(application, instance);
     if (currentTaskData !== undefined) {
-      return instance.process?.ended 
-        ? formatDate(instance.process.ended) 
+      return instance.process?.ended
+        ? formatDate(instance.process.ended)
         : formatDate(currentTaskData.lastChanged);
     }
   }
@@ -32,7 +32,7 @@ const getSender = (party: IParty): string => {
   } else if (party.orgNumber) {
     return `${party.orgNumber}-${party.name}`;
   }
-  return '';
+  return party.name ?? '';
 };
 
 export const getInstanceMetaDataObject = (
