@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +38,9 @@ namespace Altinn.Platform.Receipt.Tests.Mocks
         {
             List<SecurityKey> signingKeys = new List<SecurityKey>();
 
-            X509Certificate2 cert = X509CertificateLoader.LoadCertificateFromFile("selfSignedTestCertificatePublic.cer");
+            X509Certificate2 cert = X509CertificateLoader.LoadCertificateFromFile(
+                "selfSignedTestCertificatePublic.cer"
+            );
             SecurityKey key = new X509SecurityKey(cert);
 
             signingKeys.Add(key);

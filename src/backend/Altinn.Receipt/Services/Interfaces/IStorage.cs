@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-
 using Altinn.Platform.Storage.Interface.Models;
 
 namespace Altinn.Platform.Receipt.Services.Interfaces

@@ -33,7 +33,7 @@ public class PlatformSettings
     public string SubscriptionKey { get; set; }
 
     /// <summary>
-    /// The name of the subscription header for Api management. 
+    /// The name of the subscription header for Api management.
     /// </summary>
     public string SubscriptionKeyHeaderName { get; set; } = "Ocp-Apim-Subscription-Key";
 }

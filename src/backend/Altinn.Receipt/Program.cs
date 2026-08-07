@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-
 using Altinn.Common.AccessTokenClient.Services;
-
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Extensions;
 using Altinn.Platform.Receipt.Health;
 using Altinn.Platform.Receipt.Services;
 using Altinn.Platform.Receipt.Services.Interfaces;
 using Altinn.Platform.Receipt.Telemetry;
-
 using AltinnCore.Authentication.JwtCookie;
-
 using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Azure.Security.KeyVault.Secrets;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -70,9 +65,7 @@ void ConfigureWebHostCreationLogging()
 {
     var logFactory = LoggerFactory.Create(builder =>
     {
-        builder
-            .AddFilter("Altinn.Platform.Receipt.Program", LogLevel.Debug)
-            .AddConsole();
+        builder.AddFilter("Altinn.Platform.Receipt.Program", LogLevel.Debug).AddConsole();
     });
 
     logger = logFactory.CreateLogger<Program>();
@@ -82,14 +75,22 @@ async Task SetConfigurationProviders(ConfigurationManager config)
 {
     string basePath = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
     config.SetBasePath(basePath);
-    config.AddJsonFile(basePath + "altinn-appsettings/altinn-dbsettings-secret.json", optional: true, reloadOnChange: true);
+    config.AddJsonFile(
+        basePath + "altinn-appsettings/altinn-dbsettings-secret.json",
+        optional: true,
+        reloadOnChange: true
+    );
     if (basePath == "/")
     {
         config.AddJsonFile(basePath + "app/appsettings.json", optional: false, reloadOnChange: true);
     }
     else
     {
-        config.AddJsonFile(Directory.GetCurrentDirectory() + "/appsettings.json", optional: false, reloadOnChange: true);
+        config.AddJsonFile(
+            Directory.GetCurrentDirectory() + "/appsettings.json",
+            optional: false,
+            reloadOnChange: true
+        );
     }
 
     config.AddEnvironmentVariables();
@@ -127,18 +128,24 @@ async Task ConnectToKeyVaultAndSetApplicationInsights(ConfigurationManager confi
 
 void AddAzureMonitorTelemetryExporters(IServiceCollection services, string applicationInsightsConnectionString)
 {
-    services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddAzureMonitorLogExporter(o =>
-    {
-        o.ConnectionString = applicationInsightsConnectionString;
-    }));
-    services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddAzureMonitorMetricExporter(o =>
-    {
-        o.ConnectionString = applicationInsightsConnectionString;
-    }));
-    services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddAzureMonitorTraceExporter(o =>
-    {
-        o.ConnectionString = applicationInsightsConnectionString;
-    }));
+    services.Configure<OpenTelemetryLoggerOptions>(logging =>
+        logging.AddAzureMonitorLogExporter(o =>
+        {
+            o.ConnectionString = applicationInsightsConnectionString;
+        })
+    );
+    services.ConfigureOpenTelemetryMeterProvider(metrics =>
+        metrics.AddAzureMonitorMetricExporter(o =>
+        {
+            o.ConnectionString = applicationInsightsConnectionString;
+        })
+    );
+    services.ConfigureOpenTelemetryTracerProvider(tracing =>
+        tracing.AddAzureMonitorTraceExporter(o =>
+        {
+            o.ConnectionString = applicationInsightsConnectionString;
+        })
+    );
 }
 
 void ConfigureServices(IServiceCollection services, IConfiguration config)
@@ -148,15 +155,13 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
         KeyValuePair.Create("service.name", (object)"platform-receipt"),
     };
 
-    services.AddOpenTelemetry()
+    services
+        .AddOpenTelemetry()
         .ConfigureResource(resourceBuilder => resourceBuilder.AddAttributes(attributes))
         .WithMetrics(metrics =>
         {
             metrics.AddAspNetCoreInstrumentation();
-            metrics.AddMeter(
-                "Microsoft.AspNetCore.Hosting",
-                "Microsoft.AspNetCore.Server.Kestrel",
-                "System.Net.Http");
+            metrics.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel", "System.Net.Http");
         })
         .WithTracing(tracing =>
         {
@@ -182,26 +187,30 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
     GeneralSettings generalSettings = config.GetSection("GeneralSettings").Get<GeneralSettings>();
     services.Configure<GeneralSettings>(config.GetSection("GeneralSettings"));
 
-    services.AddAuthentication(JwtCookieDefaults.AuthenticationScheme)
-        .AddJwtCookie(JwtCookieDefaults.AuthenticationScheme, options =>
-        {
-            options.JwtCookieName = generalSettings.RuntimeCookieName;
-            options.MetadataAddress = generalSettings.OpenIdWellKnownEndpoint;
-            options.TokenValidationParameters = new TokenValidationParameters
+    services
+        .AddAuthentication(JwtCookieDefaults.AuthenticationScheme)
+        .AddJwtCookie(
+            JwtCookieDefaults.AuthenticationScheme,
+            options =>
             {
-                ValidateIssuerSigningKey = true,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
+                options.JwtCookieName = generalSettings.RuntimeCookieName;
+                options.MetadataAddress = generalSettings.OpenIdWellKnownEndpoint;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                };
 
-            if (builder.Environment.IsDevelopment())
-            {
-                options.RequireHttpsMetadata = false;
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.RequireHttpsMetadata = false;
+                }
             }
-        });
+        );
 
     services.AddSingleton(config);
     services.AddHttpClient<IRegister, RegisterWrapper>();
@@ -264,9 +273,7 @@ void Configure(IConfiguration config)
         name: "languageRoute",
         pattern: "receipt/api/v1/{controller}/{action=Index}",
         defaults: new { controller = "Language" },
-        constraints: new
-        {
-            controller = "Language",
-        });
+        constraints: new { controller = "Language" }
+    );
     app.MapHealthChecks("/health");
 }

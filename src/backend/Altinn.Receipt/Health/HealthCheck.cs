@@ -6,7 +6,7 @@ namespace Altinn.Platform.Receipt.Health
 {
     /// <summary>
     /// Health check service configured in startup https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks
-    /// Listen to 
+    /// Listen to
     /// </summary>
     public class HealthCheck : IHealthCheck
     {
@@ -16,10 +16,12 @@ namespace Altinn.Platform.Receipt.Health
         /// <param name="context">The healtcheck context</param>
         /// <param name="cancellationToken">The cancellationtoken</param>
         /// <returns>The health check result</returns>
-        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default
+        )
         {
-            return Task.FromResult(
-                HealthCheckResult.Healthy("A healthy result."));
+            return Task.FromResult(HealthCheckResult.Healthy("A healthy result."));
         }
     }
 }
