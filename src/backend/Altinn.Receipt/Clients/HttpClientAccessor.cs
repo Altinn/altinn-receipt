@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-
 using Altinn.Platform.Receipt.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -76,10 +75,7 @@ namespace Altinn.Platform.Receipt.Clients
 
         private HttpClient GetNewHttpClient(string apiEndpoint)
         {
-            HttpClient httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(apiEndpoint)
-            };
+            HttpClient httpClient = new HttpClient { BaseAddress = new Uri(apiEndpoint) };
 
             httpClient.DefaultRequestHeaders.Add(SubscriptionKeyHeaderName, _platformSettings.SubscriptionKey);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

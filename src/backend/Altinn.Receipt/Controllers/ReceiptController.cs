@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
 using Altinn.Platform.Profile.Models;
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Helpers;
@@ -11,7 +10,6 @@ using Altinn.Platform.Receipt.Services.Interfaces;
 using Altinn.Platform.Register.Models;
 using Altinn.Platform.Storage.Interface.Models;
 using AltinnCore.Authentication.Constants;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +47,8 @@ namespace Altinn.Platform.Receipt
             IProfile profile,
             ILogger<ReceiptController> logger,
             IHttpContextAccessor httpContextAccessor,
-            IOptions<GeneralSettings> generalSettings)
+            IOptions<GeneralSettings> generalSettings
+        )
         {
             _register = register;
             _storage = storage;
@@ -70,7 +69,11 @@ namespace Altinn.Platform.Receipt
         [Route("receipt/{instanceOwnerId}/{instanceId}")]
         public IActionResult Index(int instanceOwnerId, Guid instanceId, [FromQuery] string returnUrl = null)
         {
-            _logger.LogInformation("Getting receipt for: {InstanceOwnerId} for instance with id: {InstanceId}.", instanceOwnerId, instanceId);
+            _logger.LogInformation(
+                "Getting receipt for: {InstanceOwnerId} for instance with id: {InstanceId}.",
+                instanceOwnerId,
+                instanceId
+            );
             return View("receipt");
         }
 
@@ -82,8 +85,10 @@ namespace Altinn.Platform.Receipt
         [Route("receipt/api/v1/users/current")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            string userIdString = Request.HttpContext.User.Claims.Where(c => c.Type == AltinnCoreClaimTypes.UserId)
-           .Select(c => c.Value).SingleOrDefault();
+            string userIdString = Request
+                .HttpContext.User.Claims.Where(c => c.Type == AltinnCoreClaimTypes.UserId)
+                .Select(c => c.Value)
+                .SingleOrDefault();
 
             if (string.IsNullOrEmpty(userIdString))
             {
@@ -111,7 +116,9 @@ namespace Altinn.Platform.Receipt
         [Route("receipt/api/v1/users/current/language")]
         public IActionResult GetCurrentUserLanguage()
         {
-            string language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(_httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"]);
+            string language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(
+                _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"]
+            );
 
             try
             {
@@ -134,7 +141,11 @@ namespace Altinn.Platform.Receipt
         /// <returns>An extended instance including instance metadata and potentially party data.</returns>
         [HttpGet]
         [Route("receipt/api/v1/instances/{instanceOwnerId}/{instanceGuid}")]
-        public async Task<ActionResult> GetInstanceIncludeParty(int instanceOwnerId, Guid instanceGuid, bool includeParty = false)
+        public async Task<ActionResult> GetInstanceIncludeParty(
+            int instanceOwnerId,
+            Guid instanceGuid,
+            bool includeParty = false
+        )
         {
             ExtendedInstance result = new ExtendedInstance();
 

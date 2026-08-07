@@ -1,18 +1,15 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using Altinn.Platform.Receipt.Health;
-
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-
 using Xunit;
 
 namespace Altinn.Platform.Receipt.UnitTest;
 
 /// <summary>
-/// Health check 
+/// Health check
 /// </summary>
 public class HealthCheckTests : IClassFixture<WebApplicationFactory<HealthCheck>>
 {
@@ -36,9 +33,7 @@ public class HealthCheckTests : IClassFixture<WebApplicationFactory<HealthCheck>
     {
         HttpClient client = GetTestClient();
 
-        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "/health")
-        {
-        };
+        HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "/health") { };
 
         HttpResponseMessage response = await client.SendAsync(httpRequestMessage);
         await response.Content.ReadAsStringAsync();
@@ -47,12 +42,12 @@ public class HealthCheckTests : IClassFixture<WebApplicationFactory<HealthCheck>
 
     private HttpClient GetTestClient()
     {
-        HttpClient client = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureTestServices(services =>
+        HttpClient client = _factory
+            .WithWebHostBuilder(builder =>
             {
-            });
-        }).CreateClient();
+                builder.ConfigureTestServices(services => { });
+            })
+            .CreateClient();
 
         return client;
     }

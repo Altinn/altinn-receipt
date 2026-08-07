@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using Altinn.Platform.Profile.Models;
 
 namespace Altinn.Platform.Receipt.Services.Interfaces
