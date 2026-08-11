@@ -1,9 +1,7 @@
 using System.Net.Http;
 using Altinn.Platform.Receipt.Clients;
 using Altinn.Platform.Receipt.Configuration;
-
 using Microsoft.Extensions.Options;
-
 using Xunit;
 
 namespace Altinn.Platform.Receipt.Tests;
@@ -20,14 +18,17 @@ public class HttpClientAccessorTest
     public void TC01_InstantiateClients_ValidateParameters()
     {
         // Arrange
-        _httpClientAccessor = new HttpClientAccessor(Options.Create(
-            new PlatformSettings
-            {
-                ApiProfileEndpoint = profileEndpoint,
-                ApiRegisterEndpoint = registerEndpoint,
-                ApiStorageEndpoint = storageEndpoint,
-                SubscriptionKey = subscriptionKey
-            }));
+        _httpClientAccessor = new HttpClientAccessor(
+            Options.Create(
+                new PlatformSettings
+                {
+                    ApiProfileEndpoint = profileEndpoint,
+                    ApiRegisterEndpoint = registerEndpoint,
+                    ApiStorageEndpoint = storageEndpoint,
+                    SubscriptionKey = subscriptionKey,
+                }
+            )
+        );
 
         // Act
         HttpClient profileClient = _httpClientAccessor.ProfileClient;

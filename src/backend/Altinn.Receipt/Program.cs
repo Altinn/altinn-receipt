@@ -80,11 +80,7 @@ async Task SetConfigurationProviders(ConfigurationManager config)
     );
     if (basePath == "/")
     {
-        config.AddJsonFile(
-            basePath + "app/appsettings.json",
-            optional: false,
-            reloadOnChange: true
-        );
+        config.AddJsonFile(basePath + "app/appsettings.json", optional: false, reloadOnChange: true);
     }
     else
     {
@@ -118,9 +114,7 @@ async Task ConnectToKeyVaultAndSetApplicationInsights(ConfigurationManager confi
 
         try
         {
-            KeyVaultSecret keyVaultSecret = await client.GetSecretAsync(
-                "ApplicationInsights--ConnectionString"
-            );
+            KeyVaultSecret keyVaultSecret = await client.GetSecretAsync("ApplicationInsights--ConnectionString");
             applicationInsightsConnectionString = keyVaultSecret.Value;
         }
         catch (Exception vaultException)
@@ -130,10 +124,7 @@ async Task ConnectToKeyVaultAndSetApplicationInsights(ConfigurationManager confi
     }
 }
 
-void AddAzureMonitorTelemetryExporters(
-    IServiceCollection services,
-    string applicationInsightsConnectionString
-)
+void AddAzureMonitorTelemetryExporters(IServiceCollection services, string applicationInsightsConnectionString)
 {
     services.Configure<OpenTelemetryLoggerOptions>(logging =>
         logging.AddAzureMonitorLogExporter(o =>
@@ -168,11 +159,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
         .WithMetrics(metrics =>
         {
             metrics.AddAspNetCoreInstrumentation();
-            metrics.AddMeter(
-                "Microsoft.AspNetCore.Hosting",
-                "Microsoft.AspNetCore.Server.Kestrel",
-                "System.Net.Http"
-            );
+            metrics.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel", "System.Net.Http");
         })
         .WithTracing(tracing =>
         {
@@ -239,9 +226,7 @@ void Configure(IConfiguration config)
     string authenticationEndpoint = string.Empty;
     if (Environment.GetEnvironmentVariable("PlatformSettings__ApiAuthenticationEndpoint") != null)
     {
-        authenticationEndpoint = Environment.GetEnvironmentVariable(
-            "PlatformSettings__ApiAuthenticationEndpoint"
-        );
+        authenticationEndpoint = Environment.GetEnvironmentVariable("PlatformSettings__ApiAuthenticationEndpoint");
     }
     else
     {
@@ -265,8 +250,7 @@ void Configure(IConfiguration config)
     {
         var request = context.HttpContext.Request;
         var response = context.HttpContext.Response;
-        string url =
-            $"https://platform.{config["GeneralSettings:Hostname"]}{request.Path}{request.QueryString}";
+        string url = $"https://platform.{config["GeneralSettings:Hostname"]}{request.Path}{request.QueryString}";
         string gotoUrl = WebUtility.UrlEncode(url);
 
         // you may also check requests path to do this only for specific methods

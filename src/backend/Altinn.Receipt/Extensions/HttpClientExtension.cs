@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Altinn.Platform.Receipt.Extensions
 {
     /// <summary>
-    /// This extentsion is created to make it easy to add a bearer token to a httprequests. 
+    /// This extentsion is created to make it easy to add a bearer token to a httprequests.
     /// </summary>
     public static class HttpClientExtension
     {
@@ -18,7 +18,13 @@ namespace Altinn.Platform.Receipt.Extensions
         /// <param name="content">The http content</param>
         /// <param name="platformAccessToken">The platformAccess tokens</param>
         /// <returns>A HttpResponseMessage</returns>
-        public static Task<HttpResponseMessage> PostAsync(this HttpClient httpClient, string authorizationToken, string requestUri, HttpContent content, string platformAccessToken = null)
+        public static Task<HttpResponseMessage> PostAsync(
+            this HttpClient httpClient,
+            string authorizationToken,
+            string requestUri,
+            HttpContent content,
+            string platformAccessToken = null
+        )
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, requestUri);
             request.Headers.Add("Authorization", "Bearer " + authorizationToken);
@@ -40,7 +46,13 @@ namespace Altinn.Platform.Receipt.Extensions
         /// <param name="content">The http content</param>
         /// <param name="platformAccessToken">The platformAccess tokens</param>
         /// <returns>A HttpResponseMessage</returns>
-        public static Task<HttpResponseMessage> PutAsync(this HttpClient httpClient, string authorizationToken, string requestUri, HttpContent content, string platformAccessToken = null)
+        public static Task<HttpResponseMessage> PutAsync(
+            this HttpClient httpClient,
+            string authorizationToken,
+            string requestUri,
+            HttpContent content,
+            string platformAccessToken = null
+        )
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, requestUri);
             request.Headers.Add("Authorization", "Bearer " + authorizationToken);
@@ -61,7 +73,12 @@ namespace Altinn.Platform.Receipt.Extensions
         /// <param name="requestUri">The request Uri</param>
         /// <param name="platformAccessToken">The platformAccess tokens</param>
         /// <returns>A HttpResponseMessage</returns>
-        public static Task<HttpResponseMessage> GetAsync(this HttpClient httpClient, string authorizationToken, string requestUri, string platformAccessToken = null)
+        public static Task<HttpResponseMessage> GetAsync(
+            this HttpClient httpClient,
+            string authorizationToken,
+            string requestUri,
+            string platformAccessToken = null
+        )
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             request.Headers.Add("Authorization", "Bearer " + authorizationToken);
@@ -81,7 +98,12 @@ namespace Altinn.Platform.Receipt.Extensions
         /// <param name="requestUri">The request Uri</param>
         /// <param name="platformAccessToken">The platformAccess tokens</param>
         /// <returns>A HttpResponseMessage</returns>
-        public static Task<HttpResponseMessage> DeleteAsync(this HttpClient httpClient, string authorizationToken, string requestUri, string platformAccessToken = null)
+        public static Task<HttpResponseMessage> DeleteAsync(
+            this HttpClient httpClient,
+            string authorizationToken,
+            string requestUri,
+            string platformAccessToken = null
+        )
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, requestUri);
             request.Headers.Add("Authorization", "Bearer " + authorizationToken);

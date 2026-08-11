@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using Altinn.Platform.Register.Models;
 
 namespace Altinn.Platform.Receipt.Services.Interfaces
@@ -14,6 +13,6 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
         /// </summary>
         /// <param name="partyId">The party id</param>
         /// <returns>The party object</returns>
-        public Task<Party> GetParty(int partyId);        
+        public Task<Party> GetParty(int partyId);
     }
 }

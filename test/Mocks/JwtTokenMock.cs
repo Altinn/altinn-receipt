@@ -2,7 +2,6 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-
 using Microsoft.IdentityModel.Tokens;
 
 namespace Altinn.Platform.Receipt.Tests.Mocks
@@ -25,7 +24,7 @@ namespace Altinn.Platform.Receipt.Tests.Mocks
                 Subject = new ClaimsIdentity(principal.Identity),
                 Expires = DateTime.UtcNow.AddSeconds(3600),
                 SigningCredentials = GetSigningCredentials(),
-                Audience = "altinn.no"
+                Audience = "altinn.no",
             };
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
@@ -36,7 +35,10 @@ namespace Altinn.Platform.Receipt.Tests.Mocks
 
         private static SigningCredentials GetSigningCredentials()
         {
-            X509Certificate2 cert = X509CertificateLoader.LoadPkcs12FromFile("selfSignedTestCertificate.pfx", "qwer1234");
+            X509Certificate2 cert = X509CertificateLoader.LoadPkcs12FromFile(
+                "selfSignedTestCertificate.pfx",
+                "qwer1234"
+            );
             return new X509SigningCredentials(cert, SecurityAlgorithms.RsaSha256);
         }
     }
