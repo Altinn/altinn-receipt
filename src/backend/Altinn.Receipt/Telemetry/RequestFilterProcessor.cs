@@ -78,7 +78,8 @@ namespace Altinn.Platform.Receipt.Telemetry
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestFilterProcessor"/> class.
         /// </summary>
-        public RequestFilterProcessor(IHttpContextAccessor httpContextAccessor = null) : base()
+        public RequestFilterProcessor(IHttpContextAccessor httpContextAccessor = null)
+            : base()
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -112,7 +113,12 @@ namespace Altinn.Platform.Receipt.Telemetry
         {
             if (activity.OperationName == RequestKind && _httpContextAccessor.HttpContext is not null)
             {
-                if (_httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-For", out StringValues ipAddress))
+                if (
+                    _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(
+                        "X-Forwarded-For",
+                        out StringValues ipAddress
+                    )
+                )
                 {
                     activity.SetTag("ipAddress", ipAddress.FirstOrDefault());
                 }
@@ -132,7 +138,7 @@ namespace Altinn.Platform.Receipt.Telemetry
             return localpath switch
             {
                 var path when path.TrimEnd('/').EndsWith("/health", StringComparison.OrdinalIgnoreCase) => true,
-                _ => false
+                _ => false,
             };
         }
     }

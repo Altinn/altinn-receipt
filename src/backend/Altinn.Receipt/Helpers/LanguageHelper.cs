@@ -31,7 +31,7 @@ public static class LanguageHelper
         {
             return "nn";
         }
-        
+
         return string.Empty;
     }
 }

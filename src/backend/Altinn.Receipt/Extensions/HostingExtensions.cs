@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,10 +31,10 @@ public static class HostingExtensions
         var shutdownTimeout = TimeSpan.FromSeconds(20);
 
         builder.Services.AddSingleton<IHostLifetime>(sp =>
-            ActivatorUtilities.CreateInstance<AppHostLifetime>(sp, shutdownDelay));
+            ActivatorUtilities.CreateInstance<AppHostLifetime>(sp, shutdownDelay)
+        );
 
-        builder.Services.Configure<HostOptions>(options =>
-            options.ShutdownTimeout = shutdownTimeout);
+        builder.Services.Configure<HostOptions>(options => options.ShutdownTimeout = shutdownTimeout);
 
         return builder;
     }
@@ -52,7 +51,8 @@ public static class HostingExtensions
             ILogger<AppHostLifetime> logger,
             IHostEnvironment environment,
             IHostApplicationLifetime applicationLifetime,
-            TimeSpan delay)
+            TimeSpan delay
+        )
         {
             _logger = logger;
             _environment = environment;
@@ -67,9 +67,7 @@ public static class HostingExtensions
 
         public Task WaitForStartAsync(CancellationToken cancellationToken)
         {
-            Debug.Assert(
-                !_environment.IsDevelopment(),
-                "We don't need graceful shutdown in development environments");
+            Debug.Assert(!_environment.IsDevelopment(), "We don't need graceful shutdown in development environments");
 
             PosixSignalRegistration sigint = null;
             PosixSignalRegistration sigquit = null;
@@ -105,9 +103,7 @@ public static class HostingExtensions
 
         private void HandleSignal(PosixSignalContext ctx)
         {
-            _logger.LogInformation(
-                "Received shutdown signal: {Signal}, delaying shutdown",
-                ctx.Signal);
+            _logger.LogInformation("Received shutdown signal: {Signal}, delaying shutdown", ctx.Signal);
             ctx.Cancel = true;
 
             _ = Task.Delay(_delay)
@@ -117,7 +113,8 @@ public static class HostingExtensions
                         _logger.LogInformation("Starting host shutdown...");
                         _applicationLifetime.StopApplication();
                     },
-                    TaskScheduler.Default);
+                    TaskScheduler.Default
+                );
         }
 
         private void TryDispose(IDisposable disposable)
@@ -128,10 +125,7 @@ public static class HostingExtensions
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    ex,
-                    "Error during disposal of {Type}",
-                    disposable?.GetType().FullName);
+                _logger.LogError(ex, "Error during disposal of {Type}", disposable?.GetType().FullName);
             }
         }
     }
