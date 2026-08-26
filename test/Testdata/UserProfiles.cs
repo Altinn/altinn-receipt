@@ -13,6 +13,7 @@ namespace Altinn.Platform.Receipt.Tests.Testdata
                 PhoneNumber = "98765432",
                 UserType = Profile.Enums.UserType.SelfIdentified,
                 Party = Parties.Party1,
+                ProfileSettingPreference = new ProfileSettingPreference { Language = "nb" },
             };
     }
 }

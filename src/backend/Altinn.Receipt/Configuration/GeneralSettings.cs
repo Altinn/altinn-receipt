@@ -24,4 +24,9 @@ public class GeneralSettings
     /// The attachment groups to hide
     /// </summary>
     public string AttachmentGroupsToHide { get; set; }
+
+    /// <summary>
+    /// The URL of the list of Altinn organisations
+    /// </summary>
+    public string AltinnOrganisationsUrl { get; set; }
 }

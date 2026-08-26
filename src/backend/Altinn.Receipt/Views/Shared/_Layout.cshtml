@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="@ViewData["Language"]" data-color-scheme="light" data-size="md">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" href="https://altinncdn.no/favicon.ico" />
+    <link rel="stylesheet" href="https://altinncdn.no/fonts/inter/inter.css" />
+    <link rel="stylesheet" href="~/receipt/css/designsystemet/theme.css" />
+    <link rel="stylesheet" href="~/receipt/css/designsystemet/components.css" />
+    <link rel="stylesheet" href="~/receipt/css/receipt.css" />
+</head>
+<body>
+    <header class="receipt-header">
+        <div class="receipt-header__content">
+            <img class="receipt-header__logo" src="https://altinncdn.no/img/Altinn-logo-blue.svg" alt="Altinn" />
+            @await RenderSectionAsync("Header", required: false)
+        </div>
+    </header>
+    <main class="receipt-main">
+        @RenderBody()
+    </main>
+</body>
+</html>

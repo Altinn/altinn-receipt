@@ -1,0 +1,167 @@
+/*
+ * Layout for the receipt page. All colours, spacing and typography come from Designsystemet,
+ * see https://designsystemet.no. Only the tokens are used here, never hard coded values.
+ */
+
+:root {
+  --receipt-content-width: 55rem;
+  --receipt-header-width: 66rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ds-color-neutral-background-tinted);
+  color: var(--ds-color-neutral-text-default);
+  font-family: var(--ds-font-family), system-ui, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.receipt-header {
+  background: var(--ds-color-neutral-surface-default);
+  border-bottom: var(--ds-border-width-default) solid var(--ds-color-neutral-border-subtle);
+}
+
+.receipt-header__content {
+  align-items: center;
+  display: flex;
+  gap: var(--ds-size-4);
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: var(--receipt-header-width);
+  padding: var(--ds-size-4) var(--ds-size-5);
+}
+
+.receipt-header__logo {
+  display: block;
+  height: var(--ds-size-8);
+  width: auto;
+}
+
+.receipt-header__user {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+  text-align: right;
+}
+
+.receipt-main {
+  margin: 0 auto;
+  max-width: var(--receipt-content-width);
+  padding: var(--ds-size-6) var(--ds-size-5) var(--ds-size-15);
+}
+
+.receipt-main > * + * {
+  margin-top: var(--ds-size-5);
+}
+
+.receipt-back {
+  display: inline-flex;
+}
+
+.receipt-card__header > * + * {
+  margin-top: var(--ds-size-2);
+}
+
+.receipt-card__body > * + * {
+  margin-top: var(--ds-size-6);
+}
+
+.receipt-card__body > .receipt-attachment-group {
+  margin-top: var(--ds-size-5);
+}
+
+.receipt-card__body > h2 + .receipt-metadata,
+.receipt-card__body > h3 + ul {
+  margin-top: var(--ds-size-3);
+}
+
+.receipt-metadata {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--ds-size-5);
+  row-gap: var(--ds-size-1);
+  margin: 0;
+}
+
+.receipt-metadata dt {
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.receipt-metadata dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.receipt-body > p {
+  margin: 0;
+}
+
+.receipt-body > p + p {
+  margin-top: var(--ds-size-3);
+}
+
+.receipt-attachments {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.receipt-attachments li + li {
+  margin-top: var(--ds-size-2);
+}
+
+.receipt-attachments a {
+  font-weight: var(--ds-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.receipt-attachment-group + .receipt-attachment-group {
+  margin-top: 0;
+}
+
+.receipt-attachment-group summary .ds-heading {
+  margin: 0;
+}
+
+@media (max-width: 30rem) {
+  .receipt-metadata {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+  }
+
+  .receipt-metadata dd {
+    margin-bottom: var(--ds-size-2);
+  }
+}
+
+@media print {
+  body {
+    background: var(--ds-color-neutral-surface-default);
+  }
+
+  .receipt-header {
+    border-bottom: 0;
+  }
+
+  .receipt-header__user,
+  .receipt-back {
+    display: none;
+  }
+
+  .receipt-card {
+    border: 0;
+  }
+
+  .receipt-attachment-group summary::before {
+    display: none;
+  }
+}

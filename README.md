@@ -3,6 +3,21 @@
 ## Build status
 [![Receipt build status](https://dev.azure.com/brreg/altinn-studio/_apis/build/status/altinn-platform/receipt-master?label=platform/receipt)](https://dev.azure.com/brreg/altinn-studio/_build/latest?definitionId=58)
 
+## Architecture
+
+The receipt is a server rendered ASP.NET Core MVC application, without any JavaScript on the page.
+`ReceiptController` collects the instance, the party, the user profile, the application metadata and the app text
+resources from the platform, and the Razor views in `src/backend/Altinn.Receipt/Views` render the page from that.
+
+Styling comes from [Designsystemet](https://designsystemet.no), using the Altinn brand theme. The stylesheets are npm
+dependencies in `src/styles`, and `npm install` copies them into
+`src/backend/Altinn.Receipt/wwwroot/receipt/css/designsystemet`, which is where the views serve them from. The
+Docker build does the same, so the container image is self contained.
+
+Apps can override the texts of the receipt by adding text resources with the `receipt_platform.` prefix, for
+instance `receipt_platform.helper_text`. The default texts, in Norwegian bokmål, Norwegian nynorsk and English, are
+in `src/backend/Altinn.Receipt/Helpers/ReceiptTexts.cs`. Overrides may use markdown.
+
 ## Getting Started
 
 These instructions will get you a copy of the receipt component up and running on your machine for development and testing purposes.
@@ -10,7 +25,7 @@ These instructions will get you a copy of the receipt component up and running o
 ### Prerequisites
 
 1. [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-2. [Node LTS](https://nodejs.org/en/)
+2. [Node LTS](https://nodejs.org/en/), used to fetch the Designsystemet stylesheets
 3. Newest [Git](https://git-scm.com/downloads)
 4. A code editor - we like [Visual Studio Code](https://code.visualstudio.com/download)
    - Also install [recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_workspace-recommended-extensions) (e.g. [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp))
@@ -68,3 +83,14 @@ __Process__
 2. Start the app you have made in the **Altinn Studio** and run it. Check if this app is working fine with the `app-localtest` backend service.
 3. Then go to the altinn-receipt directory and run `podman compose up -d --build`. If you make changes to the code, you will need to re-run `podman compose up -d --build` to see the change in action.
 4. The application should now be available at `local.altinn.cloud/receipt/{instanceOwnerId}/{instanceId}`. You'll find the `{instanceOwnerId}` and `{instanceId}` in the URL after you successfully submitted the **Altinn Studio** app form.
+
+### Running the application outside Docker
+
+```bash
+cd src/styles && npm ci && cd ../..
+cd src/backend/Altinn.Receipt && dotnet run
+```
+
+`npm ci` copies the Designsystemet stylesheets into `wwwroot`, and only has to be run again when the stylesheet
+dependencies in `src/styles/package.json` change. Without it the page is served without any styling. The
+application still needs the platform services described above to have anything to present.

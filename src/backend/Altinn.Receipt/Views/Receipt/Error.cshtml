@@ -1,0 +1,10 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Heading;
+    ViewData["Language"] = Model.Language;
+}
+
+<article class="ds-card receipt-card" data-color="neutral">
+    <h1 class="ds-heading" data-size="sm">@Model.Heading</h1>
+    <p class="ds-paragraph">@Model.Message</p>
+</article>

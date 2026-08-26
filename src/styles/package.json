@@ -1,0 +1,14 @@
+{
+  "name": "altinn-receipt-styles",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Design system stylesheets served by the Altinn Platform Receipt Razor views.",
+  "license": "3-Clause BSD",
+  "scripts": {
+    "postinstall": "node copy-styles.mjs"
+  },
+  "dependencies": {
+    "@digdir/designsystemet-css": "1.20.1",
+    "@digdir/designsystemet-theme": "1.11.0"
+  }
+}
