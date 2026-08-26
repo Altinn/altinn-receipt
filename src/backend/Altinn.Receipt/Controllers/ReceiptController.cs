@@ -1,211 +1,245 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Altinn.Platform.Profile.Models;
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Helpers;
-using Altinn.Platform.Receipt.Model;
 using Altinn.Platform.Receipt.Services.Interfaces;
+using Altinn.Platform.Receipt.ViewModels;
 using Altinn.Platform.Register.Models;
 using Altinn.Platform.Storage.Interface.Models;
 using AltinnCore.Authentication.Constants;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Altinn.Platform.Receipt
+namespace Altinn.Platform.Receipt.Controllers;
+
+/// <summary>
+/// Presents the receipt of a submitted form.
+/// </summary>
+[Authorize]
+public class ReceiptController : Controller
 {
+    private const string LanguageCookieName = "altinnPersistentContext";
+
+    private readonly IRegister _register;
+    private readonly IStorage _storage;
+    private readonly IProfile _profile;
+    private readonly IAltinnOrganisations _organisations;
+    private readonly ILogger<ReceiptController> _logger;
+    private readonly IOptions<GeneralSettings> _generalSettings;
+
     /// <summary>
-    /// Contains all actions for receipt
+    /// Initializes a new instance of the <see cref="ReceiptController"/> class
     /// </summary>
-    [Authorize]
-    [ApiController]
-    public class ReceiptController : Controller
+    /// <param name="register">the register service</param>
+    /// <param name="storage">the storage service</param>
+    /// <param name="profile">the profile service</param>
+    /// <param name="organisations">the Altinn organisations</param>
+    /// <param name="logger">the logger</param>
+    /// <param name="generalSettings">The application general settings</param>
+    public ReceiptController(
+        IRegister register,
+        IStorage storage,
+        IProfile profile,
+        IAltinnOrganisations organisations,
+        ILogger<ReceiptController> logger,
+        IOptions<GeneralSettings> generalSettings
+    )
     {
-        private readonly IRegister _register;
-        private readonly IStorage _storage;
-        private readonly IProfile _profile;
-        private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IOptions<GeneralSettings> _generalSettings;
+        _register = register;
+        _storage = storage;
+        _profile = profile;
+        _organisations = organisations;
+        _logger = logger;
+        _generalSettings = generalSettings;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReceiptController"/> class
-        /// </summary>
-        /// <param name="register">the register service</param>
-        /// <param name="storage">the storage service</param>
-        /// <param name="profile">the profile service</param>
-        /// <param name="logger">the logger</param>
-        /// <param name="httpContextAccessor">the HTTP context accessor</param>
-        /// <param name="generalSettings">The application general settings</param>
-        public ReceiptController(
-            IRegister register,
-            IStorage storage,
-            IProfile profile,
-            ILogger<ReceiptController> logger,
-            IHttpContextAccessor httpContextAccessor,
-            IOptions<GeneralSettings> generalSettings
-        )
+    /// <summary>
+    /// Presents the receipt of an instance.
+    /// </summary>
+    /// <param name="instanceOwnerId">The party id of the instance owner</param>
+    /// <param name="instanceId">The instance guid</param>
+    /// <param name="returnUrl">The URL the user should be sent to when leaving the receipt</param>
+    /// <returns>The receipt page</returns>
+    [HttpGet]
+    [Route("receipt/{instanceOwnerId:int}/{instanceId:guid}")]
+    public async Task<IActionResult> Index(int instanceOwnerId, Guid instanceId, [FromQuery] string returnUrl = null)
+    {
+        _logger.LogInformation(
+            "Getting receipt for: {InstanceOwnerId} for instance with id: {InstanceId}.",
+            instanceOwnerId,
+            instanceId
+        );
+
+        UserProfile user;
+        Instance instance;
+
+        try
         {
-            _register = register;
-            _storage = storage;
-            _profile = profile;
-            _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
-            _generalSettings = generalSettings;
+            user = await GetUser();
+            instance = await _storage.GetInstance(instanceOwnerId, instanceId);
+        }
+        catch (PlatformHttpException e)
+        {
+            return HandlePlatformHttpException(e);
         }
 
-        /// <summary>
-        /// Gets the receipt frontend view
-        /// </summary>
-        /// <param name="instanceOwnerId">The instance owner id </param>
-        /// <param name="instanceId">The instance id</param>
-        /// <param name="returnUrl">The return URL</param>
-        /// <returns>The receipt frontend</returns>
-        [HttpGet]
-        [Route("receipt/{instanceOwnerId}/{instanceId}")]
-        public IActionResult Index(int instanceOwnerId, Guid instanceId, [FromQuery] string returnUrl = null)
+        string language = GetLanguage(user);
+        (string org, string app) = SplitAppId(instance.AppId);
+
+        Application application = null;
+        TextResource textResource = null;
+
+        if (org != null)
         {
-            _logger.LogInformation(
-                "Getting receipt for: {InstanceOwnerId} for instance with id: {InstanceId}.",
-                instanceOwnerId,
-                instanceId
-            );
-            return View("receipt");
-        }
-
-        /// <summary>
-        /// Gets the user profile of the currently logged in user
-        /// </summary>
-        /// <returns>The user profile</returns>
-        [HttpGet]
-        [Route("receipt/api/v1/users/current")]
-        public async Task<IActionResult> GetCurrentUser()
-        {
-            string userIdString = Request
-                .HttpContext.User.Claims.Where(c => c.Type == AltinnCoreClaimTypes.UserId)
-                .Select(c => c.Value)
-                .SingleOrDefault();
-
-            if (string.IsNullOrEmpty(userIdString))
-            {
-                return BadRequest("Invalid request context. UserId must be provided in claims.");
-            }
-
             try
             {
-                int userId = int.Parse(userIdString);
-                UserProfile profile = await _profile.GetUser(userId);
-
-                return Ok(profile);
+                application = await _storage.GetApplication(org, app);
             }
-            catch (PlatformHttpException e)
+            catch (PlatformHttpException e) when (e.Response.StatusCode != HttpStatusCode.Unauthorized)
             {
-                return HandlePlatformHttpException(e);
-            }
-        }
-
-        /// <summary>
-        /// Gets the language from cookie for current user
-        /// </summary>
-        /// <returns>The language or 404(if not found)</returns>
-        [HttpGet]
-        [Route("receipt/api/v1/users/current/language")]
-        public IActionResult GetCurrentUserLanguage()
-        {
-            string language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(
-                _httpContextAccessor.HttpContext.Request.Cookies["altinnPersistentContext"]
-            );
-
-            try
-            {
-                if (string.IsNullOrEmpty(language))
-                {
-                    return NoContent();
-                }
-
-                return Ok(new { language });
-            }
-            catch (PlatformHttpException e)
-            {
-                return HandlePlatformHttpException(e);
-            }
-        }
-
-        /// <summary>
-        /// Gets instance metadata with option to include instance owner party object
-        /// </summary>
-        /// <returns>An extended instance including instance metadata and potentially party data.</returns>
-        [HttpGet]
-        [Route("receipt/api/v1/instances/{instanceOwnerId}/{instanceGuid}")]
-        public async Task<ActionResult> GetInstanceIncludeParty(
-            int instanceOwnerId,
-            Guid instanceGuid,
-            bool includeParty = false
-        )
-        {
-            ExtendedInstance result = new ExtendedInstance();
-
-            try
-            {
-                Instance instance = await _storage.GetInstance(instanceOwnerId, instanceGuid);
-                result.Instance = instance;
+                _logger.LogWarning(e, "Unable to retrieve application metadata for {AppId}.", instance.AppId);
             }
             catch (PlatformHttpException e)
             {
                 return HandlePlatformHttpException(e);
             }
 
-            string partyId = result?.Instance?.InstanceOwner?.PartyId;
-            if (includeParty && partyId != null && int.TryParse(partyId, out int partyIdInt))
-            {
-                try
-                {
-                    Party party = await _register.GetParty(partyIdInt);
-                    result.Party = party;
-                }
-                catch (PlatformHttpException e)
-                {
-                    return HandlePlatformHttpException(e);
-                }
-            }
-
-            return Ok(result);
+            textResource = await GetTextResource(org, app, language);
         }
 
-        /// <summary>
-        /// Gets the attachment groups to hide
-        /// </summary>
-        /// <returns>The attachment groups</returns>
-        [HttpGet]
-        [Route("receipt/api/v1/application/attachmentgroupstohide")]
-        public ActionResult GetAttachmentGroupsToHide()
+        ReceiptPageContext context = new()
         {
-            string attachmentgroupstohide = _generalSettings.Value.AttachmentGroupsToHide;
-            return Ok(new { attachmentgroupstohide });
+            Instance = instance,
+            InstanceGuid = instanceId,
+            Party = await GetParty(instance),
+            User = user,
+            Application = application,
+            TextResource = textResource,
+            Organisations = await _organisations.GetOrgs(),
+            Language = language,
+            Host = Request.Host.Value,
+            RequestedReturnUrl = returnUrl,
+            AttachmentGroupsToHide = _generalSettings.Value.AttachmentGroupsToHide,
+        };
+
+        return View(ReceiptViewModelFactory.Create(context));
+    }
+
+    private async Task<UserProfile> GetUser()
+    {
+        string userIdString = User
+            .Claims.Where(claim => claim.Type == AltinnCoreClaimTypes.UserId)
+            .Select(claim => claim.Value)
+            .FirstOrDefault();
+
+        if (!int.TryParse(userIdString, out int userId))
+        {
+            // The receipt is also reachable with tokens that do not represent a user, for instance an organisation
+            // token. The receipt is then presented without the name of the user.
+            _logger.LogInformation("No user id in claims. Presenting the receipt without user information.");
+            return null;
         }
 
-        private ActionResult HandlePlatformHttpException(PlatformHttpException e)
+        return await _profile.GetUser(userId);
+    }
+
+    private async Task<Party> GetParty(Instance instance)
+    {
+        if (!int.TryParse(instance.InstanceOwner?.PartyId, out int partyId))
         {
-            if (e.Response.StatusCode == HttpStatusCode.Unauthorized)
+            return null;
+        }
+
+        try
+        {
+            return await _register.GetParty(partyId);
+        }
+        catch (PlatformHttpException e)
+        {
+            _logger.LogWarning(e, "Unable to retrieve party {PartyId}.", partyId);
+            return null;
+        }
+    }
+
+    private async Task<TextResource> GetTextResource(string org, string app, string language)
+    {
+        foreach (string candidate in ReceiptTexts.GetLanguagePriority(language))
+        {
+            try
             {
-                return StatusCode(401, e.Message);
+                TextResource textResource = await _storage.GetTextResource(org, app, candidate);
+                if (textResource != null)
+                {
+                    return textResource;
+                }
             }
-            else if (e.Response.StatusCode == HttpStatusCode.Forbidden)
+            catch (PlatformHttpException e)
             {
-                return StatusCode(403, e.Message);
-            }
-            else if (e.Response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return StatusCode(404, e.Message);
-            }
-            else
-            {
-                return StatusCode(500, e.Message);
+                _logger.LogWarning(e, "Unable to retrieve {Language} texts for {Org}/{App}.", candidate, org, app);
+                return null;
             }
         }
+
+        return null;
+    }
+
+    private string GetLanguage(UserProfile user)
+    {
+        string language = LanguageHelper.GetLanguageFromAltinnPersistenceCookie(Request.Cookies[LanguageCookieName]);
+
+        if (string.IsNullOrEmpty(language))
+        {
+            language = user?.ProfileSettingPreference?.Language;
+        }
+
+        return ReceiptTexts.SupportedLanguages.Contains(language) ? language : ReceiptTexts.SupportedLanguages[0];
+    }
+
+    private static (string Org, string App) SplitAppId(string appId)
+    {
+        string[] parts = appId?.Split('/') ?? [];
+
+        return parts.Length == 2 ? (parts[0], parts[1]) : (null, null);
+    }
+
+    private IActionResult HandlePlatformHttpException(PlatformHttpException e)
+    {
+        switch (e.Response.StatusCode)
+        {
+            case HttpStatusCode.Unauthorized:
+                // An empty response makes the status code pages middleware redirect the user to log in.
+                return Unauthorized();
+            case HttpStatusCode.Forbidden:
+                return Error(HttpStatusCode.Forbidden, "error_no_access");
+            case HttpStatusCode.NotFound:
+                return Error(HttpStatusCode.NotFound, "error_not_found");
+            default:
+                _logger.LogError(e, "Unable to present the receipt.");
+                return Error(HttpStatusCode.InternalServerError, "error_unknown");
+        }
+    }
+
+    private IActionResult Error(HttpStatusCode statusCode, string messageKey)
+    {
+        string language = GetLanguage(null);
+        IReadOnlyDictionary<string, string> texts = ReceiptTexts.GetDefaults(language);
+
+        Response.StatusCode = (int)statusCode;
+
+        return View(
+            "Error",
+            new ErrorViewModel
+            {
+                Language = language,
+                Heading = texts["error_title"],
+                Message = texts[messageKey],
+            }
+        );
     }
 }

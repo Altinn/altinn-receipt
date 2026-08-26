@@ -1,0 +1,88 @@
+@model ReceiptViewModel
+@{
+    ViewData["Title"] = Model.Heading;
+    ViewData["Language"] = Model.Language;
+}
+
+@section Header {
+    <div class="receipt-header__user">
+        @if (!string.IsNullOrEmpty(Model.UserName))
+        {
+            <p class="ds-paragraph" data-size="xs">@Model.UserName</p>
+            @if (!string.IsNullOrEmpty(Model.OnBehalfOfName))
+            {
+                <p class="ds-paragraph" data-size="xs">for @Model.OnBehalfOfName</p>
+            }
+        }
+        @if (!string.IsNullOrEmpty(Model.LogoutUrl))
+        {
+            <a class="ds-link" data-size="xs" href="@Model.LogoutUrl">@Model.LogoutText</a>
+        }
+    </div>
+}
+
+@if (Model.Substatus != null)
+{
+    <div class="ds-alert">
+        <h2 class="ds-heading" data-size="2xs" id="substatus-label">@Model.Substatus.Label</h2>
+        @if (!string.IsNullOrEmpty(Model.Substatus.Description))
+        {
+            <p class="ds-paragraph" id="substatus-description">@Model.Substatus.Description</p>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ReturnUrl))
+{
+    <a class="ds-link receipt-back" href="@Model.ReturnUrl">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5m0 0 6-6m-6 6 6 6" />
+        </svg>
+        <span>@Model.ReturnText</span>
+    </a>
+}
+
+<article class="ds-card receipt-card" data-color="neutral">
+    <div class="ds-card__block receipt-card__header">
+        @if (!string.IsNullOrEmpty(Model.Receiver))
+        {
+            <p class="ds-paragraph" data-size="sm">@Model.Receiver</p>
+        }
+        <h1 class="ds-heading" data-size="sm">@Model.Heading</h1>
+    </div>
+    <div class="ds-card__block receipt-card__body">
+        <h2 class="ds-heading" data-size="xs">@Model.Title</h2>
+
+        @if (Model.MetaData.Count > 0)
+        {
+            <dl class="receipt-metadata ds-paragraph" data-size="sm">
+                @foreach (ReceiptMetaDataItem item in Model.MetaData)
+                {
+                    <dt>@item.Label</dt>
+                    <dd>@item.Value</dd>
+                }
+            </dl>
+        }
+
+        <div class="receipt-body ds-paragraph" data-variant="long" id="body-text">@Model.Body</div>
+
+        @if (Model.Pdfs.Count > 0)
+        {
+            @if (!string.IsNullOrEmpty(Model.SubmittedHeading))
+            {
+                <h3 class="ds-heading" data-size="2xs">@Model.SubmittedHeading</h3>
+            }
+            <partial name="_Attachments" model="@(new AttachmentListViewModel { Id = "attachment-list-pdf", Attachments = Model.Pdfs, DownloadText = Model.DownloadText })" />
+        }
+
+        @foreach (ReceiptAttachmentGroup group in Model.AttachmentGroups)
+        {
+            <details class="ds-details receipt-attachment-group" data-color="neutral" open>
+                <summary>
+                    <span class="ds-heading" data-size="2xs">@group.Title (@group.Attachments.Count)</span>
+                </summary>
+                <partial name="_Attachments" model="@(new AttachmentListViewModel { Attachments = group.Attachments, DownloadText = Model.DownloadText })" />
+            </details>
+        }
+    </div>
+</article>

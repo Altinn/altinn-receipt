@@ -7,6 +7,7 @@ using Altinn.Common.AccessTokenClient.Services;
 using Altinn.Platform.Receipt.Configuration;
 using Altinn.Platform.Receipt.Extensions;
 using Altinn.Platform.Receipt.Health;
+using Altinn.Platform.Receipt.Helpers;
 using Altinn.Platform.Receipt.Services;
 using Altinn.Platform.Receipt.Services.Interfaces;
 using Altinn.Platform.Receipt.Telemetry;
@@ -181,6 +182,8 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
     }
 
     services.AddControllersWithViews();
+    services.AddSingleton(HtmlEncoding.Encoder);
+    services.AddMemoryCache();
     services.AddHealthChecks().AddCheck<HealthCheck>("receipt_health_check");
     GeneralSettings generalSettings = config.GetSection("GeneralSettings").Get<GeneralSettings>();
     services.Configure<GeneralSettings>(config.GetSection("GeneralSettings"));
@@ -214,6 +217,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
     services.AddHttpClient<IRegister, RegisterWrapper>();
     services.AddHttpClient<IStorage, StorageWrapper>();
     services.AddHttpClient<IProfile, ProfileWrapper>();
+    services.AddHttpClient<IAltinnOrganisations, AltinnOrganisationsWrapper>();
     services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     services.AddTransient<IAccessTokenGenerator, AccessTokenGenerator>();
     services.AddTransient<ISigningCredentialsResolver, SigningCredentialsResolver>();
@@ -267,11 +271,5 @@ void Configure(IConfiguration config)
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.MapControllerRoute(
-        name: "languageRoute",
-        pattern: "receipt/api/v1/{controller}/{action=Index}",
-        defaults: new { controller = "Language" },
-        constraints: new { controller = "Language" }
-    );
     app.MapHealthChecks("/health");
 }

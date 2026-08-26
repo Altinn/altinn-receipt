@@ -56,5 +56,44 @@ namespace Altinn.Platform.Receipt.Services.Interfaces
 
             throw new PlatformHttpException(response, string.Empty);
         }
+
+        /// <inheritdoc/>
+        public async Task<Application> GetApplication(string org, string app)
+        {
+            string token = JwtTokenUtil.GetTokenFromContext(_contextAccessor.HttpContext, "AltinnStudioRuntime");
+
+            string url = $"applications/{org}/{app}";
+
+            HttpResponseMessage response = await _client.GetAsync(token, url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<Application>(JsonSerializerOptionsProvider.Options);
+            }
+
+            throw new PlatformHttpException(response, string.Empty);
+        }
+
+        /// <inheritdoc/>
+        public async Task<TextResource> GetTextResource(string org, string app, string language)
+        {
+            string token = JwtTokenUtil.GetTokenFromContext(_contextAccessor.HttpContext, "AltinnStudioRuntime");
+
+            string url = $"applications/{org}/{app}/texts/{language}";
+
+            HttpResponseMessage response = await _client.GetAsync(token, url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<TextResource>(JsonSerializerOptionsProvider.Options);
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            throw new PlatformHttpException(response, string.Empty);
+        }
     }
 }

@@ -34,29 +34,8 @@ msbuild.wrn
 .vs/
 
 
-######### Built react apps for receipt ###########
-src/backend/Altinn.Receipt/wwwroot/receipt/js/react
-src/backend/Altinn.Receipt/wwwroot/receipt/css
-**/dist/*
-
-
-#https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-
-/.pnp.*
-/.yarn/*
-!/.yarn/patches
-!/.yarn/plugins
-!/.yarn/releases
-!/.yarn/sdks
-!/.yarn/versions
-
-src/frontend/.pnp.*
-src/frontend/.yarn/*
-!src/frontend/.yarn/patches
-!src/frontend/.yarn/plugins
-!src/frontend/.yarn/releases
-!src/frontend/.yarn/sdks
-!src/frontend/.yarn/versions
+######### Designsystemet stylesheets, copied in by src/styles ###########
+src/backend/Altinn.Receipt/wwwroot/receipt/css/designsystemet
 
 .DS_STORE
 node_modules
