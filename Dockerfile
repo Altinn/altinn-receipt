@@ -17,7 +17,7 @@ RUN yarn --immutable
 RUN yarn run build
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:edf9c86295a212261d9c74c5dfa24b35b186d8fb512f078795f42d66cf0d7878 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine3.24@sha256:82aca1e1ba54dbe6ca55d9927c40176c5287bf901afd1ee658fcaae97f0ecf93 AS build
 # Copy receipt backend
 WORKDIR /Receipt/
 
