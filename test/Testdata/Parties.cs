@@ -10,6 +10,7 @@ namespace Altinn.Platform.Receipt.Tests.Testdata
                 PartyId = 50001,
                 SSN = "12345678901",
                 PartyTypeName = Register.Enums.PartyType.Person,
+                Person = new Person { SSN = "12345678901" },
             };
     }
 }

@@ -64,6 +64,7 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
         Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
         Assert.IsType<UserProfile>(actual);
         Assert.Equal("123456*****", actual.Party.SSN);
+        Assert.Equal("123456*****", actual.Party.Person.SSN);
     }
 
     [Fact]
@@ -139,6 +140,7 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
         Assert.Null(actual.Party);
         Assert.NotNull(actual.Instance);
         Assert.Equal("tdd/auth-level-3", actual.Instance.AppId);
+        Assert.Equal("123456*****", actual.Instance.InstanceOwner.PersonNumber);
     }
 
     [Fact]
@@ -169,6 +171,7 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
         Assert.Equal(Parties.Party1.PartyTypeName, actual.Party.PartyTypeName);
         Assert.Equal("123456*****", actual.Party.SSN);
         Assert.Equal("123456*****", actual.Instance.InstanceOwner.PersonNumber);
+        Assert.Equal("123456*****", actual.Party.Person.SSN);
     }
 
     [Fact]
@@ -195,6 +198,7 @@ public class ReceiptControllerTests : IClassFixture<WebApplicationFactory<Receip
         Assert.Null(actual.Party);
         Assert.NotNull(actual.Instance);
         Assert.Equal("tdd/auth-level-3", actual.Instance.AppId);
+        Assert.Equal("123456*****", actual.Instance.InstanceOwner.PersonNumber);
     }
 
     [Fact]
