@@ -100,7 +100,7 @@ namespace Altinn.Platform.Receipt
                 int userId = int.Parse(userIdString);
                 UserProfile profile = await _profile.GetUser(userId);
 
-                return Ok(profile);
+                return Ok(PartySsnMasking.MaskUserProfile(profile));
             }
             catch (PlatformHttpException e)
             {
@@ -152,7 +152,7 @@ namespace Altinn.Platform.Receipt
             try
             {
                 Instance instance = await _storage.GetInstance(instanceOwnerId, instanceGuid);
-                result.Instance = instance;
+                result.Instance = PartySsnMasking.MaskInstance(instance);
             }
             catch (PlatformHttpException e)
             {
@@ -165,7 +165,7 @@ namespace Altinn.Platform.Receipt
                 try
                 {
                     Party party = await _register.GetParty(partyIdInt);
-                    result.Party = party;
+                    result.Party = PartySsnMasking.MaskParty(party);
                 }
                 catch (PlatformHttpException e)
                 {
