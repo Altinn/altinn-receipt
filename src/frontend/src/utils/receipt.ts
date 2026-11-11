@@ -26,9 +26,15 @@ const getDateSubmitted = (instance: IInstance, application: IApplication): strin
   return undefined;
 };
 
+/**
+ * Shows only the birth date of a fødselsnummer, e.g. "01017512345" -> "010175*****",
+ * the same way as the app frontend and the receipt in arbeidsflate.
+ */
+export const maskSsn = (ssn: string): string => `${ssn.slice(0, 6)}*****`;
+
 const getSender = (party: IParty): string => {
   if (party.ssn) {
-    return `${party.ssn}-${party.name}`;
+    return `${maskSsn(party.ssn)}-${party.name}`;
   } else if (party.orgNumber) {
     return `${party.orgNumber}-${party.name}`;
   }
