@@ -9,7 +9,7 @@ import type {
   ITextResource,
 } from 'src/types/index';
 
-import { getInstanceMetaDataObject, maskSsn } from './receipt';
+import { getInstanceMetaDataObject } from './receipt';
 
 describe('utils > receipt', () => {
   const instance = {
@@ -24,7 +24,7 @@ describe('utils > receipt', () => {
 
   const partyPerson = {
     name: 'Ola Nordmann',
-    ssn: '01017512345',
+    ssn: '12345678',
   } as IParty;
 
   const partyOrg = {
@@ -56,7 +56,7 @@ describe('utils > receipt', () => {
 
   const expectedResult = {
     'Dato sendt': '24.12.2018 / 10:33',
-    Avsender: '010175*****-Ola Nordmann',
+    Avsender: '12345678-Ola Nordmann',
     Mottaker: 'TEST ORG',
     Referansenummer: 'd6a414a797ae',
   };
@@ -157,16 +157,6 @@ describe('utils > receipt', () => {
         'nb',
       );
       expect(result['Dato sendt']).toEqual('24.12.2019 / 10:33');
-    });
-  });
-
-  describe('maskSsn', () => {
-    it('should keep the birth date and mask the rest', () => {
-      expect(maskSsn('01017512345')).toEqual('010175*****');
-    });
-
-    it('should not change an already masked value', () => {
-      expect(maskSsn('010175*****')).toEqual('010175*****');
     });
   });
 });
