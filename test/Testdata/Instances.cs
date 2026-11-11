@@ -5,7 +5,7 @@ namespace Altinn.Platform.Receipt.Tests.Testdata
 {
     public static class Instances
     {
-        public static Instance Instance1 { get; set; } =
+        public static Instance Instance1 =>
             new Instance
             {
                 Id = "1000/1c3a4b9d-cbbe-4146-b370-4164e925812b",

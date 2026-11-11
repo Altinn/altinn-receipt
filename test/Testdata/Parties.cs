@@ -4,7 +4,7 @@ namespace Altinn.Platform.Receipt.Tests.Testdata
 {
     public static class Parties
     {
-        public static Party Party1 { get; set; } =
+        public static Party Party1 =>
             new Party
             {
                 PartyId = 50001,
