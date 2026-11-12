@@ -4,7 +4,7 @@ namespace Altinn.Platform.Receipt.Tests.Testdata
 {
     public static class UserProfiles
     {
-        public static UserProfile User1 { get; set; } =
+        public static UserProfile User1 =>
             new UserProfile
             {
                 UserId = 1,

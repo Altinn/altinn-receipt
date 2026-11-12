@@ -100,6 +100,8 @@ namespace Altinn.Platform.Receipt
                 int userId = int.Parse(userIdString);
                 UserProfile profile = await _profile.GetUser(userId);
 
+                MaskSsn(profile?.Party);
+
                 return Ok(profile);
             }
             catch (PlatformHttpException e)
@@ -152,6 +154,13 @@ namespace Altinn.Platform.Receipt
             try
             {
                 Instance instance = await _storage.GetInstance(instanceOwnerId, instanceGuid);
+                if (instance?.InstanceOwner != null)
+                {
+                    instance.InstanceOwner.PersonNumber = NationalIdentityNumberMasking.Mask(
+                        instance.InstanceOwner.PersonNumber
+                    );
+                }
+
                 result.Instance = instance;
             }
             catch (PlatformHttpException e)
@@ -165,6 +174,7 @@ namespace Altinn.Platform.Receipt
                 try
                 {
                     Party party = await _register.GetParty(partyIdInt);
+                    MaskSsn(party);
                     result.Party = party;
                 }
                 catch (PlatformHttpException e)
@@ -186,6 +196,24 @@ namespace Altinn.Platform.Receipt
         {
             string attachmentgroupstohide = _generalSettings.Value.AttachmentGroupsToHide;
             return Ok(new { attachmentgroupstohide });
+        }
+
+        /// <summary>
+        /// Masks the fødselsnummer of a party, so the full number is not sent to the browser.
+        /// The party is read fresh from Register for each request, so it is safe to change it.
+        /// </summary>
+        private static void MaskSsn(Party party)
+        {
+            if (party == null)
+            {
+                return;
+            }
+
+            party.SSN = NationalIdentityNumberMasking.Mask(party.SSN);
+            if (party.Person != null)
+            {
+                party.Person.SSN = NationalIdentityNumberMasking.Mask(party.Person.SSN);
+            }
         }
 
         private ActionResult HandlePlatformHttpException(PlatformHttpException e)
