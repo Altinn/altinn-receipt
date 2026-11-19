@@ -190,28 +190,25 @@ void ConfigureServices(IServiceCollection services, IConfiguration config)
 
     services
         .AddAuthentication(JwtCookieDefaults.AuthenticationScheme)
-        .AddJwtCookie(
-            JwtCookieDefaults.AuthenticationScheme,
-            options =>
+        .AddJwtCookie(JwtCookieDefaults.AuthenticationScheme, options =>
+        {
+            options.JwtCookieName = generalSettings.RuntimeCookieName;
+            options.MetadataAddress = generalSettings.OpenIdWellKnownEndpoint;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.JwtCookieName = generalSettings.RuntimeCookieName;
-                options.MetadataAddress = generalSettings.OpenIdWellKnownEndpoint;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                };
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
 
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.RequireHttpsMetadata = false;
-                }
+            if (builder.Environment.IsDevelopment())
+            {
+                options.RequireHttpsMetadata = false;
             }
-        );
+        });
 
     services.AddSingleton(config);
     services.AddHttpClient<IRegister, RegisterWrapper>();
